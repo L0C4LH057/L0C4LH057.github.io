@@ -1,0 +1,23 @@
+title: "Security Researcher"
+description: "Security research & technical writeups"
+baseurl: ""
+url: "https://L0C4LH057.github.io"
+author: "Bashir Kabir Zarewa"
+
+theme: minima
+plugins:
+  - jekyll-feed
+
+collections:
+  research:
+    output: true
+    permalink: /research/:path/
+  writeups:
+    output: true
+    permalink: /writeups/:path/
+
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default

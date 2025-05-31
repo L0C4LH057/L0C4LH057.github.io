@@ -1,0 +1,21 @@
+---
+layout: default
+---
+<article class="research">
+  <header>
+    <h1>{{ page.title }}</h1>
+    {% if page.date %}
+      <p class="meta">Published: {{ page.date | date: "%B %d, %Y" }}</p>
+    {% endif %}
+    {% if page.techniques %}
+      <div class="techniques">
+        <strong>Techniques:</strong> 
+        {{ page.techniques | join: ", " }}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="research-content">
+    {{ content }}
+  </div>
+</article>
