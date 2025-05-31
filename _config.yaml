@@ -1,5 +1,5 @@
-title: "Security Researcher"
-description: "Security research & technical writeups"
+title: "Bashir Kabir |"
+description: "My thoughts on Hacking, Cybersecurity And AI"
 baseurl: ""
 url: "https://L0C4LH057.github.io"
 author: "Bashir Kabir Zarewa"
@@ -9,15 +9,15 @@ plugins:
   - jekyll-feed
 
 collections:
-  research:
+  top_posts:
     output: true
-    permalink: /research/:path/
-  writeups:
-    output: true
-    permalink: /writeups/:path/
 
 defaults:
   - scope:
       path: ""
     values:
       layout: default
+  - scope:
+      path: "_posts"
+    values:
+      layout: post

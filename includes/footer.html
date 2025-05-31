@@ -1,17 +1,31 @@
 <footer class="site-footer">
-  <div class="wrapper">
-    <div class="footer-col-wrapper">
-      <div class="footer-col">
-        <p>{{ site.description }}</p>
-      </div>
-      <div class="footer-col">
-        <ul class="social-media-list">
-          <li><a href="https://github.com/yourusername"><i class="fab fa-github"></i> GitHub</a></li>
-          <li><a href="https://twitter.com/yourhandle"><i class="fab fa-twitter"></i> Twitter</a></li>
-          <li><a href="https://linkedin.com/in/yourprofile"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
-          <li><a href="mailto:youremail@example.com"><i class="fas fa-envelope"></i> Email</a></li>
-        </ul>
-      </div>
+    <div class="wrapper">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">{{ site.title }}</h3>
+                <p>{{ site.description }}</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-github"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#"><i class="fab fa-medium-m"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h3 class="footer-title">Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/tools">Tools</a></li>
+                    <li><a href="/basics">Basics</a></li>
+                    <li><a href="/archive">Archive</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; {{ site.time | date: '%Y' }} {{ site.author }}. All rights reserved.
+        </div>
     </div>
-  </div>
 </footer>

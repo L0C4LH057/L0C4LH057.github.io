@@ -2,16 +2,35 @@
 layout: default
 ---
 <div class="home">
-  <h1>{{ page.title }}</h1>
-  {{ content }}
-  
-  <h2>Recent Posts</h2>
-  <ul>
-    {% for post in site.posts limit:5 %}
-      <li>
-        <a href="{{ post.url }}">{{ post.title }}</a>
-        <span class="post-date">({{ post.date | date: "%b %-d, %Y" }})</span>
-      </li>
-    {% endfor %}
-  </ul>
+    <div class="main-content">
+        <div class="top-posts">
+            <h2 class="section-title">Top Posts</h2>
+            <p>Evergreen essays or posts that were particularly well received.</p>
+            
+            {% for post in site.posts limit:3 %}
+            <div class="post-card">
+                <h3 class="post-title">
+                    <a href="{{ post.url }}">{{ post.title }}</a>
+                </h3>
+                <p class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 25 }}</p>
+                <a href="{{ post.url }}" class="read-more">
+                    Read more <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="featured-post">
+            {% assign featured = site.posts.first %}
+            <h2 class="section-title">{{ featured.title }}</h2>
+            <div class="post-meta">
+                <span class="post-date">{{ featured.date | date: "%d %b %Y" }}</span>
+                <span class="post-category">{{ featured.categories | first }}</span>
+            </div>
+            
+            <div class="featured-post-content">
+                {{ featured.content }}
+            </div>
+        </div>
+    </div>
 </div>
