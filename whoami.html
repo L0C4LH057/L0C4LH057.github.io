@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bashir Kabir Zarewa | Security Researcher & Advisor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light-gray: #f5f7fa;
+            --medium-gray: #e1e5eb;
+            --dark-gray: #7f8c8d;
+            --text: #2c3e50;
+            --text-light: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .blog-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Main Content */
+        .whoami-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--medium-gray);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .intro-text {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.7;
+        }
+
+        .consulting-box {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .personal-section {
+            margin: 2.5rem 0;
+            padding: 1.5rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2.5rem 0;
+        }
+
+        .contact-card {
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .contact-info {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            margin-right: 10px;
+            color: var(--accent);
+            min-width: 20px;
+            margin-top: 3px;
+        }
+
+        .contact-info a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+
+        .affiliations {
+            margin-top: 3rem;
+        }
+
+        .affiliation-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .affiliation-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--white);
+            font-size: 1.5rem;
+        }
+
+        .bible-verse {
+            font-style: italic;
+            margin: 2.5rem 0;
+            padding: 1.5rem;
+            border-left: 4px solid var(--accent);
+            background: rgba(52, 152, 219, 0.05);
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            font-size: 1.1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 2rem;
+            padding-right: 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .blog-title {
+                font-size: 2.2rem;
+            }
+            
+            .whoami-content {
+                padding: 1.5rem;
+            }
+            
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-container">
+                    <img src="https://drive.google.com/file/d/1AfAmc9Tgp2L_6y8Y8wYgwswubAq9BpX-/view?usp=drive_link" alt="Bashir Kabir Zarewa" class="profile-image">
+                </div>
+                
+                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
+                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
+                
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="#">posts</a></li>
+                        <li><a href="#" class="active">whoami</a></li>
+                        <li><a href="#">tools</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="whoami-content">
+            <div class="intro-text">
+                <p>I'm a Solo Founder, Bug Bounty Hunter, and Startup Advisor who specializes in application security and AI. I've helped Fortune 500 companies find vulnerabilities that could have cost them millions, and I've submitted over 1,000 vulnerabilities across HackerOne and Bugcrowd. I love helping secure the planet by building, breaking, and teaching.</p>
+            </div>
+            
+            <div class="consulting-box">
+                <p><strong>Email me if you are interested in AI consulting</strong> (implementation help/advice or AI security assessments). I'm also available for startup advising at high velocity startups that need a technical advisor who is well-networked, passionate, and has a wide range of knowledge.</p>
+            </div>
+            
+            <div class="personal-section">
+                <p>On a more personal level, I'm a Christian, husband, and father. I love most things in life, but I'm particularly fond of hacking, ai-art, running, podcasts, and keyline pie.</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <h3>whereami</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-envelope"></i> <a href="mailto:LOC4LH057@pm.me">LOC4LH057@pm.me</a></li>
+                        <li><i class="fab fa-twitter"></i> <a href="https://x.com/bashirkabirz" target="_blank">@bashir_kz</a></li>
+                        <li><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank">Bashir Kabir Zarewa</a></li>
+                        <li><i class="fab fa-hackerone"></i> <a href="https://hackerone.com/localhost80" target="_blank">bashir</a></li>
+                        <li><i class="fab fa-bug"></i> <a href="https://bugcrowd.com/bashir" target="_blank">bashir</a></li>
+                        <li><i class="fas fa-envelope-open-text"></i> <a href="#" target="_blank">Thacker Thoughts (subscribe)</a></li>
+                    </ul>
+                </div>
+                
+                <div class="contact-card">
+                    <h3>affiliations</h3>
+                    <div class="affiliation-item">
+                        <div class="affiliation-icon">
+                            <i class="fab fa-hackerone"></i>
+                        </div>
+                        <div>
+                            <strong>HackerOne</strong>
+                            <p>Hacker Advisor Board Member</p>
+                        </div>
+                    </div>
+                    
+                    <div class="affiliation-item">
+                        <div class="affiliation-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <strong>Security University</strong>
+                            <p>AI Security Instructor</p>
+                        </div>
+                    </div>
+                    
+                    <div class="affiliation-item">
+                        <div class="affiliation-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <strong>OWASP Foundation</strong>
+                            <p>Project Contributor</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bible-verse">
+                <p>"As water reflects the face, so one's life reflects the heart."</p>
+                <p><strong>Proverbs 27:19</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Bashir Kabir Zarewa</h3>
+                    <p>Security researcher focused on AI safety, vulnerability discovery, and ethical hacking. Sharing knowledge to build a safer digital world.</p>
+                    <div class="social-links">
+                       <a href="https://x.com/bashirkabirz" title="Twitter"><i class="fab fa-twitter"></i></a>
+                       <a href="https://github.com/L0C4LHO57" title="GitHub"><i class="fab fa-github"></i></a>
+                       <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">Navigation</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-blog"></i> <a href="#">Blog Posts</a></li>
+                        <li><i class="fas fa-user"></i> <a href="#">About Me</a></li>
+                        <li><i class="fas fa-tools"></i> <a href="#">Security Tools</a></li>
+                        <li><i class="fas fa-file-alt"></i> <a href="#">Research Papers</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 Bashir Kabir Zarewa. All rights reserved. Opinions my own.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to handle active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // Remove active class from all links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
