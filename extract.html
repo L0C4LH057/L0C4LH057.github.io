@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Extract Tool | Bashir Kabir Zarewa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light-gray: #f5f7fa;
+            --medium-gray: #e1e5eb;
+            --dark-gray: #7f8c8d;
+            --text: #2c3e50;
+            --text-light: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --border-radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-gray);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 2rem 0;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .blog-subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Tool Content */
+        .tool-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+        }
+
+        .tool-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .tool-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2.5rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .tool-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .tool-subtitle {
+            font-size: 1.1rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: var(--light-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .meta-item i {
+            margin-right: 5px;
+            color: var(--accent);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--medium-gray);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        ul, ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background: var(--light-gray);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        pre {
+            background: var(--light-gray);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .highlight-box {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--white);
+            padding: 0.8rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn:hover {
+            background: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .btn i {
+            margin-right: 5px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--accent);
+            color: var(--white);
+        }
+
+        .screenshot {
+            width: 100%;
+            max-width: 200px;
+            margin: 2rem auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            display: block;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 3rem 0;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 2rem;
+            padding-right: 2rem;
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .blog-title {
+                font-size: 2.2rem;
+            }
+            
+            .tool-content {
+                padding: 1.5rem;
+            }
+            
+            .tool-title {
+                font-size: 2rem;
+            }
+            
+            .tool-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+                margin: 2rem 0 1rem;
+            }
+            
+            pre {
+                font-size: 0.85rem;
+                padding: 0.8rem;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-container">
+                    <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                </div>
+                
+                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
+                <p class="blog-subtitle">My thoughts on hacking, ai, faith, and more.</p>
+                
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="index.html">posts</a></li>
+                        <li><a href="whoami.html">whoami</a></li>
+                        <li><a href="tools.html">tools</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="tool-content">
+            <div class="tool-header">
+                <div class="tool-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h1 class="tool-title">Extract</h1>
+                <p class="tool-subtitle">A Must-Have Chrome Extension for Bug Hunters & Pentesters</p>
+                
+                <div class="tool-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i> Released: May 2025
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tag"></i> Chrome Extension
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-code-branch"></i> v1.2.0
+                    </div>
+                </div>
+                
+                <div class="tool-actions">
+                    <a href="https://github.com/L0C4LHO57/Extract" class="btn" target="_blank">
+                        <i class="fab fa-github"></i> View on GitHub
+                    </a>
+                    <a href="tools.html" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back to Tools
+                    </a>
+                </div>
+            </div>
+            
+            <img src="images/screenshot.png" alt="Extract Tool Screenshot" class="screenshot">
+            
+            <p>
+                During bug bounty hunting and penetration testing, one of the most time-consuming tasks is manually searching through JavaScript files to uncover hidden API endpoints, internal routes, and query parameters.
+            </p>
+            
+            <p>
+                That's where my open-source Chrome extension — <strong>Extract</strong> — comes in handy. Built with real-world workflows in mind, this tool automates the discovery of endpoints directly from inline scripts and external JS files.
+            </p>
+            
+            <div class="highlight-box">
+                <p><strong>TL;DR:</strong> Extract scans webpages for API endpoints in JavaScript files and lets you export them for further testing.</p>
+            </div>
+            
+            <!-- What is Extract -->
+            <h2 class="section-title">What is Extract?</h2>
+            <p>
+                <strong>Extract</strong> is a lightweight Chrome extension designed to scan any webpage and extract:
+            </p>
+            <ul>
+                <li>Hidden API endpoints</li>
+                <li>JavaScript paths and routes</li>
+                <li>Query parameters (e.g., <code>/api/users?id=123</code>)</li>
+                <li>Source information (where each URL was found)</li>
+            </ul>
+            <p>
+                Whether you're doing reconnaissance or analyzing third-party applications, Extract helps you find what matters — fast.
+            </p>
+            
+            <!-- Why You Need It -->
+            <h2 class="section-title">Why You Need Extract</h2>
+            <p>
+                As a bug hunter or pentester, time is precious. Here's how Extract saves you time and effort:
+            </p>
+            <ul>
+                <li><strong>✅ Comprehensive Scanning:</strong> Automatically scans all JS files (inline + external)</li>
+                <li><strong>✅ Clean Results:</strong> Removes duplicate URLs and organizes endpoints</li>
+                <li><strong>✅ Multiple Export Formats:</strong> Export results as TXT, CSV, or JSON</li>
+                <li><strong>✅ Live Filtering:</strong> Filter results in real-time using keywords</li>
+                <li><strong>✅ Source Tracking:</strong> Toggle source info (shows which file the endpoint came from)</li>
+                <li><strong>✅ Lightweight:</strong> Doesn't slow down your browser</li>
+            </ul>
+            
+            <!-- Installation -->
+            <h2 class="section-title">Installation Guide</h2>
+            <p>
+                Follow these simple steps to install the extension:
+            </p>
+            <ol>
+                <li>Clone the repository:</li>
+                <pre><code>git clone https://github.com/L0C4LH057/Extract.git</code></pre> 
+                <li>Navigate to the folder:</li>
+                <pre><code>cd Extract</code></pre>
+                <li>In Chrome, go to <code>chrome://extensions</code></li>
+                <li>Enable "Developer mode" (toggle in top-right corner)</li>
+                <li>Click "Load unpacked" and select the Extract folder</li>
+                <li>Pin the extension to your toolbar for easy access</li>
+            </ol>
+            
+            <!-- Usage -->
+            <h2 class="section-title">How to Use Extract</h2>
+            <p>
+                Once installed, using Extract is straightforward:
+            </p>
+            <ol>
+                <li>Open any target website (e.g., a bug bounty program)</li>
+                <li>Click the Extract icon in the Chrome toolbar</li>
+                <li>Click <strong>"Extract Endpoints"</strong></li>
+                <li>Wait a few seconds while it scans the page</li>
+                <li>View the list of extracted URLs</li>
+                <li>Filter results using the search box</li>
+                <li>Export the results by clicking your preferred format (TXT, CSV, JSON)</li>
+            </ol>
+            
+            <img src="https://via.placeholder.com/800x450?text=Extract+Usage+Demo" alt="Extract Usage Demo" class="screenshot">
+            
+            <!-- Advanced Features -->
+            <h2 class="section-title">Advanced Features</h2>
+            <p>
+                Extract includes several power-user features to enhance your workflow:
+            </p>
+            
+            <h3>Custom Filters</h3>
+            <p>
+                Use the search box to filter endpoints by:
+            </p>
+            <ul>
+                <li>Specific domains (<code>api.target.com</code>)</li>
+                <li>Endpoint patterns (<code>/v1/users</code>)</li>
+                <li>File extensions (<code>.json</code>, <code>.php</code>)</li>
+            </ul>
+            
+            <h3>Export Options</h3>
+            <p>
+                Choose from three export formats:
+            </p>
+            <ul>
+                <li><strong>TXT:</strong> Simple list for quick reference</li>
+                <li><strong>CSV:</strong> For spreadsheet analysis</li>
+                <li><strong>JSON:</strong> For automated processing</li>
+            </ul>
+            
+            <h3>Source Tracking</h3>
+            <p>
+                Enable "Show Sources" to see which JavaScript file each endpoint came from, helping you:
+            </p>
+            <ul>
+                <li>Prioritize important files</li>
+                <li>Understand application structure</li>
+                <li>Identify third-party dependencies</li>
+            </ul>
+            
+            <!-- Use Cases -->
+            <h2 class="section-title">Practical Use Cases</h2>
+            <p>
+                Extract shines in these scenarios:
+            </p>
+            
+            <h3>Bug Bounty Recon</h3>
+            <p>
+                Quickly map out an application's API surface during initial reconnaissance to identify high-value targets.
+            </p>
+            
+            <h3>Penetration Testing</h3>
+            <p>
+                Discover hidden endpoints that might contain vulnerabilities like IDOR, broken auth, or information disclosure.
+            </p>
+            
+            <h3>Security Research</h3>
+            <p>
+                Analyze third-party scripts and track what data they're sending where.
+            </p>
+            
+            <!-- Download Section -->
+            <h2 class="section-title">Get Extract</h2>
+            <p>
+                Ready to boost your security workflow?
+            </p>
+            
+            <div class="tool-actions">
+                <a href="https://github.com/L0C4LH057/Extract.git" class="btn" target="_blank">
+                    <i class="fab fa-github"></i> Download on GitHub
+                </a>
+                <a href="tools.html" class="btn btn-outline">
+                    <i class="fas fa-arrow-left"></i> Back to Tools
+                </a>
+            </div>
+            
+            <div class="highlight-box">
+                <p><strong>Contribute:</strong> Extract is open-source. Feel free to submit issues or pull requests for new features!</p>
+            </div>
+            
+            <!-- Conclusion -->
+            <h2 class="section-title">Final Thoughts</h2>
+            <p>
+                Extract is built with efficiency in mind. Whether you're mapping out an application's attack surface or preparing for a targeted assessment, this tool streamlines the process and gets you straight into the action.
+            </p>
+            <p>
+                If you're serious about hacking and automation, make sure to add Extract to your toolkit.
+            </p>
+            
+            <p style="margin-top: 2rem; font-style: italic;">
+                🔍 Happy Hunting,<br/>
+                <strong>Bashir Kabir Zarewa</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Bashir Kabir Zarewa</h3>
+                    <p>Bug bounty hunter and cybersecurity educator passionate about discovering vulnerabilities, teaching offensive security, and helping secure the digital world.</p>
+                    <div class="social-links">
+                        <a href="https://x.com/bashirkabirz" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LHO57" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Navigation</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-blog"></i> <a href="index.html">Blog Posts</a></li>
+                        <li><i class="fas fa-user"></i> <a href="whoami.html">About Me</a></li>
+                        <li><i class="fas fa-tools"></i> <a href="tools.html">Tools</a></li>
+                        <li><i class="fas fa-file-alt"></i> <a href="#">Research Papers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script to handle active navigation link
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const currentPath = window.location.pathname.split('/').pop();
+            
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                if (currentPath === linkPath) {
+                    link.classList.add('active');
+                }
+                
+                link.addEventListener('click', function(e) {
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
