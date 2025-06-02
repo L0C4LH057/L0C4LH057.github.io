@@ -274,7 +274,7 @@
 
         .screenshot {
             width: 100%;
-            max-width: 200px;
+            max-width: 300px;
             margin: 2rem auto;
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
@@ -318,7 +318,23 @@
             height: 2px;
             background-color: var(--accent);
         }
+        .contact-info {
+            list-style: none;
+        }
 
+        .contact-info li {
+            margin-bottom: 0.8rem;
+        }
+
+        .contact-info a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent);
+        }
         .social-links {
             display: flex;
             gap: 1rem;

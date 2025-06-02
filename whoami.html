@@ -217,7 +217,23 @@
             color: var(--accent);
             text-decoration: underline;
         }
+        .footer-links {
+            list-style: none;
+        }
 
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
         .affiliations {
             margin-top: 3rem;
         }
@@ -360,10 +376,9 @@
                 
                 <nav>
                     <ul class="nav-links">
-                        <li><a href="#">posts</a></li>
-                        <li><a href="#" class="active">whoami</a></li>
-                        <li><a href="#">tools</a></li>
-                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html">Posts</a></li>
+                        <li><a href="#" class="active">Whoami</a></li>
+                        <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </nav>
             </div>
@@ -455,7 +470,7 @@
                 
                 <div class="footer-section">
                     <h3 class="footer-title">Navigation</h3>
-                    <ul class="contact-info">
+                    <ul class="footer-links">
                         <li><i class="fas fa-blog"></i> <a href="#">Blog Posts</a></li>
                         <li><i class="fas fa-user"></i> <a href="#">About Me</a></li>
                         <li><i class="fas fa-tools"></i> <a href="#">Security Tools</a></li>

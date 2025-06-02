@@ -257,7 +257,13 @@
             color: var(--dark-gray);
             font-size: 0.95rem;
         }
-
+        .post-cover {
+            width: 70%;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            align-items: center;
+        }
         .post-date {
             background: var(--light-gray);
             padding: 0.3rem 0.8rem;
@@ -420,9 +426,9 @@
                 
                 <nav>
                     <ul class="nav-links">
-                        <li><a href="#" class="active">posts</a></li>
-                        <li><a href="whoami.html">whoami</a></li>
-                        <li><a href="tools.html">tools</a></li>
+                        <li><a href="index.html" class="active">Posts</a></li>
+                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </nav>
             </div>
@@ -439,24 +445,24 @@
                 
                 <div class="post-card">
                     <h3 class="post-title">
-                        <a href="#">How to Hack AI Agents and Applications</a>
+                        <a href="#">Africa at the Crossroads: Will the Fourth Industrial Revolution Be Different This Time?</a>
                     </h3>
                     <p class="post-excerpt">
-                        I often get asked how to hack AI applications. There hadn't been a comprehensive guide, so I created this resource covering prompt injection, training data extraction, model evasion, and more.
+                        I often get asked about the state of the Fourth Industrial Revolution in Africa. There hadn’t been much data-driven insight, so I participated in Kaggle’s 2022 annual survey challenge to explore this. Using the global data science and machine learning survey dataset, I focused on uncovering trends, challenges, and opportunities for African data practitioners. My analysis told a story of emerging talent, growing tech adoption, and the pressing need for infrastructure and education to drive innovation on the continent.
                     </p>
-                    <a href="#" class="read-more">
+                    <a href="posts/4ir.html" class="read-more">
                         Read more <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
                 
                 <div class="post-card">
                     <h3 class="post-title">
-                        <a href="#">Root for Your Friends</a>
+                        <a href="#">The Power of Genuine Support: Why Championing Others Elevates Us All</a>
                     </h3>
                     <p class="post-excerpt">
                         Heads-up: The concept of this post might seem trivial, but it can be surprisingly difficult to implement. Learn why supporting others' success benefits everyone in the security community.
                     </p>
-                    <a href="#" class="read-more">
+                    <a href="posts/support.html" class="read-more">
                         Read more <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -476,35 +482,58 @@
             
             <!-- Featured Post Column -->
             <div class="featured-post">
-                <h2 class="section-title">Root for Your Friends</h2>
+                <h2 class="section-title">The Power of Genuine Support: Why Championing Others Elevates Us All</h2>
                 <div class="post-meta">
-                    <span class="post-date">13 May 2025</span>
-                    <span class="post-category">personal</span>
+                    <span class="post-date">1st Jun 2025</span>
+                    <span class="post-category"><i class="fas fa-tags"></i> Community, Mindset, Growth</span>
+                    
                 </div>
                 
                 <div class="featured-post-content">
-                    <p>In the security community, we often focus intensely on technical skills, certifications, and individual achievements. While these are important, there's another aspect that's equally vital but often overlooked: actively supporting and celebrating the success of others.</p>
+                    <img src="posts/support.png" alt="Community Support" class="post-cover">
+                    <p>In the cybersecurity field where competition for recognition, bug bounties, and career advancement can feel intense, it’s easy to fall into the trap of measuring our worth against others’ achievements. But one of the most transformative habits you can cultivate isn’t a technical skill or certification: it’s the practice of wholeheartedly rooting for the people around you.</p>
                     
-                    <p>When a colleague lands a great job, gets a CVE published, or releases a new tool, our instinct might be to compare their success to our own progress. Instead, I encourage you to practice genuine enthusiasm for their accomplishments.</p>
+                    <p>When a peer:</p>
+
+                    <p>✔ Publishes groundbreaking research</p>
+
+                    <p>✔ Lands a dream role at a top firm</p>
+
+                    <p>✔ Releases an innovative tool</p>
+
+                    <p>✔ Earns a hard-won certification</p>
+
+                    <p>…your reaction matters. Instead of defaulting to comparison ("Why not me?"), try active celebration ("This is amazing and I’m excited for them!"). Here’s why this mindset is a game-changer.</p>
                     
-                    <p>This mindset shift does several important things:</p>
-                    
-                    <p>First, it creates a positive community culture. Security work can be stressful and isolating. Celebrating others' wins builds camaraderie and support networks that sustain us through challenging projects.</p>
-                    
-                    <p>Second, it combats imposter syndrome. When we're happy for others' success, we internalize that achievement is possible and recognize that multiple people can succeed simultaneously.</p>
-                    
-                    <p>Third, it opens opportunities. People remember who supported them and are more likely to collaborate with or recommend those who genuinely championed their work.</p>
-                    
-                    <p>Practical ways to implement this:</p>
-                    
+                    <p>1. It Builds a Stronger Community</p>
+
                     <ul style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
-                        <li style="margin-bottom: 0.8rem;">Share colleagues' work on social media with meaningful commentary</li>
-                        <li style="margin-bottom: 0.8rem;">Recommend people for opportunities even when you're not asked</li>
-                        <li style="margin-bottom: 0.8rem;">Send a congratulatory message for milestones and achievements</li>
-                        <li>Publicly acknowledge when someone helps you solve a problem</li>
-                    </ul>
+                        <li style="margin-bottom: 0.8rem;">Cybersecurity thrives on collaboration. The "lone hacker" myth is just that a myth. Real progress happens when we share knowledge, tools, and opportunities. By celebrating others:</li>
+
+                        <li style="margin-bottom: 0.8rem;">You reinforce trust People remember who cheered for them.</li>
                     
-                    <p>This isn't about false praise - it's about recognizing that another person's success doesn't diminish your own. In fact, a rising tide lifts all boats. When we celebrate each other, we strengthen the entire security ecosystem.</p>
+                        <li style="margin-bottom: 0.8rem;"> You create psychological safety Teams perform better when members feel valued.</li>
+                    
+                        <li style="margin-bottom: 0.8rem;">You combat toxicity The infosec community struggles with ego-driven negativity. Be the counterbalance.</li>
+                    </ul>
+                  
+                    <p>Example: When a friend submits their first CVE, share their writeup with a thoughtful comment. It costs you nothing but could amplify their career.</p>
+                    
+                    <p>2. It Weakens Imposter Syndrome</p>
+
+                    <ul style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
+                        <li style="margin-bottom: 0.8rem;">Cybersecurity thrives on collaboration. The "lone hacker" myth is just that a myth. Real progress happens when we share knowledge, tools, and opportunities. By celebrating others:</li>
+
+                        <li style="margin-bottom: 0.8rem;">You reinforce trust People remember who cheered for them.</li>
+                    
+                        <li style="margin-bottom: 0.8rem;"> You create psychological safety Teams perform better when members feel valued.</li>
+                    
+                        <li style="margin-bottom: 0.8rem;">You combat toxicity The infosec community struggles with ego-driven negativity. Be the counterbalance.</li>
+                    </ul>
+                
+                    <a href="posts/support.html" class="read-more">
+                        Read more <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
         </div>
@@ -533,11 +562,11 @@
                 <div class="footer-section">
                     <h3 class="footer-title">Navigation</h3>
                     <ul class="footer-links">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">All Posts</a></li>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html">All Posts</a></li>
                         <li><a href="#">Top Content</a></li>
                         <li><a href="#">Research Papers</a></li>
-                        <li><a href="#">Tools & Resources</a></li>
+                        <li><a href="tools.html">Tools & Resources</a></li>
                     </ul>
                 </div>
                 
