@@ -184,6 +184,7 @@
 
         /* Top Posts Section */
         .top-posts {
+            max-width: 900px;
             background: var(--white);
             border-radius: var(--border-radius);
             padding: 2rem;
@@ -191,6 +192,7 @@
         }
 
         .post-card {
+            max-width: 900px;
             margin-bottom: 1.8rem;
             padding-bottom: 1.8rem;
             border-bottom: 1px solid var(--medium-gray);
@@ -375,32 +377,76 @@
             font-size: 0.9rem;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-links {
-                flex-wrap: wrap;
-                gap: 0.5rem;
+        /* Add or update these responsive styles at the end of your <style> block */
+
+/* Responsive adjustments for tablets and smaller screens */
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 98vw;
+                padding: 0 10px;
             }
-            
-            .blog-title {
-                font-size: 2.2rem;
+            .main-content {
+                gap: 1.2rem;
             }
-            
+            .top-posts,
+            .post-card {
+                max-width: 100%;
+            }
             .featured-post {
                 padding: 1.5rem;
             }
-            
+            .post-cover {
+                width: 100%;
+            }
+        }
+
+        /* Stack columns on tablets and phones */
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            .top-posts,
+            .featured-post {
+                margin-bottom: 2rem;
+            }
+        }
+
+        /* Mobile-specific tweaks */
+        @media (max-width: 600px) {
+            .blog-title {
+                font-size: 1.5rem;
+            }
+            .blog-subtitle {
+                font-size: 1rem;
+            }
+            .header-content {
+                padding: 0.5rem 0;
+            }
+            .profile-container {
+                width: 80px;
+                height: 80px;
+            }
+            .top-posts,
+            .featured-post {
+                padding: 1rem;
+            }
+            .post-title {
+                font-size: 1.1rem;
+            }
+            .section-title {
+                font-size: 1.2rem;
+                padding-bottom: 0.5rem;
+            }
             .footer-section {
+                min-width: 180px;
                 padding-right: 0;
             }
-            
-            .header-social {
-                position: relative;
-                top: 0;
-                right: 0;
-                justify-content: center;
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .post-cover {
                 width: 100%;
-                margin-top: 1rem;
             }
         }
     </style>
@@ -470,7 +516,7 @@
                 <div class="post-card">
                     <h3 class="post-title">
                         <a href="#">The Hacker's Mindset: Beyond Technical Skills</a>
-                    </h3>
+                s    </h3>
                     <p class="post-excerpt">
                         True hacking involves more than technical prowess. Explore how curiosity, persistence, and unconventional thinking create the foundation for security breakthroughs.
                     </p>
