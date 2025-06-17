@@ -5,7 +5,7 @@
     <meta property="og:type" content="article">
     <meta property="og:title" content="Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques">
     <meta property="og:description" content="Explore the common and impactful methods used to exploit Active Directory and learn how to bolster your defenses.">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1593435713589-1097a815a43f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:image" content="https://l0c4lh057.github.io/images/adversary.png">
     <meta property="og:url" content="https://l0c4lh057.github.io/posts/active-directory-attack-techniques.html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="twitter:card" content="summary_large_image">
@@ -803,7 +803,7 @@
         const postUrl = encodeURIComponent(window.location.href);
         const postTitle = encodeURIComponent(document.title);
 
-        document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?url=${postUrl}&text=${postTitle}`;
+      /*  document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?url=${postUrl}&text=${postTitle}`;
         document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${postUrl}`;
         document.getElementById('linkedinShare').href = `https://www.linkedin.com/shareArticle?mini=true&url=${postUrl}&title=${postTitle}`;
         document.getElementById('whatsappShare').href = `https://api.whatsapp.com/send?text=${postTitle} ${postUrl}`;
@@ -835,8 +835,83 @@
         } else {
             nativeShareBtn.style.display = 'none';
         }
+            */
+           
+        document.addEventListener('DOMContentLoaded', function() {
+        // Navigation active link
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const currentPath = window.location.pathname;
+        navLinks.forEach(link => {
+            const linkPath = link.getAttribute('href');
+            if (currentPath.includes(linkPath)) {
+                link.classList.add('active');
+            }
+            link.addEventListener('click', function(e) {
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Share data
+        const shareData = {
+            title: document.title,
+            text: "Check out this post: " + document.title,
+            url: window.location.href
+        };
+
+        // Native share button
+        const nativeShareBtn = document.getElementById('nativeShareBtn');
+        if (nativeShareBtn && navigator.share) {
+            nativeShareBtn.addEventListener('click', function() {
+                navigator.share(shareData);
+            });
+        } else if (nativeShareBtn) {
+            nativeShareBtn.style.display = 'none';
+        }
+
+        // Social share links
+        const twitterShare = document.getElementById('twitterShare');
+        const facebookShare = document.getElementById('facebookShare');
+        const linkedinShare = document.getElementById('linkedinShare');
+        const whatsappShare = document.getElementById('whatsappShare');
+        const copyLink = document.getElementById('copyLink');
+
+        if (twitterShare) {
+            twitterShare.setAttribute('href', `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareData.url)}&text=${encodeURIComponent(shareData.title)}`);
+            twitterShare.setAttribute('target', '_blank');
+            twitterShare.setAttribute('rel', 'noopener noreferrer');
+        }
+        if (facebookShare) {
+            facebookShare.setAttribute('href', `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareData.url)}`);
+            facebookShare.setAttribute('target', '_blank');
+            facebookShare.setAttribute('rel', 'noopener noreferrer');
+        }
+        if (linkedinShare) {
+            linkedinShare.setAttribute('href', `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(shareData.url)}&title=${encodeURIComponent(shareData.title)}`);
+            linkedinShare.setAttribute('target', '_blank');
+            linkedinShare.setAttribute('rel', 'noopener noreferrer');
+        }
+        if (whatsappShare) {
+            whatsappShare.setAttribute('href', `https://wa.me/?text=${encodeURIComponent(shareData.title + ' ' + shareData.url)}`);
+            whatsappShare.setAttribute('target', '_blank');
+            whatsappShare.setAttribute('rel', 'noopener noreferrer');
+        }
+
+        // Copy link
+        if (copyLink) {
+            copyLink.setAttribute('href', '#');
+            copyLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigator.clipboard.writeText(shareData.url).then(function() {
+                    copyLink.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        copyLink.innerHTML = '<i class="fas fa-link fa-lg"></i>';
+                    }, 1500);
+                });
+            });
+            }
+        });
     </script>
 
 </body>
 </html>
-```
