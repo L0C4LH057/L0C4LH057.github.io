@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques">
+    <meta property="og:description" content="Explore the common and impactful methods used to exploit Active Directory and learn how to bolster your defenses.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1593435713589-1097a815a43f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80">
+    <meta property="og:url" content="https://l0c4lh057.github.io/posts/active-directory-attack-techniques.html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques">
+    <meta name="twitter:description" content="Explore the common and impactful methods used to exploit Active Directory and learn how to bolster your defenses.">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1593435713589-1097a815a43f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1200&q=80">
+    <title>Unmasking the Adversary: Active Directory Attack Techniques | Bashir Kabir Zarewa</title>
+    <meta name="description" content="A comprehensive guide to the most common Active Directory attack techniques, from LLMNR poisoning to Golden Ticket attacks, with key mitigation strategies.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db; 
+            --light-gray: #f5f7fa;
+            --medium-gray: #e1e5eb;
+            --dark-gray: #7f8c8d;
+            --text: #2c3e50;
+            --text-light: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
+            --border-radius: 14px;
+            --transition: 0.3s cubic-bezier(.4,2,.6,1);
+            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(120deg, var(--light-gray) 60%, #fdecea 100%);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 1.08rem;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 2.5rem 0 2rem 0;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-title {
+            font-size: 3.0rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0px;
+            text-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        }
+
+        .blog-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.92;
+            margin-bottom: 1.5rem;
+            color: #e1e5eb;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 1.2rem;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            padding: 0.5rem 1.1rem;
+            border-radius: var(--border-radius);
+            transition: background var(--transition), color var(--transition);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+
+        /* Post Content */
+        .post-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+        }
+
+        .post-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .post-title {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .post-subtitle {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: var(--light-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.98rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .meta-item i {
+            margin-right: 5px;
+            color: var(--accent);
+        }
+
+        .post-cover {
+            width: 70%;
+            height: 200;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            max-height: 590px;
+            object-fit: cover;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .inline-image {
+            width: 70%; 
+            display: block; 
+            margin: 2.5rem auto; 
+            border-radius: var(--border-radius); 
+            box-shadow: var(--shadow);
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .share-buttons {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .share-buttons button,
+        .share-buttons a {
+            font-size: 1rem;
+        }
+
+        .post-body p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            font-size: 1.08rem;
+        }
+        
+        .post-body code {
+            background-color: var(--medium-gray);
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .post-body h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--medium-gray);
+            position: relative;
+            color: var(--primary);
+        }
+
+        .post-body h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .post-body h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+        }
+
+        .post-body ul, .post-body ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .post-body li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: rgba(192, 57, 43, 0.1); /* Red accent */
+            border-left: 4px solid var(--accent);
+            padding: 1.2rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.98rem;
+            overflow-x: auto;
+            display: block;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+            min-width: 150px;
+        }
+
+        .comparison-table th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+        }
+
+        .comparison-table tr:hover {
+            background-color: rgba(192, 57, 43, 0.05);
+        }
+        
+        .cta-box {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .cta-box a {
+            color: var(--white);
+            text-decoration: underline;
+        }
+
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 2.2rem 0 1.2rem 0;
+            margin-top: 3rem;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 180px;
+            margin-bottom: 1.2rem;
+            padding-right: 1.2rem;
+        }
+
+        .footer-title {
+            font-size: 1.15rem;
+            margin-bottom: 1.1rem;
+            position: relative;
+            padding-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 32px;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        .contact-info {
+            list-style: none;
+        }
+
+        .contact-info li {
+            margin-bottom: 0.8rem;
+        }
+
+        .contact-info a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-info a:hover {
+            color: var(--accent);
+        }
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.7rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.13);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 18px;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.08);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.2rem;
+            margin-top: 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.13);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+        
+        /* --- RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 98vw;
+                padding: 0 0.5rem;
+            }
+            .post-content {
+                padding: 1.5rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+            .footer-section {
+                min-width: 120px;
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .profile-container {
+                width: 70px;
+                height: 70px;
+            }
+            .blog-title {
+                font-size: 1.25rem;
+            }
+            .blog-subtitle {
+                font-size: 0.98rem;
+            }
+            .post-title {
+                font-size: 1.5rem;
+            }
+            .post-subtitle {
+                font-size: 1rem;
+            }
+            .post-content {
+                padding: 0.7rem 0.3rem;
+            }
+            .post-header {
+                margin-bottom: 1.5rem;
+            }
+            .post-meta {
+                gap: 0.5rem;
+                font-size: 0.93rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 100%;
+            }
+            .highlight-box, .case-study {
+                padding: 0.7rem 0.7rem 0.7rem 1rem;
+            }
+            .cta-box {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 0.7rem;
+            }
+            .blog-title {
+                font-size: 2rem;
+            }
+            .blog-subtitle {
+                font-size: 0.85rem;
+            }
+            .post-title {
+                font-size: 1.2rem;
+            }
+            .post-subtitle {
+                font-size: 0.9rem;
+            }
+            .footer-title {
+                font-size: 0.98rem;
+            }
+            .footer-links a {
+                font-size: 0.93rem;
+            }
+            .copyright {
+                font-size: 0.85rem;
+            }
+            .post-content {
+                padding: 0.5rem 0.1rem;
+            }
+            .post-header {
+                margin-bottom: 1rem;
+            }
+            .post-meta {
+                gap: 0.3rem;
+                font-size: 0.9rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 350px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-container">
+                    <img src="../images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                </div>
+                
+                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
+                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
+                
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="../index.html">posts</a></li>
+                        <li><a href="../whoami.html">whoami</a></li>
+                        <li><a href="../tools.html">tools</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="post-content">
+            <div class="post-header">
+                <h1 class="post-title">Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques</h1>
+                <p class="post-subtitle">Exploring the common and impactful methods used to exploit Active Directory and how to bolster your defenses.</p>
+                
+                <div class="post-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i> Published: 17th Jun 2025
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tags"></i> Active Directory, Red Team, Kerberoasting, Golden Ticket
+                    </div>
+                </div>
+                
+                <img src="../images/adversary.png" alt="Abstract network visualization" class="post-cover">
+            </div>
+            <div class="share-buttons" style="text-align:center; margin: 1.5rem 0;">
+                <button id="nativeShareBtn" style="background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; margin-bottom: 0.7rem;">
+                    <i class="fas fa-share-alt"></i> Share This Post
+                </button>
+                <div style="margin-top: 0.7rem;">
+                    <a href="#" id="twitterShare" title="Share on Twitter" style="margin:0 8px; color: #1da1f2;"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" id="facebookShare" title="Share on Facebook" style="margin:0 8px; color: #1877f3;"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" id="linkedinShare" title="Share on LinkedIn" style="margin:0 8px; color: #0077b5;"><i class="fab fa-linkedin fa-lg"></i></a>
+                    <a href="#" id="whatsappShare" title="Share on WhatsApp" style="margin:0 8px; color: #25d366;"><i class="fab fa-whatsapp fa-lg"></i></a>
+                    <a href="#" id="copyLink" title="Copy Link" style="margin:0 8px; color: #555;"><i class="fas fa-link fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="post-body">
+                <p>Microsoft Active Directory (AD) stands as the cornerstone of identity and access management for countless organisations globally, including a significant majority of Fortune 1000 companies. However, its extensive and often complex configuration means there isn't a "one-size-fits-all" secure setup, frequently leading to misconfigurations. This inherent complexity and its central role make AD a prime target for cybercriminals, who seek to steal sensitive data, disrupt crucial services, and ultimately gain full control over an organisation's network – effectively obtaining the "keys to the kingdom".</p>
+                
+                <p>For cybersecurity professionals, whether they are blue team members focused on defence or red team members conducting audits, understanding how Active Directory operates and how it can be exploited is paramount. This post will unpick some of the most common and impactful Active Directory attack methods, explaining why adversaries employ them and providing key takeaways for both understanding and bolstering your defences.</p>
+                
+                <h2><i class="fas fa-fire-extinguisher"></i> Active Directory Attacks and Mitigation Table</h2>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Attack Technique</th>
+                            <th>Description</th>
+                            <th>Top Mitigations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td><strong>LLMNR/NBT-NS Poisoning</strong></td><td>Spoofing name resolution to capture NTLM hashes</td><td>Disable LLMNR/NBT-NS; use strong passwords; monitor responder-like behavior</td></tr>
+                        <tr><td>2</td><td><strong>Password Spraying</strong></td><td>Trying common passwords across many users to avoid lockouts</td><td>Enforce strong password policies; implement MFA; monitor failed logins</td></tr>
+                        <tr><td>3</td><td><strong>Pass-the-Hash (PtH)</strong></td><td>Using NTLM hashes for lateral movement without knowing plaintext password</td><td>Disable WDigest; restrict admin logins; use LAPS; patch systems</td></tr>
+                        <tr><td>4</td><td><strong>Kerberoasting</strong></td><td>Requesting service tickets and cracking them offline</td><td>Use complex service account passwords; prefer GMSAs; monitor Event ID 4769</td></tr>
+                        <tr><td>5</td><td><strong>DCSync / NTDS.dit Extraction</strong></td><td>Simulating DC replication to pull password hashes</td><td>Restrict “Replicating Directory Changes” rights; monitor for DCSync behavior</td></tr>
+                        <tr><td>6</td><td><strong>Golden Ticket</strong></td><td>Forging TGTs using stolen KRBTGT hash</td><td>Reset KRBTGT password twice post-compromise; rotate KRBTGT periodically; log abnormal ticket behaviors</td></tr>
+                        <tr><td>7</td><td><strong>Token Impersonation</strong></td><td>Hijacking access tokens from memory to impersonate users</td><td>Tiered administration; prevent admins from logging into low-privilege machines; clear tokens with reboots</td></tr>
+                        <tr><td>8</td><td><strong>GPP Cpassword Attack</strong></td><td>Decrypting hardcoded passwords from legacy Group Policy preferences</td><td>Delete groups.xml files; patch MS14-025; audit SYSVOL for sensitive files</td></tr>
+                    </tbody>
+                </table>
+                
+                <h2>1. LLMNR/NBT-NS Poisoning</h2>
+                <img src="../images/llmnr.png" alt="Network cables plugged into a switch" class="inline-image">
+                <h3>What it is</h3>
+                <p>Local Loop Multicast Name Resolution (LLMNR) and NetBIOS Name Service (NBT-NS) are Windows networking functions designed for name resolution without the need for a Domain Name System (DNS) server. Attackers exploit these by intercepting multicast packets that ask for a hostname's IP address and then, using tools like <code>Responder</code>, responding as if they are the legitimate target, redirecting the network traffic.</p>
+                <h3>Why it's used</h3>
+                <p>This technique allows attackers to obtain sensitive information, including <strong>IP addresses, usernames, and password hashes</strong>. These captured hashes can then be subjected to offline cracking or used directly in relay attacks to authenticate as the victim. Notably, this attack can be initiated without any prior authentication if an attacker can gather a list of users. It's frequently described as an "easy win" for attackers if an organisation hasn't addressed it.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li>Look for any machine that is not a domain controller responding to name queries in LLMNR traffic.</li>
+                    <li>Monitor for NTLM authentication packets that are directed towards unidentified or unknown machines.</li>
+                    <li>Be aware of typos in LLMNR, DNS, and SMB traffic, as these are common triggers for such attacks.</li>
+                    <li><strong>The most effective mitigation is to entirely disable LLMNR and NBT-NS</strong> if they are not essential within your environment.</li>
+                    <li>If disabling isn't feasible, consider implementing <strong>Network Access Control (NAC)</strong>.</li>
+                    <li>Always <strong>enforce robust, complex passwords (ideally 14 characters or longer)</strong> to significantly slow down hash cracking attempts.</li>
+                </ul>
+
+                <h2>2. Password Spraying</h2>
+                <img src="../images/passwd_spray.png" alt="Login screen on a laptop" class="inline-image">
+                <h3>What it is</h3>
+                <p>Unlike traditional brute-force attacks that target a single account with numerous password attempts, <strong>password spraying</strong> involves testing a single, common password across a large number of accounts. Tools like <code>Kerbrute</code> are frequently employed for this purpose.</p>
+                <h3>Why it's used</h3>
+                <p>This method is favoured by attackers because it helps to <strong>evade account lockout policies</strong> that are designed to thwart brute-force attacks, thereby allowing the attacker to remain undetected for longer. A successful "hit" from a password spray can provide an immediate foothold, enabling further enumeration and attacks within Active Directory.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li><strong>Enforce a minimum password policy of at least 12 characters</strong>, with recommendations often extending to 14 or more for enhanced security.</li>
+                    <li><strong>Implement multi-factor authentication (MFA)</strong> wherever possible, as it significantly reduces the risk of account compromise even if credentials are leaked or stolen.</li>
+                    <li><strong>Continuously monitor failed login attempts</strong> for unusual patterns.</li>
+                    <li><strong>Prohibit the use of common passwords or patterns</strong> that relate to business names, domain names, or personal information.</li>
+                </ul>
+
+                <h2>3. Pass-the-Hash (PtH) with Mimikatz</h2>
+                <img src="../images/passThash.png" alt="Code on a laptop screen" class="inline-image">
+                <h3>What it is</h3>
+                <p><strong>Pass-the-Hash</strong> is a technique where an attacker authenticates to a remote server or service using a stolen password hash (specifically, an NTLM hash) rather than the cleartext password itself. <code>Mimikatz</code> is a powerful and widely recognised open-source tool that facilitates this by extracting credentials, including hashes, from the memory of Windows systems (e.g., the LSASS process).</p>
+                <h3>Why it's used</h3>
+                <p>PtH allows for <strong>lateral movement and privilege escalation</strong> across a network without the need to crack the stolen password hashes into plaintext. This is often enabled when IT professionals, through their regular duties, inadvertently leave privileged account hashes in system memory by logging into user machines or using Remote Desktop Protocol (RDP).</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li><strong>Apply relevant Microsoft patches and disable the WDigest protocol</strong> to prevent plaintext passwords from being stored in the Local Security Authority Subsystem Service (LSASS) memory.</li>
+                    <li><strong>Deploy Microsoft LAPS (Local Administrator Password Solution)</strong>. This is crucial for ensuring that local administrator passwords are random and unique across all endpoints, significantly hindering lateral movement.</li>
+                    <li><strong>Reduce the number of services running with local administrator privileges</strong>, as administrator rights are generally required for tools like Mimikatz to access and dump credentials from memory.</li>
+                    <li><strong>Enforce SMB signing across the domain</strong> to prevent the interception and relaying of NTLM authentication messages.</li>
+                    <li><strong>Utilise Privileged Access Workstations (PAWs)</strong> for administrators. These dedicated, secure workstations prevent privileged credentials from residing on less secure user machines.</li>
+                </ul>
+
+                <h2>4. Kerberoasting</h2>
+                <img src="../images/kerb.png" alt="A dog that looks like the mythical three-headed Cerberus" class="inline-image">
+                <h3>What it is</h3>
+                <p><strong>Kerberoasting</strong> is a post-exploitation technique where attackers target service accounts within Active Directory by requesting a Kerberos Service Ticket (TGS) for a registered Service Principal Name (SPN). The requested TGS is encrypted using the SPN's associated password hash, which the attacker can then extract and attempt to brute-force offline to recover the cleartext password. Common tools for this attack include <strong>Impacket's <code>GetUserSPNs</code></strong> and <strong><code>Rubeus</code></strong>.</p>
+                <h3>Why it's used</h3>
+                <p>Service accounts are attractive targets because they often have <strong>weak, easily guessable, or infrequently changed passwords</strong>. If a compromised service account happens to hold elevated privileges (such as being a member of a privileged group), gaining its password can lead directly to domain dominance.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li><strong>Enforce long and complex passwords (at least 25 characters)</strong> for all service accounts.</li>
+                    <li>For privileged services, <strong>consider implementing Group Managed Service Accounts (GMSAs)</strong>. These accounts automatically manage and rotate complex passwords, significantly enhancing security.</li>
+                    <li><strong>Regularly identify and remove any unused service accounts</strong>.</li>
+                    <li>If your environment supports it, <strong>disable RC4 encryption for Kerberos</strong> and enforce the use of stronger AES algorithms.</li>
+                    <li><strong>Monitor domain controller logs for Event ID 4769</strong>. Specifically, look for events where the "Ticket Encryption Type" is <code>0x17</code> (RC4), and the account name does not end with a <code>$</code>, as this often indicates a user account request.</li>
+                </ul>
+
+                <h2>5. NTDS.dit Extraction / DCSync</h2>
+                <img src="../images/dcsync.png" alt="Server room with racks of servers" class="inline-image">
+                <h3>What it is</h3>
+                <p>Active Directory stores all domain information, including highly sensitive user password hashes, within the <strong><code>NTDS.dit</code> file</strong>, located by default at <code>%SystemRoot%\ntds\</code> on a domain controller. Attackers who achieve administrator access to the domain controller can extract this file. <strong>DCSync</strong> is a specific feature within tools like Mimikatz that simulates the behaviour of a legitimate domain controller to request and retrieve password data through standard domain replication protocols.</p>
+                <h3>Why it's used</h3>
+                <p>The primary goal is to <strong>obtain all user password hashes for offline cracking or to perform Pass-the-Hash attacks</strong>. This allows attackers to operate independently of the Active Directory environment once the file is exfiltrated. DCSync attacks are particularly insidious as they mimic legitimate replication traffic, making them more difficult to detect.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li><strong>Minimise the number of accounts with logon privileges on domain controllers</strong>.</li>
+                    <li><strong>Implement strict physical access controls for domain controller machines</strong>.</li>
+                    <li><strong>Securely protect Active Directory database backups and virtual machine clones</strong> through encryption and access controls.</li>
+                    <li><strong>Exercise extreme caution when delegating "Replicating Directory Changes" rights</strong>, as these permissions are frequently abused.</li>
+                    <li><strong>Enable comprehensive logging for domain controllers</strong> and ensure logs are monitored.</li>
+                </ul>
+
+                <h2>6. Golden Ticket Attacks</h2>
+                <img src="../images/golden_ticket.png" alt="A golden ticket" class="inline-image">
+                <h3>What it is</h3>
+                <p>A <strong>Golden Ticket</strong> is a forged Kerberos Ticket Granting Ticket (TGT). It is created using the stolen NT hash of the <code>KRBTGT</code> account, which is the special Kerberos ticketing account. Once created, this forged TGT grants an attacker <strong>complete access to any resource or system within the entire domain</strong>. <code>Mimikatz</code> is the primary tool used to generate and inject these golden tickets.</p>
+                <h3>Why it's used</h3>
+                <p>This attack provides <strong>highly persistent, stealthy, and extensive access</strong> across the entire domain. Golden tickets can be generated offline, assigned an arbitrary lifetime (defaulting to 10 years), and <strong>resetting the password of the impersonated account does not invalidate the ticket</strong>.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li>The absolute top priority is to <strong>protect the <code>KRBTGT</code> account</strong>.</li>
+                    <li><strong>Regularly reset your <code>KRBTGT</code> account password at least once a year</strong>, and immediately after a potential compromise. It is critical to use Microsoft's official scripts for this process. Resetting the password twice invalidates its entire password history.</li>
+                    <li><strong>Minimise the number of accounts with highly privileged access</strong>, such as Domain Admins, Virtual Infrastructure Admins, and Backup Admins.</li>
+                    <li>Be aware that <strong>Windows event logs do not inherently distinguish between legitimate and forged TGTs</strong>, making direct detection challenging. However, anomalies in certain event IDs might indicate their use.</li>
+                </ul>
+
+                <h2>7. Token Impersonation</h2>
+                <img src="../images/impersonation.png" alt="Theatrical masks" class="inline-image">
+                <h3>What it is</h3>
+                <p>When an attacker gains a shell on a machine, they can use tools, such as the <strong>Incognito module within Metasploit</strong>, to impersonate existing delegate tokens found in the system's memory. Delegate tokens are created when a user logs onto a machine or establishes an RDP session.</p>
+                <h3>Why it's used</h3>
+                <p>This attack is highly effective if a domain administrator has logged into a compromised machine. Their delegate token may persist in memory until the machine is rebooted, allowing the attacker to impersonate them and <strong>inherit their privileges</strong>, facilitating significant <strong>privilege escalation and lateral movement</strong>.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li><strong>Implement strict account tiering</strong>: Domain administrators should strictly limit their logins to only domain controllers and other high-security administrative hosts.</li>
+                    <li><strong>Restrict local administrator access</strong>: If end-users are not local administrators on their machines, it becomes significantly harder for an attacker to perform token impersonation.</li>
+                    <li><strong>Encourage regular machine reboots</strong> to clear tokens from memory, reducing the window of opportunity for attackers.</li>
+                </ul>
+
+                <h2>8. Group Policy Preferences (GPP) / Cpassword Attacks</h2>
+                <img src="https://images.unsplash.com/photo-1618335829737-2228915674e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Structured code similar to XML" class="inline-image">
+                <h3>What it is</h3>
+                <p>Historically, Group Policy Preferences (GPP) allowed administrators to embed encrypted credentials, known as <strong>Cpassword</strong>, within XML documents stored in the <code>sysvol</code> folder of Active Directory. A critical vulnerability arose when the encryption key for these Cpasswords was publicly released.</p>
+                <h3>Why it's used</h3>
+                <p>While this vulnerability (MS14-025) has since been patched, if an administrator configured GPP credentials <strong>before</strong> the patch was applied, the encrypted passwords remain vulnerable. These credentials often belong to domain administrator accounts, offering a direct path to high-level access, as any domain user typically has read access to the <code>sysvol</code> folder.</p>
+                <h3>Key Takeaways</h3>
+                <ul>
+                    <li><strong>Proactively search for and remove any <code>groups.xml</code> files within the <code>sysvol</code> folder</strong> that contain Cpassword entries.</li>
+                    <li><strong>Ensure that all policies which might have stored embedded credentials prior to the MS14-025 patch are thoroughly remediated</strong>.</li>
+                    <li>Utilise specific tools like Metasploit's <code>smb_enum_gpp</code> module or PowerShell scripts to scan for this vulnerability.</li>
+                </ul>
+
+                <h2>Conclusion</h2>
+                <!-- <img src="https://images.unsplash.com/photo-1562923985-235a9a444155?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="A shield, representing security" class="inline-image">
+            -->
+                <p>Active Directory's fundamental role in identity and access management means its security is non-negotiable. Adversaries continuously exploit both common misconfigurations and inherent features of AD to achieve their objectives. Therefore, implementing a <strong>layered and proactive approach to security</strong> is paramount.</p>
+                <p>Organisations should prioritise:</p>
+                <ul>
+                    <li><strong>Enforcing strong, complex, and regularly changed password policies</strong> for all accounts, especially privileged ones.</li>
+                    <li><strong>Adhering strictly to the principle of least privilege</strong>, ensuring users and service accounts only have the minimum necessary permissions.</li>
+                    <li><strong>Implementing robust monitoring and alerting mechanisms</strong> to detect suspicious activity, such as unusual login attempts or changes to sensitive objects.</li>
+                    <li><strong>Conducting regular security audits and penetration tests</strong> (like red team exercises) to identify and remediate weaknesses before malicious actors can exploit them.</li>
+                </ul>
+                <p>By understanding these prevalent attack vectors and implementing comprehensive defensive strategies, organisations can significantly enhance their Active Directory security posture and cyber resilience.</p>
+                
+                <div class="cta-box">
+                    <h3>Join the Discussion</h3>
+                    <p>💬 <strong>Have you encountered AI exploits?</strong></p>
+                    <p>🛡️ <strong>Which mitigation strategy is most effective?</strong></p>
+                    <p>🔗 <strong><a href="#">Share your thoughts in the comments!</a></strong></p>
+                </div>
+                <p style="text-align: center; margin-top: 2rem;">
+                    <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center;">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Back to Blog Posts
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Bashir Kabir Zarewa</h3>
+                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+                    <div class="social-links">
+                        <a href="https://x.com/bashirkabirz" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Navigation</h3>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-blog"></i> <a href="../index.html">Blog Posts</a></li>
+                        <li><i class="fas fa-user"></i> <a href="../whoami.html">About Me</a></li>
+                        <li><i class="fas fa-tools"></i> <a href="../tools.html">Tools</a></li>
+                        <li><i class="fas fa-file-alt"></i> <a href="/research">Research Papers</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2025 Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+        const postUrl = encodeURIComponent(window.location.href);
+        const postTitle = encodeURIComponent(document.title);
+
+        document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?url=${postUrl}&text=${postTitle}`;
+        document.getElementById('facebookShare').href = `https://www.facebook.com/sharer/sharer.php?u=${postUrl}`;
+        document.getElementById('linkedinShare').href = `https://www.linkedin.com/shareArticle?mini=true&url=${postUrl}&title=${postTitle}`;
+        document.getElementById('whatsappShare').href = `https://api.whatsapp.com/send?text=${postTitle} ${postUrl}`;
+        
+        const copyLinkBtn = document.getElementById('copyLink');
+        copyLinkBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                copyLinkBtn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => {
+                    copyLinkBtn.innerHTML = '<i class="fas fa-link fa-lg"></i>';
+                }, 2000);
+            });
+        });
+
+        const nativeShareBtn = document.getElementById('nativeShareBtn');
+        if (navigator.share) {
+            nativeShareBtn.addEventListener('click', async () => {
+                try {
+                    await navigator.share({
+                        title: document.title,
+                        text: document.querySelector('meta[name="description"]').content,
+                        url: window.location.href,
+                    });
+                } catch (err) {
+                    console.error("Error sharing:", err);
+                }
+            });
+        } else {
+            nativeShareBtn.style.display = 'none';
+        }
+    </script>
+
+</body>
+</html>
+```
