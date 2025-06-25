@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Meet Bashir Kabir Zarewa, a cybersecurity researcher, bug bounty hunter, and security advisor specializing in web application security and ethical hacking.">
     <title>Bashir Kabir Zarewa | Security Researcher & Advisor</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,7 +16,6 @@
             --medium-gray: #e1e5eb;
             --dark-gray: #7f8c8d;
             --text: #2c3e50;
-            --text-light: #95a5a6;
             --white: #ffffff;
             --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
             --border-radius: 14px;
@@ -31,15 +31,19 @@
             font-size: 1.08rem;
             margin: 0;
             padding: 0;
+            display: flex;
+            flex-direction: column;
             min-height: 100vh;
         }
-
+        
         .container {
             max-width: 1100px;
             margin: 0 auto;
             padding: 0 1.2rem;
+            flex-grow: 1;
         }
 
+        /* --- Header --- */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: var(--white);
@@ -75,7 +79,7 @@
             object-fit: cover;
         }
 
-        .blog-title {
+        .page-title {
             font-size: 2.2rem;
             font-weight: 800;
             margin-bottom: 0.3rem;
@@ -83,7 +87,7 @@
             text-shadow: 0 2px 8px rgba(44,62,80,0.08);
         }
 
-        .blog-subtitle {
+        .page-subtitle {
             font-size: 1.1rem;
             font-weight: 400;
             opacity: 0.92;
@@ -114,32 +118,34 @@
             padding: 0.5rem 1.1rem;
             border-radius: var(--border-radius);
             transition: background var(--transition), color var(--transition);
-            letter-spacing: 0.02em;
         }
 
-        .nav-links a:hover,
-        .nav-links a.active {
+        .nav-links a:hover, .nav-links a.active {
             background-color: rgba(255,255,255,0.18);
-            color: #fff;
         }
 
-        /* Main Content */
-        .whoami-content {
+        /* --- Main Content --- */
+        .main-container {
             background: var(--white);
             border-radius: var(--border-radius);
-            padding: 2.5rem 2rem;
+            padding: 2.5rem;
             box-shadow: var(--shadow);
             margin-bottom: 3rem;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2.5rem;
         }
 
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 1.2rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 2px solid var(--medium-gray);
             position: relative;
-            letter-spacing: -0.5px;
         }
 
         .section-title::after {
@@ -150,51 +156,34 @@
             width: 48px;
             height: 2px;
             background-color: var(--accent);
-            border-radius: 2px;
         }
 
-        .intro-text {
-            font-size: 1.08rem;
-            margin-bottom: 2rem;
-            line-height: 1.7;
+        .intro-text p, .personal-section p {
+            margin-bottom: 1.5rem;
         }
 
         .consulting-box {
             background-color: rgba(52, 152, 219, 0.08);
             border-left: 4px solid var(--accent);
-            padding: 1.2rem 1.2rem 1.2rem 1.5rem;
-            margin-bottom: 2rem;
+            padding: 1.5rem;
+            margin: 2rem 0;
             border-radius: 0 var(--border-radius) var(--border-radius) 0;
         }
+        
+        .consulting-box p {
+            margin: 0;
+        }
 
-        .personal-section {
-            margin: 2rem 0;
-            padding: 1.2rem;
+        .sidebar .card {
             background: var(--light-gray);
             border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-            gap: 1.2rem;
-            margin: 2rem 0;
-        }
-
-        .contact-card {
-            background: var(--light-gray);
-            border-radius: var(--border-radius);
-            padding: 1.2rem;
-            transition: transform 0.3s;
-        }
-
-        .contact-card:hover {
-            transform: translateY(-5px) scale(1.03);
-            box-shadow: 0 6px 24px rgba(44,62,80,0.09);
-        }
-
-        .contact-card h3 {
-            font-size: 1.15rem;
+        .sidebar h3 {
+            font-size: 1.2rem;
+            margin-top: 0;
             margin-bottom: 1rem;
             color: var(--primary);
         }
@@ -202,25 +191,29 @@
         .contact-info {
             list-style: none;
             padding: 0;
+            margin: 0;
         }
 
         .contact-info li {
-            margin-bottom: 0.7rem;
+            margin-bottom: 1rem;
             display: flex;
-            align-items: flex-start;
+            align-items: center;
+            font-size: 1rem;
         }
 
         .contact-info i {
-            margin-right: 10px;
+            margin-right: 12px;
             color: var(--accent);
-            min-width: 20px;
-            margin-top: 3px;
+            width: 20px;
+            text-align: center;
         }
 
         .contact-info a {
-            color: var(--primary);
+            color: var(--text);
             text-decoration: none;
+            font-weight: 500;
             transition: color 0.2s;
+            word-break: break-all;
         }
 
         .contact-info a:hover {
@@ -228,74 +221,85 @@
             text-decoration: underline;
         }
 
-        .affiliations {
-            margin-top: 2.5rem;
-        }
-
         .affiliation-item {
             display: flex;
             align-items: center;
             margin-bottom: 1rem;
-            padding: 1rem;
-            background: var(--light-gray);
-            border-radius: var(--border-radius);
+        }
+        
+        .affiliation-item:last-child {
+            margin-bottom: 0;
         }
 
         .affiliation-icon {
-            width: 44px;
-            height: 44px;
+            width: 40px;
+            height: 40px;
             background: var(--accent);
+            color: var(--white);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 1rem;
-            color: var(--white);
-            font-size: 1.3rem;
+            flex-shrink: 0;
         }
-
-        .bible-verse {
+        
+        .affiliation-details p {
+            margin: 0;
+            line-height: 1.4;
+            font-size: 0.95rem;
+            color: var(--dark-gray);
+        }
+        
+        .affiliation-details strong {
+            font-size: 1rem;
+            color: var(--text);
+        }
+        
+        .quote-box {
             font-style: italic;
-            margin: 2rem 0;
-            padding: 1.2rem 1.2rem 1.2rem 1.5rem;
-            border-left: 4px solid var(--accent);
-            background: rgba(52, 152, 219, 0.05);
-            border-radius: 0 var(--border-radius) var(--border-radius) 0;
-            font-size: 1.08rem;
+            text-align: center;
+            margin: 2rem auto 0 auto;
+            padding: 1.5rem;
+            border-top: 2px solid var(--medium-gray);
+            max-width: 80%;
+        }
+        .quote-box p {
+            margin: 0;
+            color: var(--dark-gray);
+        }
+        .quote-box strong {
+            display: block;
+            margin-top: 0.8rem;
+            font-style: normal;
+            color: var(--text);
         }
 
-        /* Footer */
+        /* --- Footer --- */
         footer {
             background: var(--primary);
             color: var(--white);
-            padding: 2.2rem 0 1.2rem 0;
-            margin-top: 3rem;
+            padding: 2.5rem 1.2rem 1.5rem 1.2rem;
+            margin-top: auto; /* Pushes footer to the bottom */
             border-radius: 24px 24px 0 0;
         }
 
         .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
         }
 
-        .footer-section {
-            flex: 1;
-            min-width: 180px;
-            margin-bottom: 1.2rem;
-            padding-right: 1.2rem;
-        }
-
-        .footer-title {
+        .footer-section h3 {
             font-size: 1.15rem;
             margin-bottom: 1.1rem;
             position: relative;
             padding-bottom: 0.4rem;
-            font-weight: 700;
         }
 
-        .footer-title::after {
+        .footer-section h3::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -303,7 +307,11 @@
             width: 32px;
             height: 2px;
             background-color: var(--accent);
-            border-radius: 2px;
+        }
+        
+        .footer-section p {
+            opacity: 0.8; 
+            line-height: 1.7;
         }
 
         .footer-links {
@@ -318,21 +326,20 @@
         .footer-links a {
             color: rgba(255,255,255,0.85);
             text-decoration: none;
-            transition: color var(--transition);
-            font-size: 1rem;
+            transition: color 0.2s;
         }
 
         .footer-links a:hover {
             color: var(--accent);
         }
 
-        .social-links {
+        .footer-social {
             display: flex;
             gap: 0.8rem;
-            margin-top: 0.7rem;
+            margin-top: 1rem;
         }
 
-        .social-links a {
+        .footer-social a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -342,102 +349,53 @@
             border-radius: 50%;
             color: var(--white);
             text-decoration: none;
-            font-size: 18px;
-            transition: background var(--transition), transform var(--transition);
+            transition: all 0.2s;
         }
 
-        .social-links a:hover {
+        .footer-social a:hover {
             background: var(--accent);
-            transform: translateY(-3px) scale(1.08);
+            transform: translateY(-3px);
         }
 
         .copyright {
+            max-width: 1100px;
+            margin: 0 auto;
             text-align: center;
-            padding-top: 1.2rem;
-            margin-top: 1.2rem;
+            padding-top: 2rem;
+            margin-top: 2rem;
             border-top: 1px solid rgba(255,255,255,0.13);
             color: rgba(255,255,255,0.7);
             font-size: 0.95rem;
         }
 
         /* --- RESPONSIVE BREAKPOINTS --- */
-        @media (max-width: 1100px) {
-            .container {
-                max-width: 98vw;
-                padding: 0 0.5rem;
-            }
-            .whoami-content {
-                padding: 1.2rem 0.7rem;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .footer-content {
-                flex-direction: column;
-                gap: 1.2rem;
-            }
-            .footer-section {
-                min-width: 120px;
-                padding-right: 0;
-            }
-        }
-
-        @media (max-width: 700px) {
-            .profile-container {
-                width: 100px;
-                height: 100px;
-            }
-            .blog-title {
-                font-size: 1.25rem;
-            }
-            .blog-subtitle {
-                font-size: 0.98rem;
-            }
-            .section-title {
-                font-size: 1.05rem;
-                padding-bottom: 0.3rem;
-            }
-            .whoami-content {
-                padding: 0.7rem 0.3rem;
-            }
-            .contact-grid {
+        @media (max-width: 992px) {
+            .about-grid {
                 grid-template-columns: 1fr;
+                gap: 2rem;
             }
-            .bible-verse {
-                font-size: 0.98rem;
-                padding: 0.7rem 0.7rem 0.7rem 1rem;
+            .sidebar {
+                margin-top: 2rem;
             }
+        }
+        
+        @media (max-width: 768px) {
+            .container { padding: 0 1rem; }
+            .profile-container { width: 140px; height: 140px; }
+            .page-title { font-size: 2rem; }
+            .main-container { padding: 1.5rem; }
         }
 
         @media (max-width: 480px) {
-            .profile-container {
-                width: 100px;
-                height: 100px;
-                margin-bottom: 0.7rem;
-            }
-            .blog-title {
-                font-size: 2rem;
-            }
-            .blog-subtitle {
-                font-size: 0.85rem;
-            }
-            .section-title {
-                font-size: 0.95rem;
-            }
-            .footer-title {
-                font-size: 0.98rem;
-            }
-            .footer-links a {
-                font-size: 0.93rem;
-            }
-            .copyright {
-                font-size: 0.85rem;
-            }
+            .profile-container { width: 120px; height: 120px; }
+            .page-title { font-size: 1.8rem; }
+            .page-subtitle { font-size: 1rem; }
+            .main-container { padding: 1.5rem 1rem; }
+            .quote-box { max-width: 100%; }
         }
-            </style>
+    </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
@@ -445,13 +403,13 @@
                     <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
                 </div>
                 
-                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
-                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
+                <h1 class="page-title">Bashir Kabir Zarewa</h1>
+                <p class="page-subtitle">Security Researcher, Bug Bounty Hunter & Advisor</p>
                 
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.html">Posts</a></li>
-                        <li><a href="#" class="active">Whoami</a></li>
+                        <li><a href="whoami.html" class="active">Whoami</a></li>
                         <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </nav>
@@ -459,121 +417,100 @@
         </div>
     </header>
 
-    <!-- Main Content -->
-    <div class="container">
-        <div class="whoami-content">
-            <div class="intro-text">
-                <p>I'm a Cybersecurity Researcher, Bug Bounty Hunter, and Ethical Hacker specializing in web application security, automation, and Linux exploitation. I've reported critical vulnerabilities to Fortune 500 companies like Netflix and Hilton, uncovering misconfigurations, sensitive data exposures, and internal infrastructure leaks. With over 4 years of hands-on experience, I've submitted dozens of impactful reports on HackerOne and Bugcrowd, and I thrive on building, breaking, and teaching security concepts. When I'm not hunting bugs, I'm training the next generation of hackers through bootcamps and community-driven initiatives.</p>
-            </div>
-            
-            <div class="consulting-box">
-                <p><strong>Email me if you are interested in Cybersecurity consulting</strong> (implementation help/advice or security assessments). I'm also available for startup advising at high velocity startups that need a technical advisor who is well-networked, passionate, and has a wide range of knowledge.</p>
-            </div>
-            
-            <div class="personal-section">
-                <p>On a more personal level, I'm a Muslim, Son, and a Brother. I love most things in life, but I'm particularly fond of hacking, ai-art, Basketball, podcasts, and Mysteries in Science.</p>
-            </div>
-            
-            <div class="contact-grid">
-                <div class="contact-card">
-                    <h3>whereami</h3>
-                    <ul class="contact-info">
-                        <li><i class="fas fa-envelope"></i> <a href="mailto:LOC4LH057@pm.me">Email</a></li>
-                        <li><i class="fab fa-twitter"></i> <a href="https://x.com/bashirkabirz" target="_blank">Twitter formally(x)</a></li>
-                        <li><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank">LinkedIn</a></li>
-                        <li><i class="fab fa-hackerone"></i> <a href="https://hackerone.com/localhost80" target="_blank">hackerone</a></li>
-                        <li><i class="fab fa-bug"></i> <a href="https://bugcrowd.com/bashir" target="_blank">Bugcrowd</a></li>
-                    </ul>
+    <main class="container">
+        <div class="main-container">
+            <div class="about-grid">
+                <div class="main-column">
+                    <section class="intro-text">
+                        <h2 class="section-title">About Me</h2>
+                        <p>As a dedicated Cybersecurity Researcher, Bug Bounty Hunter, and Ethical Hacker, I specialize in web application security, automation, and Linux exploitation. My work involves identifying and reporting critical vulnerabilities for leading global companies, including Fortune 500s like Netflix and Hilton, where I've uncovered significant misconfigurations, sensitive data exposures, and internal infrastructure leaks.</p>
+                        <p>With over four years of hands-on experience, I have submitted dozens of impactful reports on platforms like HackerOne and Bugcrowd. I am passionate about building, breaking, and teaching security concepts. When I'm not hunting for bugs, I am committed to training the next generation of ethical hackers through intensive bootcamps and community-driven initiatives.</p>
+                    </section>
+                    
+                    <section class="consulting-box">
+                        <p><strong>Seeking security expertise?</strong> I provide expert consulting services in security assessments and strategic implementation. I am also available to advise high-velocity startups that require a passionate, well-networked technical advisor.</p>
+                    </section>
+
+                    <section class="personal-section">
+                        <h2 class="section-title">Personal Note</h2>
+                        <p>Beyond the terminal, I am a Muslim, a son, and a brother. I have a deep curiosity for most things in life, but I'm particularly drawn to the intersections of hacking and AI art, the strategy of basketball, the insights from podcasts, and exploring the great mysteries of science.</p>
+                    </section>
+
+                    <div class="quote-box">
+                        <p>"The important thing is not to stop questioning. Curiosity has its own reason for existing."</p>
+                        <strong>- Albert Einstein</strong>
+                    </div>
                 </div>
                 
-            <!--    <div class="contact-card">
-                    <h3>affiliations</h3>
-                    <div class="affiliation-item">
-                        <div class="affiliation-icon">
-                            <i class="fab fa-hackerone"></i>
+                <aside class="sidebar">
+                    <div class="card">
+                        <h3>Whereami</h3>
+                        <ul class="contact-info">
+                            <li><i class="fas fa-map-marker-alt"></i> Abuja, Nigeria</li>
+                            <li><i class="fas fa-envelope"></i> <a href="mailto:LOC4LH057@pm.me">LOC4LH057@pm.me</a></li>
+                            <li><i class="fab fa-twitter"></i> <a href="https://x.com/bashirkabirz" target="_blank">@bashirkabirz</a></li>
+                            <li><i class="fab fa-github"></i> <a href="https://github.com/L0C4LH057" target="_blank">L0C4LH057</a></li>
+                            <li><i class="fab fa-linkedin"></i> <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank">LinkedIn Profile</a></li>
+                        </ul>
+                    </div>
+                    <div class="card">
+                        <h3>Affiliations</h3>
+                        <div class="affiliation-item">
+                            <div class="affiliation-icon"><i class="fas fa-bug"></i></div>
+                            <div class="affiliation-details">
+                                <strong>HackerOne</strong>
+                                <p>Active bug bounty hunter</p>
+                            </div>
                         </div>
-                        <div>
-                            <strong>HackerOne</strong>
-                            <p>Hacker Advisor Board Member</p>
+                        <div class="affiliation-item">
+                            <div class="affiliation-icon"><i class="fas fa-crown"></i></div>
+                            <div class="affiliation-details">
+                                <strong>Bugcrowd</strong>
+                                <p>Security researcher</p>
+                            </div>
                         </div>
                     </div>
-                -->
-                   <!-- <div class="affiliation-item">
-                        <div class="affiliation-icon">
-                            <i class="fas fa-graduation-cap"></i>
-                        </div>
-                        <div>
-                            <strong>Security University</strong>
-                            <p>AI Security Instructor</p>
-                        </div>
-                    </div>
-                    --> 
-                <!--    <div class="affiliation-item">
-                        <div class="affiliation-icon">
-                            <i class="fas fa-shield-alt"></i>
-                        </div>
-                        <div>
-                            <strong>OWASP Foundation</strong>
-                            <p>Project Contributor</p>
-                        </div>
-                   -->  </div>
-                </div>
-            </div>
-            
-            <div class="bible-verse">
-                <p>"In both life and cybersecurity, it's not what you protect, but how you protect it that defines your safety."</p>
-                <p><strong>Proverbs</strong></p>
+                </aside>
             </div>
         </div>
-    </div>
+    </main>
 
-    <!-- Footer -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3 class="footer-title">Bashir Kabir Zarewa</h3>
-                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
-                    <div class="social-links">
-                       <a href="https://x.com/bashirkabirz" title="Twitter"><i class="fab fa-twitter"></i></a>
-                       <a href="https://github.com/L0C4LH057" title="GitHub"><i class="fab fa-github"></i></a>
-                       <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3 class="footer-title">Navigation</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-blog"></i> <a href="#">Blog Posts</a></li>
-                        <li><i class="fas fa-user"></i> <a href="#">About Me</a></li>
-                        <li><i class="fas fa-tools"></i> <a href="#">Security Tools</a></li>
-                        <li><i class="fas fa-file-alt"></i> <a href="#">Research Papers</a></li>
-                    </ul>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Bashir Kabir Zarewa</h3>
+                <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+            </div>
+
+            <div class="footer-section">
+                <h3>Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="index.html">Posts</a></li>
+                    <li><a href="whoami.html">Whoami</a></li>
+                    <li><a href="tools.html">Tools</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Connect</h3>
+                <p>Follow me on social media to get the latest updates and engage with my content.</p>
+                <div class="footer-social">
+                    <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
-            
-            <div class="copyright">
-                &copy; 2025 Bashir Kabir Zarewa. All rights reserved. Opinions my own.
-            </div>
+        </div>
+
+        <div class="copyright">
+            &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
         </div>
     </footer>
 
     <script>
-        // Simple script to handle active navigation link
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-links a');
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    // Remove active class from all links
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                });
-            });
-        });
+        // Set the copyright year automatically
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>

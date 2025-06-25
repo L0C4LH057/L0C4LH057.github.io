@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bashir Kabir Zarewa | Hacking, AI, CTFs and More</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -40,6 +40,7 @@
             padding: 0 1.2rem;
         }
 
+        /* --- Header --- */
         header {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: var(--white);
@@ -122,35 +123,6 @@
             color: #fff;
         }
 
-        .post-card {
-            display: flex;
-            align-items: flex-start;
-            gap: 1.1rem;
-            max-width: 100%;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.2rem;
-            border-bottom: 1px solid var(--medium-gray);
-            background: transparent;
-            border-radius: 0;
-            transition: background var(--transition);
-        }
-        .post-card:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
-        }
-        .post-thumb {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
-            object-fit: cover;
-            box-shadow: 0 2px 8px rgba(44,62,80,0.10);
-            flex-shrink: 0;
-        }
-        .post-card-content {
-            flex: 1;
-            min-width: 0;
-        }
         .header-social {
             position: absolute;
             top: 22px;
@@ -179,10 +151,11 @@
             transform: translateY(-3px) scale(1.08);
         }
 
+        /* --- Main Content --- */
         .main-content {
-            display: grid;
+            /* display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2.2rem;
+            gap: 2.2rem; */
             margin-bottom: 3rem;
         }
 
@@ -207,31 +180,41 @@
             border-radius: 2px;
         }
 
-        .top-posts, .featured-post {
+        .posts-column, .featured-post {
             background: var(--white);
             border-radius: var(--border-radius);
             padding: 2rem 1.5rem;
             box-shadow: var(--shadow);
-        }
-
-        .top-posts {
-            max-width: 100%;
+            margin-bottom: 2rem; /* Add margin below each section */
         }
 
         .post-card {
-            max-width: 100%;
+            display: flex;
+            align-items: flex-start;
+            gap: 1.2rem;
             margin-bottom: 1.5rem;
-            padding-bottom: 1.2rem;
-            border-bottom: 1px solid var(--medium-gray);
-            background: transparent;
-            border-radius: 0;
-            transition: background var(--transition);
+            padding-bottom: 1.5rem;
+            /* border-bottom: 1px solid var(--medium-gray); */ /* Removed border, using hr instead */
         }
 
         .post-card:last-child {
             margin-bottom: 0;
             padding-bottom: 0;
             border-bottom: none;
+        }
+
+        .post-thumb {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+            flex-shrink: 0;
+        }
+
+        .post-card-content {
+            flex: 1;
+            min-width: 0;
         }
 
         .post-title {
@@ -254,7 +237,7 @@
 
         .post-excerpt {
             color: var(--dark-gray);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.8rem;
             line-height: 1.6;
             font-size: 0.98rem;
         }
@@ -270,17 +253,26 @@
 
         .read-more i {
             margin-left: 5px;
-            transition: transform var(--transition);
+            transition: transform 0.2s;
         }
 
         .read-more:hover i {
-            transform: translateX(3px);
+            transform: translateX(4px);
         }
 
+        /* --- Featured Post Specifics --- */
         .featured-post {
-            border-radius: var(--border-radius);
             padding: 2.2rem 2rem;
+        }
+
+        .post-cover {
+            width: 50%;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
             box-shadow: var(--shadow);
+            display: block;
+            max-height: 350px;
+            object-fit: cover;
         }
 
         .post-meta {
@@ -293,50 +285,40 @@
             flex-wrap: wrap;
         }
 
-        .post-date {
+        .post-meta-item {
             background: var(--light-gray);
             padding: 0.3rem 0.8rem;
             border-radius: 20px;
             font-weight: 500;
-            margin-right: 0.7rem;
-            font-size: 0.97rem;
-        }
-
-        .post-category {
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.95rem;
-        }
-
-        .featured-post-content {
-            line-height: 1.7;
-            font-size: 1.05rem;
         }
 
         .featured-post-content p {
             margin-bottom: 1.1rem;
         }
 
-        .post-cover {
-            width: 100%;
-            border-radius: var(--border-radius);
+        /* STYLES FOR THE CORRECTED CHECKLIST */
+        .checklist {
+            list-style: none;
+            padding-left: 0;
             margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            display: block;
-            max-height: 260px;
-            object-fit: cover;
         }
 
-        ul {
-            padding-left: 1.3rem;
-            margin-bottom: 1.2rem;
+        .checklist li {
+            position: relative;
+            padding-left: 1.8em;
+            margin-bottom: 0.8rem;
         }
 
-        li {
-            margin-bottom: 0.7rem;
+        .checklist li::before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            top: 1px;
+            color: var(--accent);
+            font-weight: 600;
         }
 
+        /* --- Footer --- */
         footer {
             background: var(--primary);
             color: var(--white);
@@ -346,20 +328,12 @@
         }
 
         .footer-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
         }
 
-        .footer-section {
-            flex: 1;
-            min-width: 220px;
-            margin-bottom: 1.5rem;
-            padding-right: 1.5rem;
-        }
-
-        .footer-title {
+        .footer-section h3 {
             font-size: 1.15rem;
             margin-bottom: 1.1rem;
             position: relative;
@@ -367,7 +341,7 @@
             font-weight: 700;
         }
 
-        .footer-title::after {
+        .footer-section h3::after {
             content: '';
             position: absolute;
             bottom: 0;
@@ -376,6 +350,12 @@
             height: 2px;
             background-color: var(--accent);
             border-radius: 2px;
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 1rem;
         }
 
         .footer-links {
@@ -398,13 +378,13 @@
             color: var(--accent);
         }
 
-        .social-links {
+        .footer-social {
             display: flex;
             gap: 0.8rem;
             margin-top: 0.7rem;
         }
 
-        .social-links a {
+        .footer-social a {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -418,156 +398,99 @@
             transition: background var(--transition), transform var(--transition);
         }
 
-        .social-links a:hover {
+        .footer-social a:hover {
             background: var(--accent);
             transform: translateY(-3px) scale(1.08);
         }
 
         .copyright {
             text-align: center;
-            padding-top: 1.2rem;
-            margin-top: 1.2rem;
+            padding-top: 2rem;
+            margin-top: 2rem;
             border-top: 1px solid rgba(255,255,255,0.13);
             color: rgba(255,255,255,0.7);
             font-size: 0.95rem;
         }
 
         /* --- RESPONSIVE BREAKPOINTS --- */
-        @media (max-width: 1100px) {
-            .container {
-                max-width: 98vw;
-                padding: 0 0.5rem;
-            }
-            .main-content {
-                gap: 1.2rem;
-            }
-            .top-posts, .post-card, .featured-post {
-                max-width: 100%;
-                padding: 1.2rem 1rem;
-            }
-            .post-cover {
-                max-height: 200px;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .main-content {
+        @media (max-width: 992px) {
+            /* .main-content {
                 grid-template-columns: 1fr;
-            }
-            .top-posts, .featured-post {
-                margin-bottom: 2rem;
-            }
-            .featured-post {
-                padding: 1.2rem 1rem;
-            }
+            } */
         }
 
-        @media (max-width: 700px) {
+        @media (max-width: 768px) {
             .container {
-                padding: 0 0.2rem;
-            }
-            .header-content {
-                padding: 0.5rem 0;
-            }
-            .profile-container {
-                width: 70px;
-                height: 70px;
-            }
-            .blog-title {
-                font-size: 1.25rem;
-            }
-            .blog-subtitle {
-                font-size: 0.98rem;
-            }
-            .section-title {
-                font-size: 1.05rem;
-                padding-bottom: 0.3rem;
-            }
-            .footer-section {
-                min-width: 140px;
-                padding-right: 0;
-            }
-            .footer-content {
-                flex-direction: column;
-                gap: 1.2rem;
-            }
-            .post-title {
-                font-size: 1rem;
-            }
-            .post-excerpt {
-                font-size: 0.93rem;
-            }
-            .read-more {
-                font-size: 0.93rem;
-            }
-            .post-meta, .post-date, .post-category {
-                font-size: 0.93rem;
-            }
-            .post-cover {
-                max-height: 220px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header-social {
-                top: 10px;
-                right: 10px;
-                gap: 6px;
+                padding: 0 1rem;
             }
             .profile-container {
                 width: 100px;
                 height: 100px;
-                margin-bottom: 0.7rem;
             }
             .blog-title {
                 font-size: 2rem;
             }
             .blog-subtitle {
-                font-size: 0.85rem;
+                font-size: 1rem;
             }
-            .main-content {
-                gap: 0.7rem;
-            }
-            .top-posts, .featured-post {
-                padding: 0.7rem 0.5rem;
+            .posts-column, .featured-post {
+                padding: 1.5rem;
             }
             .section-title {
+                font-size: 1.3rem;
+            }
+            .footer-content {
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 1rem;
+            }
+            .header-social {
+                top: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+            .blog-title {
+                font-size: 1.8rem;
+            }
+            .post-card {
+                gap: 1rem; /* RESPONSIVE FIX: Reduced gap */
+            }
+            .post-thumb {
+                width: 80px; /* RESPONSIVE FIX: Smaller thumbnail on mobile */
+                height: 80px;
+            }
+            .post-title {
+                font-size: 1.05rem;
+            }
+            .post-excerpt, .read-more, .post-meta {
                 font-size: 0.95rem;
             }
-            .footer-section {
-                min-width: 100px;
-            }
-            .footer-title {
-                font-size: 0.98rem;
-            }
-            .footer-links a {
-                font-size: 0.93rem;
-            }
-            .copyright {
-                font-size: 0.85rem;
+            .footer-content {
+                grid-template-columns: 1fr; /* Ensures footer stacks cleanly */
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <header>
         <div class="header-social">
-            <a href="https://x.com/bashirkabirz" title="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="https://github.com/L0C4LH057" title="GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        
+            <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
         </div>
-        
+
         <div class="container">
             <div class="header-content">
                 <div class="profile-container">
                     <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
                 </div>
-                
-                <h1 class="blog-title">Bashir Kabir Zarewa |</h1>
+                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
                 <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
-                
+
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.html" class="active">Posts</a></li>
@@ -579,197 +502,142 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <div class="container">
-        <div class="main-content">
-            <!-- Top Posts Column -->
-            <div class="top-posts">
-                <h2 class="section-title">Top Posts</h2>
-                <p style="color: var(--dark-gray); margin-bottom: 1.5rem;">Evergreen essays or posts that were particularly well received.</p>
-                
-                <div class="post-card">
-                    <img src="images/adversary.png" alt="AI Security" class="post-thumb">
-                    <div class="post-card-content">
-                        <h3 class="post-title">
-                            <a href="posts/active-directory-attack-techniques.html">Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques</a>
-                        </h3>
-                        <p class="post-excerpt">
-                            Active Directory is the backbone of enterprise identity—but also a prime target. Uncover the techniques attackers use to exploit it and learn how to defend against everything from LLMNR poisoning to Golden Ticket attacks.
-                        </p>
-                        <a href="posts/active-directory-attack-techniques.html" class="read-more">
-                            Read more <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="post-card">
-                    <img src="images/prompt_war.png" alt="AI Security" class="post-thumb">
-                    <div class="post-card-content">
-                        <h3 class="post-title">
-                            <a href="posts/AI-security-and-vulnerability.html">Prompt Wars: Navigating the New Landscape of AI Security and Vulnerabilities</a>
-                        </h3>
-                        <p class="post-excerpt">
-                            True AI security transcends traditional cybersecurity. Discover how prompt injection, adversarial thinking, and unconventional approaches create the foundation for protecting next-generation systems.
-                        </p>
-                        <a href="posts/AI-security-and-vulnerability.html" class="read-more">
-                            Read more <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                
-                <div class="post-card">
-                    <img src="images/africa_at_crossroad.png" alt="Africa 4IR" class="post-thumb">
-                    <div class="post-card-content">
-                        <h3 class="post-title">
-                            <a href="posts/fourth-industrial-revolution-in-africa.html">Africa at the Crossroads: Will the Fourth Industrial Revolution Be Different This Time?</a>
-                        </h3>
-                        <p class="post-excerpt">
-                            I explored Africa's role in the Fourth Industrial Revolution using Kaggle’s 2022 survey data. My analysis highlighted emerging talent, increasing tech adoption, and the need for better infrastructure and education to fuel innovation.
-                        </p>
-                        <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">
-                            Read more <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                </div>
-                
-            
-                
-                <div class="post-card">
-                    <img src="images/support.png" alt="Support" class="post-thumb">
-                    <div class="post-card-content">
-                        <h3 class="post-title">
-                            <a href="posts/support.html">The Power of Genuine Support: Why Championing Others Elevates Us All</a>
-                        </h3>
-                        <p class="post-excerpt">
-                            Heads-up: The concept of this post might seem trivial, but it can be surprisingly difficult to implement. Learn why supporting others' success benefits everyone in the security community.
-                        </p>
-                        <a href="posts/support.html" class="read-more">
-                            Read more <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
+        <div class="posts-column">
+            <h2 class="section-title">Latest Posts</h2>
+            <div class="post-card">
+                <img src="images/glowing_brain.png" alt="Active Directory Security" class="post-thumb">
+                <div class="post-card-content">
+                    <h3 class="post-title"><a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html">Rewire Your Brain: The Ultimate Guide to Effortless Learning & Perfect Recall</a></h3>
+                    <p class="post-excerpt">Unlock your brain's true potential with these neuroscience-backed..</p>
+                    <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-            
-            <!-- Featured Post Column -->
-            <div class="featured-post">
-                <h2 class="section-title">The Power of Genuine Support: Why Championing Others Elevates Us All</h2>
+            <div class="post-card">
+                <img src="images/adversary.png" alt="Active Directory Security" class="post-thumb">
+                <div class="post-card-content">
+                    <h3 class="post-title"><a href="posts/active-directory-attack-techniques.html">Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques</a></h3>
+                    <p class="post-excerpt">Uncover the techniques attackers use to exploit Active Directory and learn how to defend against.....</p>
+                    <a href="posts/active-directory-attack-techniques.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <div class="post-card">
+                <img src="images/prompt_war.png" alt="AI Security" class="post-thumb">
+                <div class="post-card-content">
+                    <h3 class="post-title"><a href="posts/AI-security-and-vulnerability.html">Prompt Wars: Navigating the New Landscape of AI Security</a></h3>
+                    <p class="post-excerpt">Discover how prompt injection and adversarial thinking create the foundation for protecting next-generation.....</p>
+                    <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>  
+ 
+        </div>
+        <hr style="border: 2px solid var(--accent); margin: 3rem 0;">
+
+        <div class="featured-post">
+            <h2 class="section-title">Featured Post</h2>
+             <img src="images/glowing_brain.png" alt="Community Support" class="post-cover">
+            <div class="post-meta">
+                <span class="post-meta-item">25th Jun 2025</span>
+                <span class="post-meta-item"><i class="fas fa-tags"></i> Productivity, Learning</span>
+            </div>
+            <div class="featured-post-content">
+                <h3>Rewire Your Brain: The Ultimate Guide to Effortless Learning & Perfect Recall</h3>
+                <p>Unlock your brain's true potential with these neuroscience-backed strategies for superior learning and memory. </p>
+                <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
+
+            </div>
+            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            <img src="images/adversary.png" alt="Community Support" class="post-cover">
+            <div class="post-meta">
+                <span class="post-meta-item">17th Jun 2025</span>
+                <span class="post-meta-item"><i class="fas fa-tags"></i> Red Team, Active Directory</span>
+            </div>
+            <div class="featured-post-content">
+                <h3>Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques</h3>
+                <p>For cybersecurity professionals, whether they are <b>blue team</b> members focused on defence or <b>red team</b> members conducting audits, understanding how Active Directory operates and how it can be exploited is paramount. </p>
+                <a href="posts/active-directory-attack-techniques.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
+
+            </div>
+            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            <div class="featured-post-content">
+                <img src="images/prompt_war.png" alt="Africa at the Crossroads" class="post-cover">
                 <div class="post-meta">
-                    <span class="post-date">1st Jun 2025</span>
-                    <span class="post-category"><i class="fas fa-tags"></i> Community, Mindset, Growth</span>
-                    
-                </div>
-                
-                <div class="featured-post-content">
-                    <img src="images/support.png" alt="Community Support" class="post-cover">
-                    <p>In the cybersecurity field where competition for recognition, bug bounties, and career advancement can feel intense, it’s easy to fall into the trap of measuring our worth against others’ achievements. But one of the most transformative habits you can cultivate isn’t a technical skill or certification: it’s the practice of wholeheartedly rooting for the people around you.</p>
-                    
-                    <p>When a peer:</p>
+                <span class="post-meta-item">9th Jun 2025</span>
+                <span class="post-meta-item"><i class="fas fa-tags"></i> AI Security</span>
+            </div>
+                <h3>Prompt Wars: Navigating the New Landscape of AI Security</h3>
+                <p>As Large Language Models (LLMs) like ChatGPT, Gemini, and Claude integrate into applications, a new battlefield in cybersecurity has emerged. </p>
+                <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
 
-                    <p>✔ Publishes groundbreaking research</p>
+            </div>
+            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            <div class="featured-post-content">
+                <img src="images/africa_at_crossroad.png" alt="Africa at the Crossroads" class="post-cover">
+                <div class="post-meta">
+                <span class="post-meta-item">27th Nov 2022</span>
+                <span class="post-meta-item"><i class="fas fa-tags"></i> Africa, 4IR, AI, Technology</span>
+            </div>
+                <h3>Africa at the Crossroads: Will the 4IR Be Different?</h3>
+                <p>The Fourth Industrial Revolution (4IR) marked by breakthroughs in AI, cloud computing, robotics, IoT, and blockchain is reshaping economies worldwide.</p>
+                <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
 
-                    <p>✔ Lands a dream role at a top firm</p>
+            </div>
+            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            <img src="images/support.png" alt="Community Support" class="post-cover">
+            <div class="post-meta">
+                <span class="post-meta-item">1st Jun 2025</span>
+                <span class="post-meta-item"><i class="fas fa-tags"></i> Community</span>
+            </div>
+            <div class="featured-post-content">
+                <h3>The Power of Genuine Support</h3>
+                <p>In cybersecurity, it’s easy to measure our worth against others. But one of the most transformative habits you can cultivate isn’t a technical skill: it’s the practice of wholeheartedly rooting for the people around you.</p>
 
-                    <p>✔ Releases an innovative tool</p>
 
-                    <p>✔ Earns a hard-won certification</p>
 
-                    <p>…your reaction matters. Instead of defaulting to comparison ("Why not me?"), try active celebration ("This is amazing and I’m excited for them!"). Here’s why this mindset is a game-changer.</p>
-                    
-                    <p>1. It Builds a Stronger Community</p>
+                <a href="posts/support.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
 
-                    <ul style="padding-left: 1.5rem; margin-bottom: 1.5rem;">
-                        <li style="margin-bottom: 0.8rem;">Cybersecurity thrives on collaboration. The "lone hacker" myth is just that a myth. Real progress happens when we share knowledge, tools, and opportunities. By celebrating others:</li>
-
-                        <li style="margin-bottom: 0.8rem;">You reinforce trust People remember who cheered for them.</li>
-                    
-                        <li style="margin-bottom: 0.8rem;"> You create psychological safety Teams perform better when members feel valued.</li>
-                    
-                        <li style="margin-bottom: 0.8rem;">You combat toxicity The infosec community struggles with ego-driven negativity. Be the counterbalance.</li>
-                    </ul>
-                  
-                    <p>Example: When a friend submits their first CVE, share their writeup with a thoughtful comment. It costs you nothing but could amplify their career.</p>
-                
-                    <a href="posts/support.html" class="read-more">
-                        Read more <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <div class="profile-container" style="width: 150px; height: 150px; margin-bottom: 1.8rem;">
-                        <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
-                    </div>
-                    
-                    <h3 class="footer-title">Bashir Kabir Zarewa</h3>
-                    <p style="opacity: 0.8; line-height: 1.7; margin-bottom: 1rem;">
-                        Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.
-                    </p>
-                    <div class="social-links">
-                        <a href="https://x.com/bashirkabirz" title="Twitter"><i class="fab fa-twitter"></i></a>
-                        <a href="https://github.com/L0C4LH057" title="GitHub"><i class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
+                    <h3>Bashir Kabir Zarewa</h3>
+                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h3 class="footer-title">Navigation</h3>
+                    <h3>Navigation</h3>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
-                        <li><a href="index.html">All Posts</a></li>
-                        <li><a href="#">Top Content</a></li>
-                        <li><a href="#">Research Papers</a></li>
-                        <li><a href="tools.html">Tools & Resources</a></li>
+                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="tools.html">Tools</a></li>
+                        <li><a href="#">Categories</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
-                    <h3 class="footer-title">Categories</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">AI Security</a></li>
-                        <li><a href="#">Web Application Hacking</a></li>
-                        <li><a href="#">Reverse Engineering</a></li>
-                        <li><a href="#">Personal Development</a></li>
-                        <li><a href="#">Faith & Technology</a></li>
-                    </ul>
+                    <h3>Connect</h3>
+                    <p>Follow me on social media to get the latest updates and engage with my content.</p>
+                    <div class="footer-social">
+                        <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
                 </div>
             </div>
-            
+
             <div class="copyright">
-                &copy; 2025 Bashir Kabir Zarewa. All rights reserved. Opinions my own.
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
             </div>
         </div>
     </footer>
 
     <script>
-        // Simple script to handle active navigation link
-        document.addEventListener('DOMContentLoaded', function() {
-            const navLinks = document.querySelectorAll('.nav-links a');
-            
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    // Remove active class from all links
-                    navLinks.forEach(l => l.classList.remove('active'));
-                    
-                    // Add active class to clicked link
-                    this.classList.add('active');
-                });
-            });
-            
-            // Set active link based on current page
-            const currentPath = window.location.pathname.split('/').pop() || 'index.html';
-            navLinks.forEach(link => {
-                const linkPath = link.getAttribute('href');
-                if (currentPath.includes(linkPath)) {
-                    link.classList.add('active');
-                }
-            });
-        });
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
     </script>
 </body>
 </html>
