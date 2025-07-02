@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-DES Detailed Demonstrator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .step-card {
+            background-color: #f0f8ff;
+            border: 1px solid #90E0EF;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .step-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: #004AAD;
+            margin-bottom: 0.5rem;
+        }
+        .step-content {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            background-color: #e0f2f7;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            word-break: break-all;
+            white-space: pre-wrap;
+        }
+        .btn-primary {
+            background-color: #0077B6;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #005f93;
+        }
+        .input-field {
+            border: 1px solid #90E0EF;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            width: 100%;
+            max-width: 250px;
+            text-align: center;
+        }
+        .result-box {
+            background-color: #CAF0F8;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #004AAD;
+            text-align: center;
+            word-break: break-all;
+        }
+        .detail-item {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #0077B6;
+        }
+        .binary-string {
+            color: #004AAD;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-[#004AAD] text-gray-800 p-4 sm:p-8">
+
+    <div class="container mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-10">
+        <h1 class="text-3xl md:text-4xl font-black text-[#004AAD] text-center mb-6">S-DES Detailed Demonstrator</h1>
+        <p class="text-center text-lg mb-8 max-w-2xl mx-auto">
+            Input a string for your master key and a single character for plaintext/ciphertext. See the full S-DES algorithm, including string-to-binary conversion, step-by-step.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-8">
+            <div class="flex flex-col items-center">
+                <label for="masterKeyStringInput" class="text-lg font-semibold text-[#0077B6] mb-2">Master Key (ASCII String):</label>
+                <input type="text" id="masterKeyStringInput" class="input-field" placeholder="e.g., 'secret'" value="secret">
+                <button id="generateKeysBtn" class="btn-primary mt-4 w-full md:w-auto">Generate Keys</button>
+            </div>
+            <div class="flex flex-col items-center">
+                <label for="plainTextCharInput" class="text-lg font-semibold text-[#0077B6] mb-2">Plaintext (ASCII Char):</label>
+                <input type="text" id="plainTextCharInput" class="input-field" placeholder="e.g., 'A'" maxlength="1" value="A">
+                <button id="encryptBtn" class="btn-primary mt-4 w-full md:w-auto">Encrypt</button>
+            </div>
+            <div class="flex flex-col items-center">
+                <label for="cipherTextCharInput" class="text-lg font-semibold text-[#0077B6] mb-2">Ciphertext (ASCII Char):</label>
+                <input type="text" id="cipherTextCharInput" class="input-field" placeholder="e.g., 'B'" maxlength="1" value="B">
+                <button id="decryptBtn" class="btn-primary mt-4 w-full md:w-auto">Decrypt</button>
+            </div>
+        </div>
+
+        <div id="messages" class="text-center text-red-600 font-semibold mb-6"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Key Generation Steps -->
+            <div class="bg-[#e0f2f7] p-6 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-[#004AAD] mb-4 text-center">Key Generation Steps</h2>
+                <div id="keyGenSteps">
+                    <div class="step-card">
+                        <div class="step-title">1. Master Key ASCII String to 10-bit Binary</div>
+                        <div id="stepMasterKeyConvert" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">2. P10 Permutation</div>
+                        <div id="stepP10" class="step-content"></div>
+                    </div>
+                    <div class="ste<p style="text-align: center; margin-top: 2rem;">
+                    <a href="sdes.html" style="color: white; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center;">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Goto SDES DEMO
+                    </a>p-card">
+                        <div class="step-title">3. LS-1 (Left Shift 1)</div>
+                        <div id="stepLS1" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">4. P8 for K1</div>
+                        <div id="stepP8K1" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">5. LS-2 (Left Shift 2)</div>
+                        <div id="stepLS2" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">6. P8 for K2</div>
+                        <div id="stepP8K2" class="step-content"></div>
+                    </div>
+                    <div class="step-card result-box">
+                        <div class="step-title text-[#004AAD] mb-0">Subkey K1: <span id="outputK1"></span></div>
+                    </div>
+                    <div class="step-card result-box">
+                        <div class="step-title text-[#004AAD] mb-0">Subkey K2: <span id="outputK2"></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Encryption/Decryption Steps -->
+            <div class="bg-[#e0f2f7] p-6 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold text-[#004AAD] mb-4 text-center">Encryption/Decryption Steps</h2>
+                <div id="cipherSteps">
+                    <div class="step-card">
+                        <div class="step-title">1. Input ASCII Character to 8-bit Binary</div>
+                        <div id="stepInputConvert" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">2. Initial Permutation (IP)</div>
+                        <div id="stepIP" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">3. Round 1: Function f<sub>K1</sub> (or f<sub>K2</sub> for Decryption)</div>
+                        <div id="stepFK1" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">4. Swap (SW)</div>
+                        <div id="stepSW" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">5. Round 2: Function f<sub>K2</sub> (or f<sub>K1</sub> for Decryption)</div>
+                        <div id="stepFK2" class="step-content"></div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-title">6. Inverse Initial Permutation (IP<sup>-1</sup>)</div>
+                        <div id="stepIPInverse" class="step-content"></div>
+                    </div>
+                    <div class="step-card result-box">
+                        <div class="step-title text-[#004AAD] mb-0">Output Binary: <span id="outputResultBinary"></span></div>
+                    </div>
+                    <div class="step-card result-box">
+                        <div class="step-title text-[#004AAD] mb-0">Output Character: <span id="outputResultChar"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 2rem;">
+                    <a href="infograhic.html" style="color: black; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center;">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Goto SDES infographic
+                    </a>
+    </div>
+
+    <script>
+        // DOM Elements
+        const masterKeyStringInput = document.getElementById('masterKeyStringInput');
+        const plainTextCharInput = document.getElementById('plainTextCharInput');
+        const cipherTextCharInput = document.getElementById('cipherTextCharInput');
+        const generateKeysBtn = document.getElementById('generateKeysBtn');
+        const encryptBtn = document.getElementById('encryptBtn');
+        const decryptBtn = document.getElementById('decryptBtn');
+        const messagesDiv = document.getElementById('messages');
+
+        // Key Generation Step Displays
+        const stepMasterKeyConvert = document.getElementById('stepMasterKeyConvert');
+        const stepP10 = document.getElementById('stepP10');
+        const stepLS1 = document.getElementById('stepLS1');
+        const stepP8K1 = document.getElementById('stepP8K1');
+        const stepLS2 = document.getElementById('stepLS2');
+        const stepP8K2 = document.getElementById('stepP8K2');
+        const outputK1 = document.getElementById('outputK1');
+        const outputK2 = document.getElementById('outputK2');
+
+        // Cipher Steps Displays
+        const stepInputConvert = document.getElementById('stepInputConvert');
+        const stepIP = document.getElementById('stepIP');
+        const stepFK1 = document.getElementById('stepFK1');
+        const stepSW = document.getElementById('stepSW');
+        const stepFK2 = document.getElementById('stepFK2');
+        const stepIPInverse = document.getElementById('stepIPInverse');
+        const outputResultBinary = document.getElementById('outputResultBinary');
+        const outputResultChar = document.getElementById('outputResultChar');
+
+        // Global variables for subkeys
+        let K1 = '';
+        let K2 = '';
+
+        // S-DES Constants (0-indexed for easier JavaScript array access)
+        const P10_TABLE = [2, 4, 1, 6, 3, 9, 0, 8, 7, 5];
+        const P8_TABLE = [5, 2, 6, 3, 7, 4, 9, 8];
+        const IP_TABLE = [1, 5, 2, 0, 3, 7, 4, 6];
+        const IP_INVERSE_TABLE = [3, 0, 2, 4, 6, 1, 7, 5];
+        const EP_TABLE = [3, 0, 1, 2, 1, 2, 3, 0]; // Expansion Permutation
+        const P4_TABLE = [1, 3, 2, 0]; // Permutation after S-Boxes
+
+        const S0_BOX = [
+            ['01', '00', '11', '10'],
+            ['11', '10', '01', '00'],
+            ['00', '10', '01', '11'],
+            ['11', '01', '11', '10']
+        ];
+
+        const S1_BOX = [
+            ['00', '01', '10', '11'],
+            ['10', '00', '01', '11'],
+            ['11', '00', '01', '00'],
+            ['10', '01', '00', '11']
+        ];
+
+        // --- Utility Functions ---
+
+        // Converts an ASCII string to a 10-bit binary string for the master key.
+        // Sums the ASCII values of characters in the string and takes modulo 2^10 (1024).
+        // Pads with leading zeros to ensure it's 10 bits.
+        function stringTo10BitBinary(str) {
+            let sum = 0;
+            for (let i = 0; i < str.length; i++) {
+                sum += str.charCodeAt(i);
+            }
+            const num = sum % 1024; // Modulo 2^10 to fit in 10 bits
+            return {
+                binary: num.toString(2).padStart(10, '0'),
+                sum: sum,
+                modulo: num
+            };
+        }
+
+        // Converts a single ASCII character to an 8-bit binary string.
+        // Gets the ASCII value and pads with leading zeros to ensure it's 8 bits.
+        function charTo8BitBinary(char) {
+            if (char.length === 0) return { binary: '', ascii: 0 };
+            const ascii = char.charCodeAt(0);
+            return {
+                binary: ascii.toString(2).padStart(8, '0'),
+                ascii: ascii
+            };
+        }
+
+        // Converts an 8-bit binary string back to an ASCII character.
+        function binaryToChar(binaryStr) {
+            if (!/^[01]{8}$/.test(binaryStr)) {
+                return 'Invalid 8-bit binary';
+            }
+            const ascii = parseInt(binaryStr, 2);
+            return String.fromCharCode(ascii);
+        }
+
+        // Performs a permutation on an input bit string based on a given table.
+        // Provides detailed mapping information for visualization.
+        function permute(input, table, name) {
+            let output = '';
+            let mappingDetails = '';
+            for (let i = 0; i < table.length; i++) {
+                // table[i] is the 0-indexed original position, i is the 0-indexed new position
+                output += input[table[i]];
+                mappingDetails += `Bit at original position ${table[i] + 1} (value ${input[table[i]]}) moves to new position ${i + 1}.\n`;
+            }
+            return { output, mappingDetails };
+        }
+
+        // Performs a circular left shift on a bit string.
+        function leftShift(bits, numShifts) {
+            const len = bits.length;
+            const shiftAmount = numShifts % len;
+            const shifted = bits.substring(shiftAmount) + bits.substring(0, shiftAmount);
+            const details = `Input: <span class="binary-string">${bits}</span>\nCircular left shift by ${numShifts} bit(s).\nResult: <span class="binary-string">${shifted}</span>`;
+            return { shifted, details };
+        }
+
+        // Performs a bitwise XOR operation on two binary strings of equal length.
+        function xor(a, b) {
+            let result = '';
+            let details = `Input 1: <span class="binary-string">${a}</span>\nInput 2: <span class="binary-string">${b}</span>\nXOR Operation (bit-by-bit):\n`;
+            for (let i = 0; i < a.length; i++) {
+                const xorBit = (parseInt(a[i]) ^ parseInt(b[i])).toString();
+                result += xorBit;
+                details += `${a[i]} ^ ${b[i]} = ${xorBit}\n`;
+            }
+            details += `Result: <span class="binary-string">${result}</span>`;
+            return { result, details };
+        }
+
+        // Performs an S-Box lookup for S-DES.
+        // Takes a 4-bit input, determines row (1st and 4th bits) and column (2nd and 3rd bits),
+        // and returns the 2-bit output from the specified S-Box.
+        function sBoxLookup(inputBits, sBox, sBoxName) {
+            // S-DES S-box takes 4-bit input: b0 b1 b2 b3
+            // Row is determined by b0 and b3 (1st and 4th bits)
+            // Column is determined by b1 and b2 (2nd and 3rd bits)
+            const rowBits = inputBits[0] + inputBits[3];
+            const colBits = inputBits[1] + inputBits[2];
+            const row = parseInt(rowBits, 2);
+            const col = parseInt(colBits, 2);
+            const output = sBox[row][col];
+            const details = `4-bit Input to ${sBoxName}: <span class="binary-string">${inputBits}</span>\n` +
+                            `Row bits (1st and 4th): <span class="binary-string">${inputBits[0]}${inputBits[3]}</span> (Decimal: ${row})\n` +
+                            `Column bits (2nd and 3rd): <span class="binary-string">${inputBits[1]}${inputBits[2]}</span> (Decimal: ${col})\n` +
+                            `${sBoxName} lookup at [${row}][${col}]: <span class="binary-string">${output}</span>\n` +
+                            `Result: <span class="binary-string">${output}</span>`;
+            return { output, details };
+        }
+
+        // The F-function (fK) used in each round of S-DES.
+        // Takes the 4-bit right half of the block, a subkey, and the S-boxes.
+        // Performs EP, XOR with subkey, S-box lookups, and P4 permutation.
+        function fk(rightHalf, subkey, s0, s1, roundLabel) {
+            let details = `Applying F-function (f<sub>K</sub>) for ${roundLabel}:\n`;
+
+            // 1. Expansion/Permutation (EP)
+            const { output: expandedRight, mappingDetails: epDetails } = permute(rightHalf, EP_TABLE, 'EP');
+            details += `\n--- Expansion/Permutation (EP) ---\nInput (Right Half): <span class="binary-string">${rightHalf}</span> (4 bits)\nEP Table: [${EP_TABLE.map(i => i + 1).join(', ')}]\nMapping:\n${epDetails}Result: <span class="binary-string">${expandedRight}</span> (8 bits)\n`;
+            
+            // 2. XOR with subkey
+            const { result: xored, details: xorDetails } = xor(expandedRight, subkey);
+            details += `\n--- XOR with Subkey ---\nSubkey (${roundLabel.split(' ')[2]}): <span class="binary-string">${subkey}</span>\n${xorDetails}\n`;
+            
+            // 3. Split into two 4-bit halves for S-Boxes
+            const xoredLeft = xored.substring(0, 4);
+            const xoredRight = xored.substring(4, 8);
+            details += `\n--- Split XOR Result for S-Boxes ---\nSplit <span class="binary-string">${xored}</span> into Left 4-bits: <span class="binary-string">${xoredLeft}</span>, Right 4-bits: <span class="binary-string">${xoredRight}</span>\n`;
+
+            // 4. S-Box substitution
+            const { output: s0Output, details: s0Details } = sBoxLookup(xoredLeft, S0_BOX, 'S0-Box');
+            const { output: s1Output, details: s1Details } = sBoxLookup(xoredRight, S1_BOX, 'S1-Box');
+
+            details += `\n--- S-Box Substitution ---\n`;
+            details += `\nS0-Box:\n${s0Details}\n`;
+            details += `\nS1-Box:\n${s1Details}\n`;
+            
+            // 5. Combine S-Box outputs (2 bits + 2 bits = 4 bits)
+            const combinedS = s0Output + s1Output;
+            details += `Combined S-Box Outputs: <span class="binary-string">${s0Output}</span> + <span class="binary-string">${s1Output}</span> = <span class="binary-string">${combinedS}</span> (4 bits)\n`;
+
+            // 6. Permutation P4
+            const { output: p4Output, mappingDetails: p4Details } = permute(combinedS, P4_TABLE, 'P4');
+            details += `\n--- Permutation P4 ---\nInput: <span class="binary-string">${combinedS}</span> (4 bits)\nP4 Table: [${P4_TABLE.map(i => i + 1).join(', ')}]\nMapping:\n${p4Details}Result: <span class="binary-string">${p4Output}</span> (4 bits)\n`;
+            
+            return { output: p4Output, details };
+        }
+
+        // --- Main Logic Functions ---
+
+        // Handles the key generation process from a master key string.
+        function generateKeysLogic(masterKeyString) {
+            messagesDiv.textContent = '';
+            if (masterKeyString.length === 0) {
+                messagesDiv.textContent = 'Please enter a master key string.';
+                return;
+            }
+
+            // Step 1: Convert ASCII String to 10-bit Binary
+            const { binary: masterKeyBinary, sum: asciiSum, modulo: moduloResult } = stringTo10BitBinary(masterKeyString);
+            stepMasterKeyConvert.innerHTML = `Original String: "${masterKeyString}"<br>ASCII Values Sum: ${masterKeyString.split('').map(c => c.charCodeAt(0)).join(' + ')} = ${asciiSum}<br>Modulo 1024: ${moduloResult}<br>10-bit Binary Master Key: <span class="binary-string">${masterKeyBinary}</span>`;
+
+            // Clear previous steps for other sections
+            stepP10.innerHTML = '';
+            stepLS1.innerHTML = '';
+            stepP8K1.innerHTML = '';
+            stepLS2.innerHTML = '';
+            stepP8K2.innerHTML = '';
+            outputK1.textContent = '';
+            outputK2.textContent = '';
+            
+            // Step 2: P10 Permutation
+            const { output: p10Result, mappingDetails: p10Details } = permute(masterKeyBinary, P10_TABLE, 'P10');
+            stepP10.innerHTML = `Input: <span class="binary-string">${masterKeyBinary}</span><br>P10 Table (0-indexed to 1-indexed): [${P10_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${p10Details}<br>Result: <span class="binary-string">${p10Result}</span>`;
+
+            // Step 3: LS-1 (Left Shift 1)
+            const p10Left = p10Result.substring(0, 5);
+            const p10Right = p10Result.substring(5, 10);
+            
+            const { shifted: ls1Left, details: ls1LeftDetails } = leftShift(p10Left, 1);
+            const { shifted: ls1Right, details: ls1RightDetails } = leftShift(p10Right, 1);
+            const ls1Result = ls1Left + ls1Right;
+            stepLS1.innerHTML = `Input (from P10): <span class="binary-string">${p10Result}</span><br>Split into Left Half: <span class="binary-string">${p10Left}</span>, Right Half: <span class="binary-string">${p10Right}</span><br><br>--- Left Half Shift (LS-1) ---\n${ls1LeftDetails}<br><br>--- Right Half Shift (LS-1) ---\n${ls1RightDetails}<br><br>Combined LS-1 Result: <span class="binary-string">${ls1Result}</span>`;
+
+            // Step 4: P8 for K1
+            const { output: k1Result, mappingDetails: p8K1Details } = permute(ls1Result, P8_TABLE, 'P8');
+            K1 = k1Result;
+            stepP8K1.innerHTML = `Input (from LS-1): <span class="binary-string">${ls1Result}</span><br>P8 Table (0-indexed to 1-indexed): [${P8_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${p8K1Details}<br>Result (K1): <span class="binary-string">${K1}</span>`;
+            outputK1.textContent = K1;
+
+            // Step 5: LS-2 (Left Shift 2)
+            // LS-2 is applied to the *original* 5-bit halves from P10, but shifted by 2 total.
+            // In typical S-DES, LS-2 is applied to the result of LS-1, shifting by an *additional* 2.
+            // Let's stick to the common interpretation where LS-2 is applied to the output of LS-1, shifting by 2 bits.
+            const { shifted: ls2Left, details: ls2LeftDetails } = leftShift(ls1Left, 2);
+            const { shifted: ls2Right, details: ls2RightDetails } = leftShift(ls1Right, 2);
+            const ls2Result = ls2Left + ls2Right;
+            stepLS2.innerHTML = `Input (from LS-1): <span class="binary-string">${ls1Result}</span> (Left: <span class="binary-string">${ls1Left}</span>, Right: <span class="binary-string">${ls1Right}</span>)<br>LS-2 shifts each half by 2 bits from their LS-1 state.<br><br>--- Left Half Shift (LS-2) ---\n${ls2LeftDetails}<br><br>--- Right Half Shift (LS-2) ---\n${ls2RightDetails}<br><br>Combined LS-2 Result: <span class="binary-string">${ls2Result}</span>`;
+
+            // Step 6: P8 for K2
+            const { output: k2Result, mappingDetails: p8K2Details } = permute(ls2Result, P8_TABLE, 'P8');
+            K2 = k2Result;
+            stepP8K2.innerHTML = `Input (from LS-2): <span class="binary-string">${ls2Result}</span><br>P8 Table (0-indexed to 1-indexed): [${P8_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${p8K2Details}<br>Result (K2): <span class="binary-string">${K2}</span>`;
+            outputK2.textContent = K2;
+        }
+
+        // Handles the encryption or decryption process.
+        function runCipherLogic(inputChar, isEncrypt) {
+            messagesDiv.textContent = '';
+            if (inputChar.length === 0) {
+                messagesDiv.textContent = 'Please enter a single character for plaintext/ciphertext.';
+                return;
+            }
+            if (!K1 || !K2) {
+                messagesDiv.textContent = 'Please generate keys first!';
+                return;
+            }
+
+            // Step 1: Convert ASCII Character to 8-bit Binary
+            const { binary: inputBinary, ascii: asciiVal } = charTo8BitBinary(inputChar);
+            stepInputConvert.innerHTML = `Original Character: "${inputChar}"<br>ASCII Value: ${asciiVal}<br>8-bit Binary Input: <span class="binary-string">${inputBinary}</span>`;
+
+            // Clear previous steps for other sections
+            stepIP.innerHTML = '';
+            stepFK1.innerHTML = '';
+            stepSW.innerHTML = '';
+            stepFK2.innerHTML = '';
+            stepIPInverse.innerHTML = '';
+            outputResultBinary.textContent = '';
+            outputResultChar.textContent = '';
+
+            // Determine which subkeys to use for each round based on encryption/decryption mode
+            const currentK1 = isEncrypt ? K1 : K2;
+            const currentK2 = isEncrypt ? K2 : K1;
+            const round1KeyLabel = isEncrypt ? 'K1' : 'K2';
+            const round2KeyLabel = isEncrypt ? 'K2' : 'K1';
+
+            // Step 2: Initial Permutation (IP)
+            const { output: ipResult, mappingDetails: ipDetails } = permute(inputBinary, IP_TABLE, 'IP');
+            stepIP.innerHTML = `Input: <span class="binary-string">${inputBinary}</span><br>IP Table (0-indexed to 1-indexed): [${IP_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${ipDetails}<br>Result: <span class="binary-string">${ipResult}</span>`;
+
+            let leftHalf = ipResult.substring(0, 4);
+            let rightHalf = ipResult.substring(4, 8);
+
+            // Step 3: Round 1 (fK1 or fK2)
+            const { output: fk1Output, details: fk1Details } = fk(rightHalf, currentK1, S0_BOX, S1_BOX, `Round 1 (using ${round1KeyLabel})`);
+            const { result: xoredLeft1, details: xor1Details } = xor(leftHalf, fk1Output);
+            stepFK1.innerHTML = `Current Left Half: <span class="binary-string">${leftHalf}</span><br>Current Right Half: <span class="binary-string">${rightHalf}</span><br>Subkey for Round 1 (${round1KeyLabel}): <span class="binary-string">${currentK1}</span><br><br>--- F-Function Details ---\n${fk1Details}<br><br>--- XOR with Left Half ---\n${xor1Details}<br><br>New Left Half (after XOR): <span class="binary-string">${xoredLeft1}</span>`;
+
+            let combinedAfterFK1 = xoredLeft1 + rightHalf;
+
+            // Step 4: Swap (SW)
+            // Swap the two 4-bit halves
+            const swapped = combinedAfterFK1.substring(4, 8) + combinedAfterFK1.substring(0, 4);
+            stepSW.innerHTML = `Input for Swap: <span class="binary-string">${combinedAfterFK1}</span> (Left: <span class="binary-string">${xoredLeft1}</span>, Right: <span class="binary-string">${rightHalf}</span>)<br>Swapping halves: Right becomes new Left, Left becomes new Right.<br>Result: <span class="binary-string">${swapped}</span>`;
+
+            // Update halves for the next round
+            leftHalf = swapped.substring(0, 4);
+            rightHalf = swapped.substring(4, 8);
+
+            // Step 5: Round 2 (fK2 or fK1)
+            const { output: fk2Output, details: fk2Details } = fk(rightHalf, currentK2, S0_BOX, S1_BOX, `Round 2 (using ${round2KeyLabel})`);
+            const { result: xoredLeft2, details: xor2Details } = xor(leftHalf, fk2Output);
+            stepFK2.innerHTML = `Current Left Half (after Swap): <span class="binary-string">${leftHalf}</span><br>Current Right Half (after Swap): <span class="binary-string">${rightHalf}</span><br>Subkey for Round 2 (${round2KeyLabel}): <span class="binary-string">${currentK2}</span><br><br>--- F-Function Details ---\n${fk2Details}<br><br>--- XOR with Left Half ---\n${xor2Details}<br><br>New Left Half (after XOR): <span class="binary-string">${xoredLeft2}</span>`;
+
+            // Combine the final left and right halves before inverse IP
+            const combinedBeforeIPInverse = xoredLeft2 + rightHalf;
+
+            // Step 6: Inverse Initial Permutation (IP-1)
+            const { output: finalResultBinary, mappingDetails: ipInverseDetails } = permute(combinedBeforeIPInverse, IP_INVERSE_TABLE, 'IP Inverse');
+            stepIPInverse.innerHTML = `Input: <span class="binary-string">${combinedBeforeIPInverse}</span><br>IP Inverse Table (0-indexed to 1-indexed): [${IP_INVERSE_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${ipInverseDetails}<br>Result: <span class="binary-string">${finalResultBinary}</span>`;
+            
+            // Display final binary and ASCII results
+            outputResultBinary.textContent = finalResultBinary;
+            outputResultChar.textContent = binaryToChar(finalResultBinary);
+        }
+
+        // --- Event Listeners ---
+        generateKeysBtn.addEventListener('click', () => {
+            generateKeysLogic(masterKeyStringInput.value);
+        });
+
+        encryptBtn.addEventListener('click', () => {
+            runCipherLogic(plainTextCharInput.value, true);
+        });
+
+        decryptBtn.addEventListener('click', () => {
+            runCipherLogic(cipherTextCharInput.value, false);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S-DES: The Simplified Data Encryption Standard - An Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Color Palette: Brilliant Blues -->
+    <!-- Narrative Plan: 
+        1. Hook/Intro: What is S-DES? Use large stats (Key/Block size) and a donut chart for its use case.
+        2. Process Overview: Visualize the high-level Encryption/Decryption formulas as a flow diagram.
+        3. Deep Dive: Create a detailed flowchart for the multi-step Key Generation process (P10 -> LS -> P8).
+        4. Detailed Breakdown: Use styled tables to show the exact P10 and P8 permutation mappings.
+        5. Conclusion: Summarize the educational value. 
+    -->
+    <!-- Visualization Plan:
+        - S-DES Use Case: Goal: Inform. Visualization: Donut Chart (Chart.js/Canvas). Justification: Perfect for showing a stark, simple proportion (Educational vs. Real World). CONFIRMS NO SVG.
+        - Encryption/Decryption Flow: Goal: Organize. Visualization: Flow Chart (HTML/Tailwind CSS). Justification: Best way to show a sequence of operations without SVG/Mermaid. CONFIRMS NO SVG.
+        - Key Generation Flow: Goal: Organize. Visualization: Flow Chart (HTML/Tailwind CSS). Justification: A complex process requires a step-by-step visual guide. HTML/CSS is the non-SVG method. CONFIRMS NO SVG.
+        - P10/P8 Permutation Tables: Goal: Organize/Inform. Visualization: Styled HTML Table. Justification: Most direct and clear way to display a static mapping of inputs to outputs. CONFIRMS NO SVG.
+    -->
+    <!-- CONFIRM: NEITHER Mermaid JS NOR SVG were used in this output. All diagrams are built with structured HTML and Tailwind CSS. All charts are rendered on Canvas via Chart.js. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 350px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 350px;
+        }
+        .flow-arrow {
+            width: 2px;
+            background-color: #90E0EF;
+            position: relative;
+        }
+        .flow-arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid #90E0EF;
+        }
+        .flow-box {
+            border-color: #0077B6;
+        }
+         .flow-line-h {
+            height: 2px;
+            background-color: #90E0EF;
+        }
+    </style>
+</head>
+<body class="bg-[#004AAD] text-gray-800">
+
+    <div class="container mx-auto p-4 sm:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-6xl font-black text-white mb-2">S-DES</h1>
+            <p class="text-xl md:text-2xl font-semibold text-[#CAF0F8]">The Simplified Data Encryption Standard</p>
+        </header>
+
+        <main>
+            <section id="intro" class="mb-16">
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8 text-center">
+                    <h2 class="text-3xl font-bold text-[#004AAD] mb-4">An Educational Cipher</h2>
+                    <p class="max-w-3xl mx-auto mb-8 text-lg">
+                        The Simplified Data Encryption Standard (S-DES) is a basic, symmetric-key block cipher developed for educational purposes. It mirrors the structure of the much more complex Data Encryption Standard (DES), making cryptographic concepts easier to grasp. It is **not cryptographically secure** and should never be used in real-world applications.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                        <div class="flex flex-col items-center justify-center p-6 bg-[#CAF0F8] rounded-xl shadow-lg h-full">
+                            <span class="text-7xl font-black text-[#004AAD]">10</span>
+                            <span class="text-2xl font-bold text-[#0077B6]">Bit Key</span>
+                            <p class="text-sm mt-2">A master key used to generate two 8-bit subkeys for encryption rounds.</p>
+                        </div>
+                        <div class="flex flex-col items-center justify-center p-6 bg-[#CAF0F8] rounded-xl shadow-lg h-full">
+                            <span class="text-7xl font-black text-[#004AAD]">8</span>
+                            <span class="text-2xl font-bold text-[#0077B6]">Bit Block</span>
+                            <p class="text-sm mt-2">S-DES operates on a fixed-size block of 8 bits of plaintext at a time.</p>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="sdesUseCaseChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>p
+
+            <section id="process" class="mb-16">
+                <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8">
+                    <h2 class="text-3xl font-bold text-[#004AAD] mb-4 text-center">The Encryption & Decryption Flow</h2>
+                    <p class="max-w-3xl mx-auto mb-10 text-lg text-center">
+                        The core of S-DES is a series of functions that transform plaintext into ciphertext and back. Encryption and decryption follow the same path but use the generated subkeys, K1 and K2, in the reverse order.
+                    </p>
+                    <div class="flex flex-col md:flex-row justify-around items-center text-center gap-8">
+                        <div class="w-full">
+                             <h3 class="text-2xl font-bold text-[#0077B6] mb-4">Encryption</h3>
+                             <div class="flex flex-col items-center">
+                                <div class="font-mono p-3 bg-gray-100 rounded-lg shadow-inner w-48 flow-box border-2">Plaintext</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-[#90E0EF] text-[#004AAD] rounded-lg shadow w-48 flow-box border-2">Initial Permutation (IP)</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-white rounded-lg shadow w-48 flow-box border-2">Function f<sub>K1</sub></div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-white rounded-lg shadow w-48 flow-box border-2">Swap (SW)</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-white rounded-lg shadow w-48 flow-box border-2">Function f<sub>K2</sub></div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-[#90E0EF] text-[#004AAD] rounded-lg shadow w-48 flow-box border-2">Inverse IP (IP<sup>-1</sup>)</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-mono p-3 bg-gray-100 rounded-lg shadow-inner w-48 flow-box border-2">Ciphertext</div>
+                             </div>
+                        </div>
+                        <div class="w-full">
+                            <h3 class="text-2xl font-bold text-[#0077B6] mb-4">Decryption</h3>
+                             <div class="flex flex-col items-center">
+                                <div class="font-mono p-3 bg-gray-100 rounded-lg shadow-inner w-48 flow-box border-2">Ciphertext</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-[#90E0EF] text-[#004AAD] rounded-lg shadow w-48 flow-box border-2">Initial Permutation (IP)</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-white rounded-lg shadow w-48 flow-box border-2">Function f<sub>K2</sub></div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-white rounded-lg shadow w-48 flow-box border-2">Swap (SW)</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-white rounded-lg shadow w-48 flow-box border-2">Function f<sub>K1</sub></div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-semibold p-3 bg-[#90E0EF] text-[#004AAD] rounded-lg shadow w-48 flow-box border-2">Inverse IP (IP<sup>-1</sup>)</div>
+                                <div class="h-8 flow-arrow"></div>
+                                <div class="font-mono p-3 bg-gray-100 rounded-lg shadow-inner w-48 flow-box border-2">Plaintext</div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="key-generation" class="mb-16">
+                 <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8">
+                    <h2 class="text-3xl font-bold text-[#004AAD] mb-4 text-center">Subkey Generation: The Engine Room</h2>
+                    <p class="max-w-3xl mx-auto mb-10 text-lg text-center">
+                       Before encryption can begin, two 8-bit subkeys (K1 and K2) must be derived from the 10-bit master key. This is a critical three-step process involving two types of permutations and a circular bit shift.
+                    </p>
+                     <div class="flex flex-col items-center">
+                         <div class="font-mono text-lg p-4 bg-gray-100 rounded-lg shadow-inner flow-box border-2">10-Bit Master Key</div>
+                         <div class="h-10 flow-arrow"></div>
+                         <div class="text-center font-semibold p-4 bg-[#90E0EF] text-[#004AAD] rounded-lg shadow flow-box border-2 w-72">
+                             Step 1: P10 Permutation
+                             <p class="font-normal text-sm mt-1">Rearrange the 10 bits.</p>
+                         </div>
+                         <div class="h-10 flow-arrow"></div>
+                         <div class="p-4 bg-white rounded-lg shadow flow-box border-2 w-full max-w-lg text-center">
+                            <p class="font-semibold mb-2">Step 2: Split & Left Shift (LS)</p>
+                            <div class="flex justify-around items-start mt-4">
+                                <div class="flex flex-col items-center w-1/2">
+                                    <p class="font-bold text-lg mb-2 text-[#0077B6]">For Subkey K1</p>
+                                    <div class="p-3 bg-gray-100 rounded-lg shadow-inner">Split into two 5-bit halves</div>
+                                    <div class="h-6 flow-arrow"></div>
+                                    <div class="font-semibold p-3 bg-white rounded-lg shadow flow-box border">LS-1: Circular Left Shift by 1</div>
+                                </div>
+                                <div class="flex flex-col items-center w-1/2">
+                                    <p class="font-bold text-lg mb-2 text-[#0077B6]">For Subkey K2</p>
+                                     <div class="p-3 bg-gray-100 rounded-lg shadow-inner">Take LS-1 result</div>
+                                    <div class="h-6 flow-arrow"></div>
+                                    <div class="font-semibold p-3 bg-white rounded-lg shadow flow-box border">LS-2: Circular Left Shift by 2</div>
+                                </div>
+                            </div>
+                         </div>
+                         <div class="h-10 flow-arrow"></div>
+                         <div class="p-4 bg-white rounded-lg shadow flow-box border-2 w-full max-w-lg text-center">
+                             <p class="font-semibold mb-2">Step 3: Recombine & P8 Permutation</p>
+                             <div class="flex justify-around items-start mt-4">
+                                <div class="flex flex-col items-center w-1/2">
+                                     <div class="h-6 w-px bg-gray-400"></div>
+                                     <div class="font-semibold p-3 bg-[#90E0EF] text-[#004AAD] rounded-lg shadow flow-box border-2">P8 Permutation</div>
+                                     <p class="text-sm mt-1">Select & rearrange 8 bits</p>
+                                     <div class="h-6 flow-arrow"></div>
+                                     <div class="font-mono text-lg p-4 bg-gray-800 text-white rounded-lg shadow-inner flow-box border-2">Subkey K1 (8 bits)</div>
+                                </div>
+                                <div class="flex flex-col items-center w-1/2">
+                                    <div class="h-6 w-px bg-gray-400"></div>
+                                    <div class="font-semibold p-3 bg-[#90E0EF] text-[#004AAD] rounded-lg shadow flow-box border-2">P8 Permutation</div>
+                                    <p class="text-sm mt-1">Select & rearrange 8 bits</p>
+                                    <div class="h-6 flow-arrow"></div>
+                                    <div class="font-mono text-lg p-4 bg-gray-800 text-white rounded-lg shadow-inner flow-box border-2">Subkey K2 (8 bits)</div>
+                                </div>
+                            </div>
+                         </div>
+                     </div>
+                </div>
+            </section>
+            
+            <section id="permutations" class="mb-16">
+                 <div class="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-8">
+                     <h2 class="text-3xl font-bold text-[#004AAD] mb-4 text-center">The Permutation Tables</h2>
+                    <p class="max-w-3xl mx-auto mb-10 text-lg text-center">
+                       Permutations are fixed rules for reordering bits. In S-DES, P10 shuffles the initial 10-bit key, while P8 selects and shuffles 8 of those bits to form the final subkeys.
+                    </p>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                            <h3 class="font-bold text-xl text-[#0077B6] mb-3">P10: Permute 10 Bits</h3>
+                            <p class="mb-4">The 3rd bit of the input becomes the 1st bit of the output, the 5th becomes the 2nd, and so on.</p>
+                            <div class="grid grid-cols-5 text-center gap-2">
+                                <div class="font-semibold">Input Pos:</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">3</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">5</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">2</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">7</div>
+                                <div class="font-semibold">Output Pos:</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">1</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">2</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">3</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">4</div>
+
+                                <div class="font-semibold mt-2">Input Pos:</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">4</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">10</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">1</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">9</div>
+                                <div class="font-semibold mt-2">Output Pos:</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">5</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">6</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">7</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">8</div>
+
+                                <div class="font-semibold mt-2">Input Pos:</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">8</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">6</div>
+                                <div class="col-span-2"></div>
+                                <div class="font-semibold mt-2">Output Pos:</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">9</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">10</div>
+
+                            </div>
+                        </div>
+                        <div class="bg-gray-50 p-6 rounded-lg shadow-inner">
+                            <h3 class="font-bold text-xl text-[#0077B6] mb-3">P8: Select & Permute 8 Bits</h3>
+                            <p class="mb-4">This permutation selects 8 bits from the 10-bit shifted key and rearranges them to form a final 8-bit subkey.</p>
+                             <div class="grid grid-cols-5 text-center gap-2">
+                                <div class="font-semibold">Input Pos:</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">6</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">3</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">7</div>
+                                <div class="font-mono rounded bg-gray-200 p-2">4</div>
+                                <div class="font-semibold">Output Pos:</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">1</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">2</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">3</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2">4</div>
+                                
+                                <div class="font-semibold mt-2">Input Pos:</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">8</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">5</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">10</div>
+                                <div class="font-mono rounded bg-gray-200 p-2 mt-2">9</div>
+                                <div class="font-semibold mt-2">Output Pos:</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">5</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">6</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">7</div>
+                                <div class="font-mono rounded bg-[#CAF0F8] p-2 mt-2">8</div>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+            </section>
+            <p style="text-align: center; margin-top: 2rem;">
+                    <a href="sdes.html" style="color: white; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center;">
+                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Goto SDES DEMO
+                    </a>
+            </p>
+        </main>
+        
+        <footer class="text-center mt-12 text-[#CAF0F8]">
+            <p>Infographic created to visualize the S-DES algorithm for educational purposes.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const ctx = document.getElementById('sdesUseCaseChart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Educational Use', 'Real-World Security'],
+                    datasets: [{
+                        label: 'S-DES Use Case',
+                        data: [100, 0],
+                        backgroundColor: [
+                            '#0077B6',
+                            '#e5e7eb' 
+                        ],
+                        borderColor: [
+                            '#FFFFFF',
+                            '#FFFFFF'
+                        ],
+                        borderWidth: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                             labels: {
+                                color: '#374151', 
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Primary Use Case Distribution',
+                            color: '#004AAD',
+                             font: {
+                                size: 16,
+                                weight: 'bold'
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    const item = tooltipItems[0];
+                                    let label = item.chart.data.labels[item.dataIndex];
+                                    if (Array.isArray(label)) {
+                                      return label.join(' ');
+                                    } else {
+                                      return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
