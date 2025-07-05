@@ -104,6 +104,7 @@
             list-style: none;
             gap: 1.2rem;
             padding: 0;
+            flex-wrap: wrap; /* Added for responsiveness */
         }
 
         .nav-links a {
@@ -153,9 +154,6 @@
 
         /* --- Main Content --- */
         .main-content {
-            /* display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.2rem; */
             margin-bottom: 3rem;
         }
 
@@ -414,9 +412,7 @@
 
         /* --- RESPONSIVE BREAKPOINTS --- */
         @media (max-width: 992px) {
-            /* .main-content {
-                grid-template-columns: 1fr;
-            } */
+            /* No specific changes for this breakpoint for index page */
         }
 
         @media (max-width: 768px) {
@@ -442,6 +438,13 @@
             .footer-content {
                 gap: 1.5rem;
             }
+            .nav-links { /* Adjust gap for smaller screens */
+                gap: 0.8rem;
+            }
+            .nav-links a { /* Smaller padding for smaller nav items */
+                padding: 0.4rem 0.9rem;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -457,10 +460,10 @@
                 font-size: 1.8rem;
             }
             .post-card {
-                gap: 1rem; /* RESPONSIVE FIX: Reduced gap */
+                gap: 1rem;
             }
             .post-thumb {
-                width: 80px; /* RESPONSIVE FIX: Smaller thumbnail on mobile */
+                width: 80px;
                 height: 80px;
             }
             .post-title {
@@ -470,7 +473,17 @@
                 font-size: 0.95rem;
             }
             .footer-content {
-                grid-template-columns: 1fr; /* Ensures footer stacks cleanly */
+                grid-template-columns: 1fr;
+            }
+            .nav-links { /* Stack nav items vertically if needed or spread them */
+                flex-direction: column;
+                gap: 0.5rem; /* Smaller gap when stacked */
+                align-items: center; /* Center items when stacked */
+            }
+            .nav-links a {
+                width: calc(100% - 2.2rem); /* Make links full width minus padding */
+                text-align: center;
+                padding: 0.6rem 1.1rem; /* Adjust padding for better tap area */
             }
         }
     </style>
@@ -495,7 +508,7 @@
                     <ul class="nav-links">
                         <li><a href="index.html" class="active">Posts</a></li>
                         <li><a href="whoami.html">Whoami</a></li>
-                        <li><a href="tools.html">Tools</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </nav>
             </div>
@@ -529,14 +542,14 @@
                     <p class="post-excerpt">Discover how prompt injection and adversarial thinking create the foundation for protecting next-generation.....</p>
                     <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
                 </div>
-            </div>  
- 
+            </div>
+
         </div>
         <hr style="border: 2px solid var(--accent); margin: 3rem 0;">
 
         <div class="featured-post">
             <h2 class="section-title">Featured Post</h2>
-             <img src="images/glowing_brain.png" alt="Community Support" class="post-cover">
+            <img src="images/glowing_brain.png" alt="Community Support" class="post-cover">
             <div class="post-meta">
                 <span class="post-meta-item">25th Jun 2025</span>
                 <span class="post-meta-item"><i class="fas fa-tags"></i> Productivity, Learning</span>
@@ -592,11 +605,7 @@
             <div class="featured-post-content">
                 <h3>The Power of Genuine Support</h3>
                 <p>In cybersecurity, it’s easy to measure our worth against others. But one of the most transformative habits you can cultivate isn’t a technical skill: it’s the practice of wholeheartedly rooting for the people around you.</p>
-
-
-
                 <a href="posts/support.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
             </div>
         </div>
     </div>
@@ -614,7 +623,7 @@
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="whoami.html">Whoami</a></li>
-                        <li><a href="tools.html">Tools</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html">Tools</a></li>
                         <li><a href="#">Categories</a></li>
                     </ul>
                 </div>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bashir Kabir Zarewa | Write Ups</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light-gray: #f5f7fa;
+            --medium-gray: #e1e5eb;
+            --dark-gray: #7f8c8d;
+            --text: #2c3e50;
+            --text-light: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
+            --border-radius: 14px;
+            --transition: 0.3s cubic-bezier(.4,2,.6,1);
+            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(120deg, var(--light-gray) 60%, #eaf1fb 100%);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 1.08rem;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.2rem;
+        }
+
+        /* --- Header --- */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 2.5rem 0 2rem 0;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-container {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.13);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        }
+
+        .blog-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.92;
+            margin-bottom: 1.5rem;
+            color: #e1e5eb;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 1.2rem;
+            padding: 0;
+            flex-wrap: wrap; /* Added for responsiveness */
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            padding: 0.5rem 1.1rem;
+            border-radius: var(--border-radius);
+            transition: background var(--transition), color var(--transition);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+
+        .header-social {
+            position: absolute;
+            top: 22px;
+            right: 22px;
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+
+        .header-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.13);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 18px;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .header-social a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.08);
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--medium-gray);
+            position: relative;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 48px;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        /* --- Write-up Entry Styling --- */
+        .write-up-entry {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2.2rem 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            position: relative; /* Needed for absolute positioning of the badge */
+            overflow: hidden; /* Ensures badge corners are clipped if they go outside */
+        }
+
+        /* Image Styling and Hover Effects */
+        .post-cover-wrapper { /* New wrapper for image and overlay */
+            position: relative;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            overflow: hidden; /* Crucial for clipping the image on zoom */
+            box-shadow: var(--shadow);
+        }
+
+        .post-cover {
+            width: 70%; /* Responsive width */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: var(--border-radius);
+            display: block;
+            max-height: 600px;
+            object-fit: cover;
+            transition: transform var(--transition); /* Smooth zoom transition */
+        }
+
+        .post-cover-wrapper:hover .post-cover {
+            transform: scale(1.03); /* Slight zoom on hover */
+        }
+
+        .post-cover-overlay { /* Overlay for hover effect */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0); /* Start transparent */
+            transition: background var(--transition);
+            border-radius: var(--border-radius);
+        }
+
+        .post-cover-wrapper:hover .post-cover-overlay {
+            background: rgba(0, 0, 0, 0.1); /* Darken on hover */
+        }
+
+        .post-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.2rem;
+            color: var(--dark-gray);
+            font-size: 0.97rem;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .post-meta-item {
+            background: var(--light-gray);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .write-up-content p {
+            margin-bottom: 1.1rem;
+        }
+
+        .read-more {
+            display: inline-block;
+            color: var(--accent);
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 0.98rem;
+            transition: color var(--transition);
+        }
+
+        .read-more i {
+            margin-left: 5px;
+            transition: transform 0.2s;
+        }
+
+        .read-more:hover i {
+            transform: translateX(4px);
+        }
+
+        /* Introduction text for the write-ups page */
+        .intro-text {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            color: var(--dark-gray);
+            line-height: 1.8;
+            font-size: 1rem;
+        }
+        .intro-text strong {
+            color: var(--primary);
+        }
+
+        /* "New" Badge Styling */
+        .new-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--accent);
+            color: var(--white);
+            padding: 0.3em 0.8em;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+
+        /* --- Footer --- */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 2.5rem 0 1.5rem 0;
+            margin-top: 3rem;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.15rem;
+            margin-bottom: 1.1rem;
+            position: relative;
+            padding-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 32px;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.7rem;
+        }
+
+        .footer-social a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.13);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 18px;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .footer-social a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.08);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.13);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        /* --- RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 992px) {
+            /* No specific changes for this breakpoint for write-ups page */
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+            .profile-container {
+                width: 100px;
+                height: 100px;
+            }
+            .blog-title {
+                font-size: 2rem;
+            }
+            .blog-subtitle {
+                font-size: 1rem;
+            }
+            .write-up-entry {
+                padding: 1.5rem;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .footer-content {
+                gap: 1.5rem;
+            }
+            .post-cover-wrapper { /* Adjust for smaller screens */
+                max-height: 300px;
+            }
+            .nav-links { /* Adjust gap for smaller screens */
+                gap: 0.8rem;
+            }
+            .nav-links a { /* Smaller padding for smaller nav items */
+                padding: 0.4rem 0.9rem;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                font-size: 1rem;
+            }
+            .header-social {
+                top: 10px;
+                right: 10px;
+                gap: 8px;
+            }
+            .blog-title {
+                font-size: 1.8rem;
+            }
+            .post-meta {
+                font-size: 0.95rem;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            .intro-text {
+                padding: 1rem 1.5rem;
+            }
+            .post-cover-wrapper {
+                max-height: 200px; /* Further adjust for very small screens */
+            }
+            .new-badge {
+                font-size: 0.7rem;
+                padding: 0.2em 0.6em;
+                top: 10px;
+                right: 10px;
+            }
+            .nav-links { /* Stack nav items vertically if needed or spread them */
+                flex-direction: column;
+                gap: 0.5rem; /* Smaller gap when stacked */
+                align-items: center; /* Center items when stacked */
+            }
+            .nav-links a {
+                width: calc(100% - 2.2rem); /* Make links full width minus padding */
+                text-align: center;
+                padding: 0.6rem 1.1rem; /* Adjust padding for better tap area */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-social">
+            <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-container">
+                    <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                </div>
+                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
+                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
+
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="index.html">Posts</a></li>
+                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="write-ups.html" class="active">Write Ups</a></li>
+                        <li><a href="tools.html">Tools</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="intro-text">
+            <p>Welcome to my **Write Ups** section! Here you'll find detailed analyses, solutions, and methodologies for various cybersecurity challenges, including Capture The Flag (CTF) challenges, exploit development, and in-depth security research. Each write-up aims to provide clear, actionable insights into complex topics.</p>
+        </div>
+
+        <div class="write-up-entry">
+            <h2 class="section-title">Latest Write Ups</h2>
+            <img src="images/Haze.png" alt="Haze Machine Walkthrough" class="post-cover">
+            <div class="post-meta">
+                <span class="post-meta-item">3rd July 2025</span>
+                <span class="post-meta-item"><i class="fas fa-tags"></i> HTB, Active Directory, Offensive Security</span>
+            </div>
+            <div class="write-up-content">
+                <h3>Haze Machine Walkthrough HackTheBox</h3>
+                <p>Detailed walkthrough of Haze Machine, a challenging Active Directory machine that served as an exceptional learning experience. Dive into the steps, tools, and insights gained during this capture the flag challenge.</p>
+                <a href="writeups/haze-htb-write-up.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+
+            <!-- <div class="write-up-entry">
+                 <div class="post-cover-wrapper">
+                    <img src="images/glowing_brain.png" alt="Rewire Your Brain" class="post-cover">
+                    <div class="post-cover-overlay"></div>
+                </div>
+                <div class="post-meta">
+                    <span class="post-meta-item">25th Jun 2025</span>
+                    <span class="post-meta-item"><i class="fas fa-tags"></i> Productivity, Learning</span>
+                </div>
+                <div class="write-up-content">
+                    <h3>Rewire Your Brain: The Ultimate Guide to Effortless Learning & Perfect Recall</h3>
+                    <p>Unlock your brain's true potential with these neuroscience-backed strategies for superior learning and memory. This write-up delves into practical techniques and concepts that can help you learn faster and retain information more effectively.</p>
+                    <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            </div>
+
+            <div class="write-up-entry">
+                <div class="post-cover-wrapper">
+                    <img src="images/adversary.png" alt="Active Directory Security" class="post-cover">
+                    <div class="post-cover-overlay"></div>
+                </div>
+                <div class="post-meta">
+                    <span class="post-meta-item">17th Jun 2025</span>
+                    <span class="post-meta-item"><i class="fas fa-tags"></i> Red Team, Active Directory</span>
+                </div>
+                <div class="write-up-content">
+                    <h3>Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques</h3>
+                    <p>For cybersecurity professionals, whether they are **blue team** members focused on defence or **red team** members conducting audits, understanding how Active Directory operates and how it can be exploited is paramount. This write-up provides a comprehensive look at common attack vectors.</p>
+                    <a href="posts/active-directory-attack-techniques.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            </div>
+
+            <div class="write-up-entry">
+                <div class="post-cover-wrapper">
+                    <img src="images/prompt_war.png" alt="AI Security" class="post-cover">
+                    <div class="post-cover-overlay"></div>
+                </div>
+                <div class="post-meta">
+                    <span class="post-meta-item">9th Jun 2025</span>
+                    <span class="post-meta-item"><i class="fas fa-tags"></i> AI Security</span>
+                </div>
+                <div class="write-up-content">
+                    <h3>Prompt Wars: Navigating the New Landscape of AI Security</h3>
+                    <p>As Large Language Models (LLMs) like ChatGPT, Gemini, and Claude integrate into applications, a new battlefield in cybersecurity has emerged. This write-up explores the threats posed by prompt injection and adversarial thinking in AI systems.</p>
+                    <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            </div>
+
+            <div class="write-up-entry">
+                <div class="post-cover-wrapper">
+                    <img src="images/africa_at_crossroad.png" alt="Africa at the Crossroads" class="post-cover">
+                    <div class="post-cover-overlay"></div>
+                </div>
+                <div class="post-meta">
+                    <span class="post-meta-item">27th Nov 2022</span>
+                    <span class="post-meta-item"><i class="fas fa-tags"></i> Africa, 4IR, AI, Technology</span>
+                </div>
+                <div class="write-up-content">
+                    <h3>Africa at the Crossroads: Will the 4IR Be Different?</h3>
+                    <p>The Fourth Industrial Revolution (4IR) marked by breakthroughs in AI, cloud computing, robotics, IoT, and blockchain is reshaping economies worldwide. This write-up examines Africa's position and potential in this transformative era.</p>
+                    <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
+                </div>
+                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
+            </div>
+
+            <div class="write-up-entry">
+                <div class="post-cover-wrapper">
+                    <img src="images/support.png" alt="Community Support" class="post-cover">
+                    <div class="post-cover-overlay"></div>
+                </div>
+                <div class="post-meta">
+                    <span class="post-meta-item">1st Jun 2025</span>
+                    <span class="post-meta-item"><i class="fas fa-tags"></i> Community</span>
+                </div>
+                <div class="write-up-content">
+                    <h3>The Power of Genuine Support</h3>
+                    <p>In cybersecurity, it’s easy to measure our worth against others. But one of the most transformative habits you can cultivate isn’t a technical skill: it’s the practice of wholeheartedly rooting for the people around you.</p>
+                    <a href="posts/support.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Bashir Kabir Zarewa</h3>
+                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Navigation</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li>
+                        <li><a href="tools.html">Tools</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h3>Connect</h3>
+                    <p>Follow me on social media to get the latest updates and engage with my content.</p>
+                    <div class="footer-social">
+                        <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="copyright">
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

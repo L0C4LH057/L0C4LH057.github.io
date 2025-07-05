@@ -35,7 +35,7 @@
             flex-direction: column;
             min-height: 100vh;
         }
-        
+
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -107,7 +107,7 @@
             list-style: none;
             gap: 1.2rem;
             padding: 0;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Allows navigation items to wrap on smaller screens */
         }
 
         .nav-links a {
@@ -169,7 +169,7 @@
             margin: 2rem 0;
             border-radius: 0 var(--border-radius) var(--border-radius) 0;
         }
-        
+
         .consulting-box p {
             margin: 0;
         }
@@ -226,7 +226,7 @@
             align-items: center;
             margin-bottom: 1rem;
         }
-        
+
         .affiliation-item:last-child {
             margin-bottom: 0;
         }
@@ -243,19 +243,19 @@
             margin-right: 1rem;
             flex-shrink: 0;
         }
-        
+
         .affiliation-details p {
             margin: 0;
             line-height: 1.4;
             font-size: 0.95rem;
             color: var(--dark-gray);
         }
-        
+
         .affiliation-details strong {
             font-size: 1rem;
             color: var(--text);
         }
-        
+
         .quote-box {
             font-style: italic;
             text-align: center;
@@ -308,9 +308,9 @@
             height: 2px;
             background-color: var(--accent);
         }
-        
+
         .footer-section p {
-            opacity: 0.8; 
+            opacity: 0.8;
             line-height: 1.7;
         }
 
@@ -378,12 +378,19 @@
                 margin-top: 2rem;
             }
         }
-        
+
         @media (max-width: 768px) {
             .container { padding: 0 1rem; }
             .profile-container { width: 140px; height: 140px; }
             .page-title { font-size: 2rem; }
             .main-container { padding: 1.5rem; }
+            .nav-links { /* Adjust gap for smaller screens */
+                gap: 0.8rem;
+            }
+            .nav-links a { /* Smaller padding for smaller nav items */
+                padding: 0.4rem 0.9rem;
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -392,6 +399,16 @@
             .page-subtitle { font-size: 1rem; }
             .main-container { padding: 1.5rem 1rem; }
             .quote-box { max-width: 100%; }
+            .nav-links { /* Stack nav items vertically if needed or spread them */
+                flex-direction: column;
+                gap: 0.5rem; /* Smaller gap when stacked */
+                align-items: center; /* Center items when stacked */
+            }
+            .nav-links a {
+                width: calc(100% - 2.2rem); /* Make links full width minus padding */
+                text-align: center;
+                padding: 0.6rem 1.1rem; /* Adjust padding for better tap area */
+            }
         }
     </style>
 </head>
@@ -402,15 +419,15 @@
                 <div class="profile-container">
                     <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
                 </div>
-                
+
                 <h1 class="page-title">Bashir Kabir Zarewa</h1>
                 <p class="page-subtitle">Security Researcher, Bug Bounty Hunter & Advisor</p>
-                
+
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.html">Posts</a></li>
                         <li><a href="whoami.html" class="active">Whoami</a></li>
-                        <li><a href="tools.html">Tools</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </nav>
             </div>
@@ -426,7 +443,7 @@
                         <p>As a dedicated Cybersecurity Researcher, Bug Bounty Hunter, and Ethical Hacker, I specialize in web application security, automation, and Linux exploitation. My work involves identifying and reporting critical vulnerabilities for leading global companies, including Fortune 500s like Netflix and Hilton, where I've uncovered significant misconfigurations, sensitive data exposures, and internal infrastructure leaks.</p>
                         <p>With over four years of hands-on experience, I have submitted dozens of impactful reports on platforms like HackerOne and Bugcrowd. I am passionate about building, breaking, and teaching security concepts. When I'm not hunting for bugs, I am committed to training the next generation of ethical hackers through intensive bootcamps and community-driven initiatives.</p>
                     </section>
-                    
+
                     <section class="consulting-box">
                         <p><strong>Seeking security expertise?</strong> I provide expert consulting services in security assessments and strategic implementation. I am also available to advise high-velocity startups that require a passionate, well-networked technical advisor.</p>
                     </section>
@@ -441,7 +458,7 @@
                         <strong>- Albert Einstein</strong>
                     </div>
                 </div>
-                
+
                 <aside class="sidebar">
                     <div class="card">
                         <h3>Whereami</h3>
@@ -485,9 +502,9 @@
             <div class="footer-section">
                 <h3>Navigation</h3>
                 <ul class="footer-links">
-                    <li><a href="index.html">Posts</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li><a href="whoami.html">Whoami</a></li>
-                    <li><a href="tools.html">Tools</a></li>
+                    <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html">Tools</a></li>
                     <li><a href="#">Privacy Policy</a></li>
                 </ul>
             </div>

