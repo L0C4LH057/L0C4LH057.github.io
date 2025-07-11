@@ -653,6 +653,96 @@
         }
 
         
+                /* Responsive post content and footer tweaks */
+        @media (max-width: 700px) {
+            .container {
+                padding: 0 0.3rem;
+            }
+            .post-content {
+                padding: 0.7rem 0.3rem;
+            }
+            .post-header {
+                margin-bottom: 1.5rem;
+            }
+            .post-title {
+                font-size: 1.5rem;
+            }
+            .post-subtitle {
+                font-size: 1rem;
+            }
+            .post-cover, .inline-image {
+                width: 100%;
+                max-height: 300px;
+            }
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-bio .bio-image {
+                margin-bottom: 0.5rem;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            .footer-section {
+                min-width: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+        }
+
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 70px;
+                height: 70px;
+            }
+            .blog-title {
+                font-size: 1.25rem;
+            }
+            .blog-subtitle {
+                font-size: 0.98rem;
+            }
+            .post-title {
+                font-size: 1.2rem;
+            }
+            .post-subtitle {
+                font-size: 0.9rem;
+            }
+            .footer-title {
+                font-size: 0.98rem;
+            }
+            .footer-links a {
+                font-size: 0.93rem;
+            }
+            .copyright {
+                font-size: 0.85rem;
+            }
+            .post-content {
+                padding: 0.5rem 0.1rem;
+            }
+            .post-header {
+                margin-bottom: 1rem;
+            }
+            .post-meta {
+                gap: 0.3rem;
+                font-size: 0.9rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 200px;
+                width: 100%;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        
 
         /* Responsive Footer */
         @media (max-width: 900px) {

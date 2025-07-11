@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DES Encryption/Decryption Demonstrator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #334155;
+        }
+        .container {
+            max-width: 90%;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        input[type="text"] {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        button {
+            background-color: #4f46e5;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        button:hover {
+            background-color: #4338ca;
+        }
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+        .process-step {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            overflow-x: auto;
+        }
+        .process-step strong {
+            color: #4f46e5;
+        }
+        .result-box {
+            background-color: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            font-weight: 600;
+            color: #065f46;
+            text-align: center;
+            font-size: 1.125rem;
+            margin-top: 1.5rem;
+        }
+        .warning-message {
+            background-color: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #dc2626;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+        .binary-display {
+            word-break: break-all;
+            user-select: all; /* Allow easy selection for copy-pasting */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p style="text-align: center; margin-top: 2rem;">
+            <a href="des.html" style="color: rgb(31, 28, 221); text-decoration: none; font-weight: 700; display: inline-flex; align-items: center;">
+                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Goto DES infographic
+            </a>
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">DES Encryption/Decryption Demonstrator</h1>
+
+        <div class="mb-6">
+            <label for="plaintextInput" class="block text-sm font-medium text-gray-700 mb-2">Plaintext (ASCII, max 8 chars per block for demo):</label>
+            <input type="text" id="plaintextInput" class="focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter plaintext (e.g., HELLOWORLD)">
+            <p class="text-xs text-gray-500 mt-1">For simplicity, this demo processes in 64-bit blocks (8 ASCII characters). Input will be padded with '0's if not a multiple of 8.</p>
+        </div>
+
+        <div class="mb-6">
+            <label for="keyInput" class="block text-sm font-medium text-gray-700 mb-2">Key (ASCII, exactly 8 characters):</label>
+            <input type="text" id="keyInput" class="focus:ring-indigo-500 focus:border-indigo-500" placeholder="Enter 8-char key (e.g., MYSECRET)">
+            <p class="text-xs text-gray-500 mt-1">The key must be exactly 8 ASCII characters (64 bits, 56 effective bits after PC-1).</p>
+        </div>
+
+        <div class="flex space-x-4 mb-8">
+            <button id="generateKeyBtn" class="bg-green-600 hover:bg-green-700">Generate Key</button>
+            <button id="encryptBtn">Encrypt Plaintext</button>
+            <button id="decryptBtn" class="bg-blue-600 hover:bg-blue-700">Decrypt Ciphertext</button>
+        </div>
+
+        <div id="resultOutput" class="result-box hidden"></div>
+
+        <div id="processDisplay" class="mt-8">
+            <h2 class="section-title">Background Process Steps:</h2>
+            <div id="processStepsContainer">
+                <p class="text-gray-500">No process initiated yet. Enter plaintext/key and click a button.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- DES Algorithm Tables ---
+        const IP = [
+            58, 50, 42, 34, 26, 18, 10, 2,
+            60, 52, 44, 36, 28, 20, 12, 4,
+            62, 54, 46, 38, 30, 22, 14, 6,
+            64, 56, 48, 40, 32, 24, 16, 8,
+            57, 49, 41, 33, 25, 17, 9, 1,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            61, 53, 45, 37, 29, 21, 13, 5,
+            63, 55, 47, 39, 31, 23, 15, 7
+        ];
+
+        const FP = [ // Inverse of IP
+            40, 8, 48, 16, 56, 24, 64, 32,
+            39, 7, 47, 15, 55, 23, 63, 31,
+            38, 6, 46, 14, 54, 22, 62, 30,
+            37, 5, 45, 13, 53, 21, 61, 29,
+            36, 4, 44, 12, 52, 20, 60, 28,
+            35, 3, 43, 11, 51, 19, 59, 27,
+            34, 2, 42, 10, 50, 18, 58, 26,
+            33, 1, 41, 9, 49, 17, 57, 25
+        ];
+
+        const PC1 = [
+            57, 49, 41, 33, 25, 17, 9, 1,
+            58, 50, 42, 34, 26, 18, 10, 2,
+            59, 51, 43, 35, 27, 19, 11, 3,
+            60, 52, 44, 36, 63, 55, 47, 39,
+            31, 23, 15, 7, 62, 54, 46, 38,
+            30, 22, 14, 6, 61, 53, 45, 37,
+            29, 21, 13, 5, 28, 20, 12, 4
+        ];
+
+        const PC2 = [
+            14, 17, 11, 24, 1, 5, 3, 28,
+            15, 6, 21, 10, 23, 19, 12, 4,
+            26, 8, 16, 7, 27, 20, 13, 2,
+            41, 52, 31, 37, 47, 55, 30, 40,
+            51, 45, 33, 48, 44, 49, 39, 56,
+            34, 53, 46, 42, 50, 36, 29, 32
+        ];
+
+        const SHIFT_SCHEDULE = [
+            1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1
+        ];
+
+        const E = [
+            32, 1, 2, 3, 4, 5,
+            4, 5, 6, 7, 8, 9,
+            8, 9, 10, 11, 12, 13,
+            12, 13, 14, 15, 16, 17,
+            16, 17, 18, 19, 20, 21,
+            20, 21, 22, 23, 24, 25,
+            24, 25, 26, 27, 28, 29,
+            28, 29, 30, 31, 32, 1
+        ];
+
+        const P = [
+            16, 7, 20, 21, 29, 12, 28, 17,
+            1, 15, 23, 26, 5, 18, 31, 10,
+            2, 8, 24, 14, 32, 27, 3, 9,
+            19, 13, 30, 6, 22, 11, 4, 25
+        ];
+
+        const S_BOXES = [
+            // S1
+            [[14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7],
+            [0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8],
+            [4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0],
+            [15, 12, 8, 2, 4, 9, 1, 7, 5, 11, 3, 14, 10, 0, 6, 13]],
+            // S2
+            [[15, 1, 8, 14, 6, 11, 3, 4, 9, 7, 2, 13, 12, 0, 5, 10],
+            [3, 13, 4, 7, 15, 2, 8, 14, 12, 0, 1, 10, 6, 9, 11, 5],
+            [0, 14, 7, 11, 10, 4, 13, 1, 5, 8, 12, 6, 9, 3, 2, 15],
+            [13, 8, 10, 1, 3, 15, 4, 2, 11, 6, 7, 12, 0, 5, 14, 9]],
+            // S3
+            [[10, 0, 9, 14, 6, 3, 15, 5, 1, 13, 12, 7, 11, 4, 2, 8],
+            [13, 7, 0, 9, 3, 4, 6, 10, 2, 8, 5, 14, 12, 11, 15, 1],
+            [10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4],
+            [3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14]],
+            // S4
+            [[7, 13, 14, 3, 0, 6, 9, 10, 1, 2, 8, 5, 11, 12, 4, 15],
+            [13, 8, 11, 5, 6, 15, 0, 3, 4, 7, 2, 12, 1, 10, 14, 9],
+            [10, 6, 9, 0, 12, 11, 7, 13, 15, 1, 3, 14, 5, 2, 8, 4],
+            [3, 15, 0, 6, 10, 1, 13, 8, 9, 4, 5, 11, 12, 7, 2, 14]],
+            // S5
+            [[2, 12, 4, 1, 7, 10, 11, 6, 8, 5, 3, 15, 13, 0, 14, 9],
+            [14, 11, 2, 12, 4, 7, 13, 1, 5, 0, 15, 10, 3, 9, 8, 6],
+            [4, 2, 1, 11, 10, 13, 7, 8, 15, 9, 12, 5, 6, 3, 0, 14],
+            [11, 8, 12, 7, 1, 14, 2, 13, 6, 15, 0, 9, 10, 4, 5, 3]],
+            // S6
+            [[12, 1, 10, 15, 9, 2, 6, 8, 0, 13, 3, 4, 14, 7, 5, 11],
+            [10, 15, 4, 2, 7, 12, 9, 5, 6, 1, 13, 14, 0, 11, 3, 8],
+            [9, 14, 15, 5, 2, 8, 12, 3, 7, 0, 4, 10, 1, 13, 11, 6],
+            [4, 3, 2, 12, 9, 5, 15, 10, 11, 14, 1, 7, 6, 0, 8, 13]],
+            // S7
+            [[4, 11, 2, 14, 15, 0, 8, 13, 3, 12, 9, 7, 5, 10, 6, 1],
+            [13, 0, 11, 7, 4, 9, 1, 10, 14, 3, 5, 12, 2, 15, 8, 6],
+            [1, 4, 11, 13, 12, 3, 7, 14, 10, 15, 6, 8, 0, 5, 9, 2],
+            [6, 11, 13, 8, 1, 4, 10, 7, 9, 5, 0, 15, 14, 2, 3, 12]],
+            // S8
+            [[13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 7],
+            [1, 15, 13, 8, 10, 3, 7, 4, 12, 5, 6, 11, 0, 14, 9, 2],
+            [7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8],
+            [2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11]]
+        ];
+
+        // Global variable to store generated subkeys
+        let generatedSubKeys = null;
+
+        // --- Helper Functions ---
+
+        /**
+         * Formats a binary string by adding spaces every 8 bits for readability.
+         * @param {string} binaryString - The binary string.
+         * @returns {string} Formatted binary string.
+         */
+        function formatBinary(binaryString) {
+            return binaryString.match(/.{1,8}/g)?.join(' ') || binaryString;
+        }
+
+        /**
+         * Converts an ASCII string to a binary string (64-bit blocks).
+         * Pads with '0's to ensure each block is 64 bits.
+         * @param {string} text - The ASCII input string.
+         * @returns {string} The binary string.
+         */
+        function asciiToBinary(text) {
+            let binaryString = '';
+            for (let i = 0; i < text.length; i++) {
+                // Convert char to its 8-bit binary representation
+                binaryString += text.charCodeAt(i).toString(2).padStart(8, '0');
+            }
+            // Pad the binary string to be a multiple of 64 bits
+            const paddingNeeded = 64 - (binaryString.length % 64);
+            if (paddingNeeded !== 64) { // Only pad if not already a multiple of 64
+                binaryString += '0'.repeat(paddingNeeded);
+            }
+            return binaryString;
+        }
+
+        /**
+         * Converts a binary string to an ASCII string.
+         * @param {string} binaryString - The binary input string.
+         * @returns {string} The ASCII string.
+         */
+        function binaryToAscii(binaryString) {
+            let asciiText = '';
+            for (let i = 0; i < binaryString.length; i += 8) {
+                const byte = binaryString.substring(i, i + 8);
+                asciiText += String.fromCharCode(parseInt(byte, 2));
+            }
+            // Remove null characters from padding
+            return asciiText.replace(/\0/g, '');
+        }
+
+        /**
+         * Applies a permutation table to an input binary string.
+         * @param {string} input - The binary string to permute.
+         * @param {number[]} table - The permutation table.
+         * @param {string} tableName - Name of the table for display.
+         * @returns {string} The permuted binary string.
+         */
+        function permuteDetailed(input, table, tableName) {
+            let output = '';
+            let mappingDetails = '';
+            for (let i = 0; i < table.length; i++) {
+                const inputBitPosition = table[i]; // 1-indexed
+                const outputBitValue = input[inputBitPosition - 1]; // 0-indexed for string access
+                output += outputBitValue;
+                // Add mapping detail for a few bits or conceptually
+                if (i < 8 || i >= table.length - 8) { // Show first/last few mappings
+                    mappingDetails += `Bit ${inputBitPosition} of input moves to position ${i + 1} of output (value: ${outputBitValue}). `;
+                }
+            }
+            if (table.length > 16) {
+                mappingDetails += '... (and so on for all bits according to the table)';
+            }
+            return { output, mappingDetails };
+        }
+
+        /**
+         * Performs XOR operation on two binary strings with detailed explanation.
+         * @param {string} bin1 - First binary string.
+         * @param {string} bin2 - Second binary string.
+         * @returns {string} Result of XOR.
+         */
+        function xorDetailed(bin1, bin2) {
+            let result = '';
+            let detail = 'Bit-wise XOR operation:<br>';
+            detail += `Input 1: ${formatBinary(bin1)}<br>`;
+            detail += `Input 2: ${formatBinary(bin2)}<br>`;
+            detail += `Result:  `;
+            for (let i = 0; i < bin1.length; i++) {
+                const bit1 = parseInt(bin1[i]);
+                const bit2 = parseInt(bin2[i]);
+                const xorResult = (bit1 ^ bit2).toString();
+                result += xorResult;
+                detail += xorResult;
+                if ((i + 1) % 8 === 0 && i !== bin1.length - 1) {
+                    detail += ' ';
+                }
+            }
+            return { result, detail };
+        }
+
+        /**
+         * Performs a left circular shift on a binary string with detailed explanation.
+         * @param {string} binary - The binary string.
+         * @param {number} shifts - Number of positions to shift.
+         * @returns {string} Shifted binary string.
+         */
+        function leftCircularShiftDetailed(binary, shifts) {
+            const shifted = binary.substring(shifts) + binary.substring(0, shifts);
+            const detail = `Original: ${formatBinary(binary)}<br>
+                            Shifted left by ${shifts} bit(s): ${formatBinary(shifted)}`;
+            return { shifted, detail };
+        }
+
+        /**
+         * Pads a binary string with leading zeros to a specified length.
+         * @param {string} binary - The binary string.
+         * @param {number} length - The desired length.
+         * @returns {string} Padded binary string.
+         */
+        function padBinary(binary, length) {
+            return binary.padStart(length, '0');
+        }
+
+        /**
+         * Adds a step to the process display.
+         * @param {string} title - Title of the step.
+         * @param {string} content - HTML content for the step.
+         */
+        function addProcessStep(title, content) {
+            const container = document.getElementById('processStepsContainer');
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'process-step';
+            stepDiv.innerHTML = `<strong>${title}</strong><br><div class="binary-display">${content}</div>`;
+            container.appendChild(stepDiv);
+            container.scrollTop = container.scrollHeight; // Scroll to bottom
+        }
+
+        /**
+         * Clears the process display.
+         */
+        function clearProcessDisplay() {
+            document.getElementById('processStepsContainer').innerHTML = '';
+            document.getElementById('resultOutput').classList.add('hidden');
+        }
+
+        // --- Key Generation ---
+        function generateSubKeys(keyBinary) {
+            clearProcessDisplay();
+            addProcessStep('Key Generation Start', `Original 64-bit Key (ASCII to Binary): ${formatBinary(keyBinary)}`);
+
+            // PC-1: Permuted Choice 1 (64-bit to 56-bit)
+            const { output: permutedKey, mappingDetails: pc1Details } = permuteDetailed(keyBinary, PC1, 'PC-1');
+            addProcessStep('Step 1: Permutation Choice 1 (PC-1)',
+                `The 64-bit key is permuted to 56 bits, discarding parity bits (positions 8, 16, 24, 32, 40, 48, 56, 64).<br>
+                Mapping example: ${pc1Details}<br>
+                Resulting 56-bit key: ${formatBinary(permutedKey)}`);
+
+            let C = permutedKey.substring(0, 28);
+            let D = permutedKey.substring(28, 56);
+            addProcessStep('Step 2: Split into C0 and D0',
+                `The 56-bit key is split into two 28-bit halves:<br>
+                C0 (Left Half): ${formatBinary(C)}<br>D0 (Right Half): ${formatBinary(D)}`);
+
+            const subKeys = [];
+            for (let i = 0; i < 16; i++) {
+                const roundNum = i + 1;
+                const shifts = SHIFT_SCHEDULE[i];
+                addProcessStep(`--- Round ${roundNum} Key Generation ---`,
+                    `Current C${i}: ${formatBinary(C)}<br>Current D${i}: ${formatBinary(D)}`);
+
+                const { shifted: newC, detail: cShiftDetail } = leftCircularShiftDetailed(C, shifts);
+                const { shifted: newD, detail: dShiftDetail } = leftCircularShiftDetailed(D, shifts);
+                C = newC;
+                D = newD;
+                addProcessStep(`Round ${roundNum} Key Generation: Circular Left Shift`,
+                    `C half: ${cShiftDetail}<br>D half: ${dShiftDetail}<br>
+                    C${roundNum} (Shifted): ${formatBinary(C)}<br>D${roundNum} (Shifted): ${formatBinary(D)}`);
+
+                const combinedCD = C + D;
+                const { output: subKey, mappingDetails: pc2Details } = permuteDetailed(combinedCD, PC2, 'PC-2');
+                subKeys.push(subKey);
+                addProcessStep(`Round ${roundNum} Key Generation: Permutation Choice 2 (PC-2)`,
+                    `The 56-bit combined C${roundNum}D${roundNum} (${formatBinary(combinedCD)}) is permuted and compressed to 48 bits.<br>
+                    Mapping example: ${pc2Details}<br>
+                    Resulting 48-bit subkey K${roundNum}: ${formatBinary(subKey)}`);
+            }
+            addProcessStep('Key Generation Complete', `Generated 16 48-bit subkeys. These will be used for encryption/decryption.`);
+            return subKeys;
+        }
+
+        // --- Feistel Function (F) ---
+        function fFunction(rightHalf, subKey, roundNum) {
+            addProcessStep(`Round ${roundNum} Feistel Function: Input`,
+                `Right Half R${roundNum-1}: ${formatBinary(rightHalf)}<br>Subkey K${roundNum}: ${formatBinary(subKey)}`);
+
+            // Expansion Permutation (32-bit to 48-bit)
+            const { output: expandedR, mappingDetails: eDetails } = permuteDetailed(rightHalf, E, 'E-box');
+            addProcessStep(`Round ${roundNum} Feistel Function: Expansion (E-box)`,
+                `The 32-bit R${roundNum-1} (${formatBinary(rightHalf)}) is expanded to 48 bits by duplicating certain bits and rearranging them according to the E-table.<br>
+                Mapping example: ${eDetails}<br>
+                Expanded R: ${formatBinary(expandedR)}`);
+
+            // XOR with Subkey
+            const { result: xoredResult, detail: xorDetail } = xorDetailed(expandedR, subKey);
+            addProcessStep(`Round ${roundNum} Feistel Function: XOR with Subkey`,
+                `${xorDetail}<br>
+                Result of XOR (48 bits): ${formatBinary(xoredResult)}`);
+
+            // S-box Substitution (48-bit to 32-bit)
+            let sBoxOutput = '';
+            addProcessStep(`Round ${roundNum} Feistel Function: S-Box Substitution`,
+                `The 48-bit XOR result is broken into eight 6-bit blocks. Each block is fed into a separate S-box.`);
+            for (let i = 0; i < 8; i++) {
+                const sixBitBlock = xoredResult.substring(i * 6, (i * 6) + 6);
+                const row = parseInt(sixBitBlock[0] + sixBitBlock[5], 2);    // First and last bits for row
+                const col = parseInt(sixBitBlock.substring(1, 5), 2);        // Middle four bits for column
+                const sBoxValue = S_BOXES[i][row][col];
+                const sBoxBinaryOutput = padBinary(sBoxValue.toString(2), 4); // Convert to 4-bit binary
+                sBoxOutput += sBoxBinaryOutput;
+                addProcessStep(`S-Box ${i+1} Calculation:`,
+                    `Input (6 bits): ${formatBinary(sixBitBlock)}<br>
+                    The first bit (${sixBitBlock[0]}) and last bit (${sixBitBlock[5]}) form the row index: ${sixBitBlock[0]}${sixBitBlock[5]} (decimal: ${row}).<br>
+                    The middle four bits (${sixBitBlock.substring(1, 5)}) form the column index: ${sixBitBlock.substring(1, 5)} (decimal: ${col}).<br>
+                    S-Box ${i+1} lookup value at [row ${row}][col ${col}]: ${sBoxValue} (decimal)<br>
+                    Output (4 bits): ${formatBinary(sBoxBinaryOutput)}`);
+            }
+            addProcessStep(`Round ${roundNum} Feistel Function: Combined S-Box Output`,
+                `All 8 S-box outputs concatenated (32 bits):<br>${formatBinary(sBoxOutput)}`);
+
+            // P-box Permutation (32-bit to 32-bit)
+            const { output: pBoxOutput, mappingDetails: pDetails } = permuteDetailed(sBoxOutput, P, 'P-box');
+            addProcessStep(`Round ${roundNum} Feistel Function: Permutation (P-box)`,
+                `The 32-bit S-box output (${formatBinary(sBoxOutput)}) is permuted according to the P-box table.<br>
+                Mapping example: ${pDetails}<br>
+                Resulting 32-bit P-box output: ${formatBinary(pBoxOutput)}`);
+
+            return pBoxOutput;
+        }
+
+        // --- DES Encryption ---
+        function encrypt(plaintextBinary, subKeys) {
+            addProcessStep('Encryption Start', `Original 64-bit Plaintext: ${formatBinary(plaintextBinary)}`);
+
+            // Initial Permutation
+            const { output: permutedPlaintext, mappingDetails: ipDetails } = permuteDetailed(plaintextBinary, IP, 'IP');
+            addProcessStep('Step 1: Initial Permutation (IP)',
+                `The 64-bit plaintext is permuted according to the Initial Permutation (IP) table.<br>
+                Mapping example: ${ipDetails}<br>
+                Plaintext after IP: ${formatBinary(permutedPlaintext)}`);
+
+            // Split into L0 and R0
+            let L = permutedPlaintext.substring(0, 32);
+            let R = permutedPlaintext.substring(32, 64);
+            addProcessStep('Step 2: Split into L0 and R0', `The 64-bit permuted block is split into two 32-bit halves:<br>L0: ${formatBinary(L)}<br>R0: ${formatBinary(R)}`);
+
+            for (let i = 0; i < 16; i++) {
+                const roundNum = i + 1;
+                const currentSubKey = subKeys[i];
+                addProcessStep(`--- Round ${roundNum} Encryption ---`,
+                    `Input L${i}: ${formatBinary(L)}<br>Input R${i}: ${formatBinary(R)}`);
+
+                const prevL = L; // Store L(n-1)
+                L = R;           // L(n) = R(n-1)
+
+                const fResult = fFunction(R, currentSubKey, roundNum); // F(R(n-1), K(n))
+                const { result: newR, detail: xorL_F_Detail } = xorDetailed(prevL, fResult);
+                R = newR; // R(n) = L(n-1) XOR F(R(n-1), K(n))
+
+                addProcessStep(`Round ${roundNum} Encryption: XOR L(n-1) with F(R(n-1), K(n))`,
+                    `L(n-1) (${formatBinary(prevL)}) XOR F-function output (${formatBinary(fResult)}) = ${formatBinary(R)}<br>
+                    ${xorL_F_Detail}`);
+
+                addProcessStep(`Round ${roundNum} Encryption: Halves Swap`,
+                    `The new Left half (L${roundNum}) is the previous Right half (R${roundNum-1}).<br>
+                    The new Right half (R${roundNum}) is the result of the XOR operation.<br>
+                    New L${roundNum}: ${formatBinary(L)}<br>New R${roundNum}: ${formatBinary(R)}`);
+            }
+
+            // Final Swap (R16L16)
+            const preFinalPermutation = R + L; // R16L16
+            addProcessStep('Step 3: Final Swap (R16L16)',
+                `After 16 rounds, the final Left (L16: ${formatBinary(L)}) and Right (R16: ${formatBinary(R)}) halves are concatenated in reverse order (R16L16):<br>${formatBinary(preFinalPermutation)}`);
+
+            // Inverse Initial Permutation
+            const { output: ciphertextBinary, mappingDetails: fpDetails } = permuteDetailed(preFinalPermutation, FP, 'FP');
+            addProcessStep('Step 4: Inverse Initial Permutation (FP)',
+                `The combined R16L16 block is permuted according to the Final Permutation (FP) table (which is the inverse of IP).<br>
+                Mapping example: ${fpDetails}<br>
+                Final Ciphertext (64 bits):<br>${formatBinary(ciphertextBinary)}`);
+
+            return ciphertextBinary;
+        }
+
+        // --- DES Decryption ---
+        function decrypt(ciphertextBinary, subKeys) {
+            addProcessStep('Decryption Start', `Original 64-bit Ciphertext: ${formatBinary(ciphertextBinary)}`);
+
+            // Initial Permutation (same as encryption)
+            const { output: permutedCiphertext, mappingDetails: ipDetails } = permuteDetailed(ciphertextBinary, IP, 'IP');
+            addProcessStep('Step 1: Initial Permutation (IP)',
+                `The 64-bit ciphertext is permuted according to the Initial Permutation (IP) table.<br>
+                Mapping example: ${ipDetails}<br>
+                Ciphertext after IP: ${formatBinary(permutedCiphertext)}`);
+
+            // Split into L0 and R0
+            let L = permutedCiphertext.substring(0, 32);
+            let R = permutedCiphertext.substring(32, 64);
+            addProcessStep('Step 2: Split into L0 and R0', `The 64-bit permuted block is split into two 32-bit halves:<br>L0: ${formatBinary(L)}<br>R0: ${formatBinary(R)}`);
+
+            // Decryption uses subkeys in reverse order
+            for (let i = 15; i >= 0; i--) { // Iterate from K16 down to K1 (subKeys[15] is K16, subKeys[0] is K1)
+                const roundNum = 16 - i; // For display purposes (Round 1 for K16, Round 16 for K1)
+                const currentSubKey = subKeys[i]; // Access subkeys in reverse order (K16, K15, ..., K1)
+                addProcessStep(`--- Round ${roundNum} Decryption ---`,
+                    `Input L${16-roundNum}: ${formatBinary(L)}<br>Input R${16-roundNum}: ${formatBinary(R)}`);
+
+                const prevL = L; // Store L(n-1)
+                L = R;           // L(n) = R(n-1)
+
+                const fResult = fFunction(R, currentSubKey, roundNum);
+                const { result: newR, detail: xorL_F_Detail } = xorDetailed(prevL, fResult);
+                R = newR; // R(n) = L(n-1) XOR F(R(n-1), K(n))
+
+                addProcessStep(`Round ${roundNum} Decryption: XOR L(n-1) with F(R(n-1), K(n))`,
+                    `L(n-1) (${formatBinary(prevL)}) XOR F-function output (${formatBinary(fResult)}) = ${formatBinary(R)}<br>
+                    ${xorL_F_Detail}`);
+
+                addProcessStep(`Round ${roundNum} Decryption: Halves Swap`,
+                    `The new Left half (L${16-roundNum+1}) is the previous Right half (R${16-roundNum}).<br>
+                    The new Right half (R${16-roundNum+1}) is the result of the XOR operation.<br>
+                    New L${16-roundNum+1}: ${formatBinary(L)}<br>New R${16-roundNum+1}: ${formatBinary(R)}`);
+            }
+
+            // Final Swap (R16L16)
+            const preFinalPermutation = R + L; // R16L16
+            addProcessStep('Step 3: Final Swap (R16L16)',
+                `After 16 rounds, the final Left (L16: ${formatBinary(L)}) and Right (R16: ${formatBinary(R)}) halves are concatenated in reverse order (R16L16):<br>${formatBinary(preFinalPermutation)}`);
+
+            // Inverse Initial Permutation
+            const { output: plaintextBinary, mappingDetails: fpDetails } = permuteDetailed(preFinalPermutation, FP, 'FP');
+            addProcessStep('Step 4: Inverse Initial Permutation (FP)',
+                `The combined R16L16 block is permuted according to the Final Permutation (FP) table.<br>
+                Mapping example: ${fpDetails}<br>
+                Final Plaintext (64 bits):<br>${formatBinary(plaintextBinary)}`);
+
+            return plaintextBinary;
+        }
+
+        // --- Event Listeners ---
+        document.getElementById('generateKeyBtn').addEventListener('click', () => {
+            const key = document.getElementById('keyInput').value;
+            const resultOutput = document.getElementById('resultOutput');
+
+            if (key.length !== 8) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = 'Error: Key must be exactly 8 ASCII characters for key generation.';
+                resultOutput.classList.remove('hidden');
+                clearProcessDisplay();
+                return;
+            }
+
+            const keyBinary = asciiToBinary(key);
+            try {
+                generatedSubKeys = generateSubKeys(keyBinary);
+                resultOutput.className = 'result-box';
+                resultOutput.innerHTML = `<strong>Key Generation Successful!</strong><br>
+                                          16 subkeys generated and ready for encryption/decryption.`;
+                resultOutput.classList.remove('hidden');
+            } catch (error) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = `An error occurred during key generation: ${error.message}`;
+                resultOutput.classList.remove('hidden');
+                console.error(error);
+            }
+        });
+
+        document.getElementById('encryptBtn').addEventListener('click', () => {
+            const plaintext = document.getElementById('plaintextInput').value;
+            const resultOutput = document.getElementById('resultOutput');
+
+            if (!generatedSubKeys) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = 'Error: Please generate the key first using the "Generate Key" button.';
+                resultOutput.classList.remove('hidden');
+                clearProcessDisplay();
+                return;
+            }
+            if (plaintext.length === 0) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = 'Error: Plaintext cannot be empty.';
+                resultOutput.classList.remove('hidden');
+                clearProcessDisplay();
+                return;
+            }
+
+            // Clear previous process steps and start fresh for encryption
+            clearProcessDisplay();
+
+            // Pad plaintext to a multiple of 8 characters (64 bits)
+            const paddedPlaintext = plaintext.padEnd(Math.ceil(plaintext.length / 8) * 8, '0');
+            const plaintextBinary = asciiToBinary(paddedPlaintext);
+
+            try {
+                const ciphertextBinary = encrypt(plaintextBinary, generatedSubKeys);
+                const ciphertextHex = Array.from({ length: ciphertextBinary.length / 4 }, (_, i) =>
+                    parseInt(ciphertextBinary.substring(i * 4, (i * 4) + 4), 2).toString(16)
+                ).join('').toUpperCase();
+                const ciphertextAscii = binaryToAscii(ciphertextBinary);
+
+                resultOutput.className = 'result-box';
+                resultOutput.innerHTML = `<strong>Encryption Complete!</strong><br>
+                                          Ciphertext (Binary): <div class="binary-display">${formatBinary(ciphertextBinary)}</div><br>
+                                          Ciphertext (Hex): ${ciphertextHex}<br>
+                                          Ciphertext (ASCII): ${ciphertextAscii} <span class="text-red-600 text-sm">(Note: May contain unprintable characters)</span>`;
+                resultOutput.classList.remove('hidden');
+            } catch (error) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = `An error occurred during encryption: ${error.message}`;
+                resultOutput.classList.remove('hidden');
+                console.error(error);
+            }
+        });
+
+        document.getElementById('decryptBtn').addEventListener('click', () => {
+            const ciphertextInput = document.getElementById('plaintextInput').value; // Re-using plaintext input for ciphertext
+            const resultOutput = document.getElementById('resultOutput');
+
+            if (!generatedSubKeys) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = 'Error: Please generate the key first using the "Generate Key" button.';
+                resultOutput.classList.remove('hidden');
+                clearProcessDisplay();
+                return;
+            }
+            if (ciphertextInput.length === 0) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = 'Error: Ciphertext cannot be empty.';
+                resultOutput.classList.remove('hidden');
+                clearProcessDisplay();
+                return;
+            }
+
+            // Clear previous process steps and start fresh for decryption
+            clearProcessDisplay();
+
+            // Handle input: try to detect hex, otherwise treat as ASCII
+            let inputBinary;
+            const hexRegex = /^[0-9A-Fa-f]+$/;
+            if (hexRegex.test(ciphertextInput) && ciphertextInput.length % 2 === 0) { // Check if it looks like hex and is even length
+                try {
+                    inputBinary = Array.from({ length: ciphertextInput.length / 2 }, (_, i) =>
+                        parseInt(ciphertextInput.substring(i * 2, (i * 2) + 2), 16).toString(2).padStart(8, '0')
+                    ).join('');
+                    // Ensure it's a multiple of 64 bits for DES
+                    if (inputBinary.length % 64 !== 0) {
+                        resultOutput.className = 'warning-message';
+                        resultOutput.textContent = 'Error: Hexadecimal ciphertext length must result in a multiple of 64 bits (e.g., 16 hex chars for 64 bits).';
+                        resultOutput.classList.remove('hidden');
+                        clearProcessDisplay();
+                        return;
+                    }
+                } catch (e) {
+                    resultOutput.className = 'warning-message';
+                    resultOutput.textContent = 'Error: Invalid hexadecimal ciphertext. Please ensure it is valid hex or ASCII.';
+                    resultOutput.classList.remove('hidden');
+                    clearProcessDisplay();
+                    return;
+                }
+            } else {
+                // Treat as ASCII and convert to binary, then pad
+                const paddedCiphertext = ciphertextInput.padEnd(Math.ceil(ciphertextInput.length / 8) * 8, '0');
+                inputBinary = asciiToBinary(paddedCiphertext);
+            }
+
+            try {
+                const decryptedBinary = decrypt(inputBinary, generatedSubKeys);
+                const decryptedAscii = binaryToAscii(decryptedBinary);
+
+                resultOutput.className = 'result-box';
+                resultOutput.innerHTML = `<strong>Decryption Complete!</strong><br>
+                                          Plaintext (Binary): <div class="binary-display">${formatBinary(decryptedBinary)}</div><br>
+                                          Plaintext (ASCII): ${decryptedAscii}`;
+                resultOutput.classList.remove('hidden');
+            } catch (error) {
+                resultOutput.className = 'warning-message';
+                resultOutput.textContent = `An error occurred during decryption: ${error.message}`;
+                resultOutput.classList.remove('hidden');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>

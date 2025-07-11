@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The DES Algorithm: An Interactive Infographic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: The SPA follows a narrative structure: 1. Hero section to introduce DES. 2. "Core Characteristics" using high-impact stat cards for quick understanding. 3. "The Encryption Engine," a detailed HTML/CSS flowchart to visually simplify the complex multi-step process. 4. "Subkey Generation," another flowchart explaining the key schedule. 5. "The Fall of DES," combining a timeline and a logarithmic bar chart to dramatically visualize its declining security. 6. A "Legacy" section to conclude. This thematic, storytelling approach is more engaging and digestible for a user than the linear format of the source report. -->
+    <!-- Visualization & Content Choices: 1. Characteristics -> Goal: Inform -> Viz: "Big Number" Stat Cards -> Justification: High-impact, immediate communication of key parameters. Method: HTML/Tailwind. 2. Encryption/Key-Gen Process -> Goal: Organize -> Viz: Flowchart Diagram -> Justification: Clearly visualizes a complex, sequential process without overwhelming the user. Method: HTML/Tailwind. 3. Cryptanalysis Timeline -> Goal: Change -> Viz: Timeline -> Justification: Best for showing chronological events. Method: HTML/Tailwind. 4. Time-to-Crack Data -> Goal: Compare/Change -> Viz: Bar Chart (Logarithmic) -> Justification: Powerful visual comparison of disparate data points, showing the exponential speed-up in cracking. Method: Chart.js/Canvas. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            color: #1e293b;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            padding: 1.5rem;
+            height: 100%;
+        }
+        .flow-box {
+            border: 2px solid #4286f4;
+            background-color: #e3f2fd;
+            color: #004e92;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #004e92;
+            margin: 0.5rem 0;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2.5rem;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 0;
+            top: 0.25rem;
+            height: 1.5rem;
+            width: 1.5rem;
+            background-color: #4286f4;
+            border-radius: 9999px;
+            border: 4px solid #fff;
+        }
+        .timeline-line {
+            position: absolute;
+            left: 0.68rem;
+            top: 2rem;
+            bottom: 0;
+            width: 2px;
+            background-color: #cbd5e1;
+        }
+        .timeline-item:last-child .timeline-line {
+            display: none;
+        }
+        .sticky-nav a.active {
+            color: #4286f4;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+    <nav class="sticky-nav sticky top-0 bg-white/80 backdrop-blur-md z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-center items-center space-x-4 sm:space-x-8 h-16 overflow-x-auto whitespace-nowrap">
+                <a href="#characteristics" class="text-sm sm:text-base font-medium text-slate-600 hover:text-[#004e92] transition">Characteristics</a>
+                <a href="#encryption-flow" class="text-sm sm:text-base font-medium text-slate-600 hover:text-[#004e92] transition">Encryption Flow</a>
+                <a href="#key-generation" class="text-sm sm:text-base font-medium text-slate-600 hover:text-[#004e92] transition">Key Generation</a>
+                <a href="#cryptanalysis" class="text-sm sm:text-base font-medium text-slate-600 hover:text-[#004e92] transition">Cryptanalysis</a>
+                <a href="#legacy" class="text-sm sm:text-base font-medium text-slate-600 hover:text-[#004e92] transition">Legacy</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+
+        <header class="text-center my-12">
+            <h1 class="text-4xl md:text-6xl font-black text-[#004e92]">The Data Encryption Standard (DES)</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">An interactive journey through the design, process, and eventual vulnerability of a foundational cryptographic algorithm.</p>
+        </header>
+
+        <main class="space-y-16">
+
+            <section id="characteristics">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#000428]">Core Characteristics</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">DES was defined by a few key parameters that determined both its strength and its eventual weakness. These core numbers are fundamental to understanding how it operates.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="card text-center">
+                        <div class="text-7xl font-black text-[#4286f4]">64</div>
+                        <h3 class="mt-2 text-xl font-bold">Bit Block Size</h3>
+                        <p class="text-slate-500 mt-1">DES processes data in fixed 64-bit blocks, transforming plaintext into ciphertext of the same length.</p>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-7xl font-black text-[#4286f4]">56</div>
+                        <h3 class="mt-2 text-xl font-bold">Bit Effective Key</h3>
+                        <p class="text-slate-500 mt-1">Though the key is 64 bits, 8 are for parity, leaving a 56-bit key space of $2^{56}$ possibilities.</p>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-7xl font-black text-[#4286f4]">16</div>
+                        <h3 class="mt-2 text-xl font-bold">Identical Rounds</h3>
+                        <p class="text-slate-500 mt-1">The core of the algorithm involves 16 rounds of complex substitutions and permutations.</p>
+                    </div>
+                    <div class="card text-center">
+                        <div class="text-5xl mb-4">🔑</div>
+                        <h3 class="mt-2 text-xl font-bold">Symmetric-Key</h3>
+                        <p class="text-slate-500 mt-1">The same secret key is used for both encrypting and decrypting data, a hallmark of the Feistel structure.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="encryption-flow">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#000428]">The Encryption Engine</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">This flowchart visualizes the six main stages of the DES encryption process. It shows how a 64-bit block of plaintext is permuted, processed through 16 rounds of complex transformations, and finally permuted again to produce the ciphertext.</p>
+                <div class="card p-4 md:p-8">
+                    <div class="w-full text-center text-slate-600 mb-4">64-Bit Plaintext Input</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="flow-box max-w-md mx-auto">1. Initial Permutation (IP)</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="flow-box max-w-md mx-auto">2. Split into 32-bit Left (L0) and Right (R0) Halves</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-4 md:p-6 my-4">
+                        <div class="flow-box bg-[#004e92] text-white">3. 16 Rounds of Transformation (Feistel Function)</div>
+                        <p class="text-center my-4 text-slate-600">For each round, the right half is processed with a unique 48-bit subkey and then XORed with the left half.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 items-center">
+                            <div class="text-center font-semibold text-slate-700">Left Half (L n-1)</div>
+                            <div class="text-center font-semibold text-slate-700">Right Half (R n-1)</div>
+                            
+                            <div class="flex items-center justify-center relative">
+                                <div class="arrow md:absolute md:right-full md:mr-2">➡️</div>
+                                <div class="text-4xl font-bold text-[#4286f4]">⊕</div>
+                            </div>
+                            
+                            <div class="flex flex-col items-center">
+                                <div class="arrow">⬇️</div>
+                                <div class="flow-box w-full text-sm">Expansion (32-bit to 48-bit)</div>
+                                <div class="arrow">⬇️</div>
+                                <div class="text-2xl font-bold text-[#4286f4]">⊕</div>
+                                <p class="text-sm font-semibold text-slate-500 my-1">XOR with 48-bit Round Key (Kn)</p>
+                                <div class="arrow">⬇️</div>
+                                <div class="flow-box w-full text-sm">8 S-Boxes (48-bit to 32-bit)</div>
+                                <div class="arrow">⬇️</div>
+                                <div class="flow-box w-full text-sm">Permutation (P-Box)</div>
+                            </div>
+                            
+                            <div class="md:col-span-2 text-center text-slate-600 my-2">The result of the XOR becomes the new Right Half (Rn). The old Right Half (Rn-1) becomes the new Left Half (Ln). This is the swap.</div>
+                        </div>
+                    </div>
+                    <div class="arrow">⬇️</div>
+                    <div class="flow-box max-w-md mx-auto">4. Final Swap (R16 & L16)</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="flow-box max-w-md mx-auto">5. Final Permutation (FP)</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="w-full text-center text-slate-600 mt-4">64-Bit Ciphertext Output</div>
+                </div>
+            </section>
+
+            <section id="key-generation">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#000428]">The Key Schedule</h2>
+                <p class="text-center text-slate-600 max-w-3xl mx-auto mb-10">A critical part of DES is creating a unique 48-bit subkey for each of the 16 rounds from the single 56-bit master key. This ensures each round's transformation is different. This process is known as the key schedule.</p>
+                <div class="card p-4 md:p-8">
+                    <div class="w-full text-center text-slate-600 mb-4">64-Bit Master Key</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="flow-box max-w-md mx-auto">Permutation Choice 1 (PC-1) → 56-bit key</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="flow-box max-w-md mx-auto">Split into 28-bit Halves (C0 & D0)</div>
+                    <div class="arrow">⬇️</div>
+                    <div class="border-2 border-dashed border-slate-300 rounded-lg p-4 my-4">
+                        <div class="text-center font-bold text-lg text-[#004e92] mb-4">Repeat for 16 Rounds</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <div class="flow-box text-sm bg-blue-100">Circular Left Shift C(n-1)</div>
+                             <div class="flow-box text-sm bg-blue-100">Circular Left Shift D(n-1)</div>
+                        </div>
+                        <div class="text-center my-2 text-2xl font-bold text-slate-400">&</div>
+                        <div class="flow-box max-w-md mx-auto mt-2">Combine Halves → 56-bit Block</div>
+                         <div class="arrow">⬇️</div>
+                        <div class="flow-box max-w-md mx-auto">Permutation Choice 2 (PC-2)</div>
+                         <div class="arrow">⬇️</div>
+                        <div class="w-full text-center text-slate-600 mt-4">Output 48-bit Subkey (Kn)</div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="cryptanalysis">
+                <h2 class="text-3xl font-bold text-center mb-8 text-[#000428]">The Fall of an Empire: Cracking DES</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="card">
+                        <h3 class="font-bold text-xl mb-4 text-[#004e92]">Timeline of Vulnerability</h3>
+                        <p class="text-slate-600 mb-6">While secure for its time, the 56-bit key length became DES's Achilles' heel. As computing power grew exponentially, the time to brute-force the entire key space shrank dramatically.</p>
+                        <div class="relative">
+                            <div class="timeline-item">
+                                <div class="timeline-dot"></div><div class="timeline-line"></div>
+                                <div class="font-bold text-slate-800">1997: DESCHALL Project</div>
+                                <p class="text-slate-500">First public success, broke a DES key in 96 days using thousands of computers over the internet.</p>
+                            </div>
+                             <div class="timeline-item">
+                                <div class="timeline-dot"></div><div class="timeline-line"></div>
+                                <div class="font-bold text-slate-800">1998: EFF's "Deep Crack"</div>
+                                <p class="text-slate-500">A custom-built machine costing $250,000 cracked a key in just 56 hours.</p>
+                            </div>
+                             <div class="timeline-item">
+                                <div class="timeline-dot"></div><div class="timeline-line"></div>
+                                <div class="font-bold text-slate-800">1999: Deep Crack & distributed.net</div>
+                                <p class="text-slate-500">Collaboration broke the record again, finding a key in just 22 hours and 15 minutes.</p>
+                            </div>
+                             <div class="timeline-item">
+                                <div class="timeline-dot"></div>
+                                <div class="font-bold text-slate-800">2008 & Beyond: Commodity Hardware</div>
+                                <p class="text-slate-500">Specialized machines like COPACOBANA and later, off-the-shelf GPUs, reduced cracking time to less than a day, rendering DES obsolete for serious security.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                         <h3 class="font-bold text-xl mb-4 text-[#004e92]">Time to Break DES (in hours)</h3>
+                         <p class="text-slate-600 mb-6">This chart visualizes the rapid decrease in time required to brute-force a DES key. It's plotted on a logarithmic scale to properly compare the vast differences in time across the years.</p>
+                         <div class="chart-container">
+                             <canvas id="crackTimeChart"></canvas>
+                         </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="legacy">
+                 <h2 class="text-3xl font-bold text-center mb-8 text-[#000428]">Legacy of DES</h2>
+                 <div class="card bg-[#004e92] text-white">
+                    <p class="text-lg text-center max-w-3xl mx-auto">
+                        Though no longer secure on its own, DES was a monumental step in public cryptography. It spurred immense academic interest, laid the groundwork for modern block ciphers like AES, and its analysis taught the world invaluable lessons about cipher design and the relentless march of computational power. Its Feistel structure remains an influential design in modern cryptography.
+                    </p>
+                 </div>
+
+            </section>
+             <p style="text-align: center; margin-top: 2rem;">
+            <a href="des-demo.html" style="color: rgb(55, 52, 233); text-decoration: none; font-weight: 900; display: inline-flex; align-items: center;">
+                <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Goto DES demo
+            </a>
+
+        </main>
+
+        <footer class="text-center mt-16 py-8 border-t border-slate-200">
+            <p class="text-slate-500">Infographic created based on the Data Encryption Standard (FIPS PUB 46-3).</p>
+        </footer>
+
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const crackTimeCtx = document.getElementById('crackTimeChart').getContext('2d');
+
+        const wrappedLabels = [
+            ['DESCHALL', '(1997)'], 
+            ['Deep Crack', '(1998)'], 
+            ['Deep Crack &', 'distributed.net', '(1999)'], 
+            ['COPACOBANA', '(2006)'], 
+            ['RIVYERA', '(2008)']
+        ];
+
+        new Chart(crackTimeCtx, {
+            type: 'bar',
+            data: {
+                labels: wrappedLabels,
+                datasets: [{
+                    label: 'Time to Crack (Hours)',
+                    data: [2304, 56, 22.25, 216, 24], 
+                    backgroundColor: [
+                        '#004e92',
+                        '#4286f4',
+                        '#6edff6',
+                        '#003a6a',
+                        '#2a69c1'
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'x',
+                scales: {
+                    y: {
+                        type: 'logarithmic',
+                        title: {
+                            display: true,
+                            text: 'Hours (Log Scale)',
+                            color: '#475569',
+                            font: { weight: 'bold' }
+                        },
+                        ticks: {
+                            color: '#475569'
+                        },
+                        grid: {
+                            color: '#e2e8f0'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#475569'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                if (Array.isArray(label)) {
+                                  return label.join(' ');
+                                } else {
+                                  return label;
+                                }
+                            },
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toFixed(2) + ' hours';
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.sticky-nav a');
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href').substring(1) === entry.target.id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { rootMargin: '-50% 0px -50% 0px' });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    });
+</script>
+
+</body>
+</html>
