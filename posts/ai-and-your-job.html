@@ -413,7 +413,17 @@
         .cta-box p a:hover {
             color: var(--accent);
         }
-
+        .typed-cursor {
+            font-weight: 800;
+            color: var(--accent);
+            animation: blink 0.8s steps(1) infinite;
+            font-size: inherit;
+            margin-left: 2px;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
         /* Footer */
         footer {
             background: var(--primary);
@@ -841,7 +851,7 @@ button:focus, a:focus {
                 <div class="profile-container">
                     <img src="../images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
                 </div>
-                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
+               <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
                 <p class="blog-subtitle">Thoughts on Hacking, AI, Security, and Personal Development.</p>
                 <nav>
                     <ul class="nav-links">
@@ -1029,6 +1039,22 @@ button:focus, a:focus {
                     upvoteBtn.style.opacity = 0.7;
                 }
             });
+            // Typewriter effect for the title
+            const titleText = "Bashir Kabir Zarewa";
+            const typedTitle = document.getElementById('typed-title');
+            const cursor = document.querySelector('.typed-cursor');
+            let i = 0;
+
+            function typeWriter() {
+                if (i <= titleText.length) {
+                    typedTitle.textContent = titleText.slice(0, i);
+                    i++;
+                    setTimeout(typeWriter, 120);
+                }
+            }
+            typeWriter();
+
+
 
             const postUrl = window.location.href;
             const postTitle = document.querySelector('.post-title').innerText;
