@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://l0c4lh057.github.io/</loc>
+    <lastmod>2025-08-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <!-- Add more pages manually like below -->
+ 
+  <url>
+	  <loc>https://l0c4lh057.github.io/posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html</loc>
+    <lastmod>2025-07-31</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/posts/ai-and-your-job.html</loc>
+    <lastmod>2025-07-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/writeups/haze-htb-write-up.html</loc>
+    <lastmod>2025-07-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>  
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/posts/rewire-your-brain-effortless-learning-perfect-recall.html</loc>
+    <lastmod>2025-06-25</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/posts/active-directory-attack-techniques.html</loc>
+    <lastmod>2025-06-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/posts/AI-security-and-vulnerability.html</loc>
+    <lastmod>2025-06-09</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/posts/fourth-industrial-revolution-in-africa.html</loc>
+    <lastmod>2022-11-5</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/posts/support.html</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://l0c4lh057.github.io/whoami.html</loc>
+    <lastmod>2025-06-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>
+
