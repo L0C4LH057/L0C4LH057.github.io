@@ -9,11 +9,11 @@
     <meta name="robots" content="index, follow">
     <meta property="og:title" content="Beyond Prompts: Mastering Context Engineering for Smarter AI Agents">
     <meta property="og:description" content="Discover how shaping the contextual landscape empowers AI agents to deliver precise, relevant, and truly intelligent responses.">
-    <meta property="og:image" content="https://l0c4lh057.github.io/images/">
+    <meta property="og:image" content="https://l0c4lh057.github.io/images/contex_eng_cover.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://l0c4lh057.github.io/images/">
+    <meta name="twitter:image" content="https://l0c4lh057.github.io/images/contex_eng_cover.png">
     <meta property="og:url" content="https://l0c4lh057.github.io/posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html">
     <meta name="twitter:title" content="Beyond Prompts: Mastering Context Engineering for Smarter AI Agents">
     <meta name="twitter:description" content="Discover how shaping the contextual landscape empowers AI agents to deliver precise, relevant, and truly intelligent responses.">
@@ -490,7 +490,7 @@
                     <img src="../images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
                 </div>
                 
-                <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
+                <h1 class="blog-title"><span id="typed-title" style="color: #fff;"></span><span class="typed-cursor">|</span></h1>
                 <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
                 <nav>
                     <ul class="nav-links">
@@ -517,11 +517,14 @@
                         <i class="fas fa-tags"></i> AI Agents, Context Engineering, Prompt Engineering, Large Language Models, AI Development
                     </div>
                 </div>
-                <img src="../images/" alt="" class="post-cover">
+                <img src="../images/contex_eng_cover.png" alt="" class="post-cover">
             </div>
             <div class="share-buttons" style="text-align:center; margin: 1.5rem 0;">
                 <button id="nativeShareBtn" style="background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; margin-bottom: 0.7rem;">
                     <i class="fas fa-share-alt"></i> Share This Post
+                </button>
+                <button id="upvoteBtn" style="background: #18a106; color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; margin-left: 10px;">
+                    <i class="fas fa-thumbs-up"></i> Upvote <span id="upvoteCount">0</span>
                 </button>
                 <div style="margin-top: 0.7rem;">
                     <a href="#" id="twitterShare" title="Share on Twitter" style="margin:0 8px; color: #1da1f2;"><i class="fab fa-twitter fa-lg"></i></a>
@@ -588,6 +591,7 @@
 </table>
 
 <h2>The Pillars of Effective Context Engineering</h2>
+<img src="../images/context_eng_pillers.png" alt="" class="post-cover">
 <h3>1. Advanced Prompt Engineering</h3>
 <p>While a subset, sophisticated prompt engineering is the foundation. This involves not just asking questions, but providing explicit instructions, examples (few-shot learning), constraints, persona definitions, and output formats within the prompt itself. Rules files or style guidelines are often pulled into context as instructions. It's about front-loading as much relevant information as possible for a single turn.</p>
 
@@ -608,6 +612,7 @@
 <p>For agents operating in physical or digital environments, context can also come from sensors, APIs, or real-time data feeds. This allows agents to react to changes, understand their surroundings, and make decisions based on dynamic external factors.</p>
 
 <h2>Challenges and the Road Ahead</h2>
+<img src="../images/context_eng_challenges.png" alt="" class="post-cover">
 <p>Context Engineering isn't without its challenges:</p>
 <table>
   <thead>
@@ -689,13 +694,14 @@
         </div>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Typed title animation
             const titleText = "Bashir Kabir Zarewa";
             const typedTitle = document.getElementById('typed-title');
-            const cursor = document.querySelector('.typed-cursor');
             let i = 0;
-
             function typeWriter() {
                 if (i <= titleText.length) {
                     typedTitle.textContent = titleText.slice(0, i);
@@ -703,7 +709,7 @@
                     setTimeout(typeWriter, 120);
                 }
             }
-            typeWriter();
+        typeWriter();
         });
         document.addEventListener('DOMContentLoaded', function() {
             // Sharing logic
@@ -733,7 +739,46 @@
                     alert('Link copied to clipboard!');
                 });
             });
+            
+            // Firebase config (use your own config)
+            const firebaseConfig = {
+                apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+                authDomain: "personalblog-e8d0d.firebaseapp.com",
+                databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "personalblog-e8d0d",
+                storageBucket: "personalblog-e8d0d.appspot.com",
+                messagingSenderId: "746191305731",
+                appId: "1:746191305731:web:b2802db970e04979fe2236"
+            };
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.database();
 
+            const upvoteBtn = document.getElementById('upvoteBtn');
+            const upvoteCount = document.getElementById('upvoteCount');
+            const upvotedKey = 'beyond-prompts-upvoted-global';
+
+            // Listen for upvote count changes
+            db.ref('upvotes/beyond-prompts').on('value', (snapshot) => {
+                const count = snapshot.val() || 0;
+                upvoteCount.textContent = count;
+            });
+
+            // Check if user already upvoted
+            if (localStorage.getItem(upvotedKey) === 'true') {
+                upvoteBtn.disabled = true;
+                upvoteBtn.style.opacity = 0.7;
+            }
+
+            // Upvote logic
+            upvoteBtn.addEventListener('click', function() {
+                if (localStorage.getItem(upvotedKey) !== 'true') {
+                    const upvoteRef = db.ref('upvotes/beyond-prompts');
+                    upvoteRef.transaction(current => (current || 0) + 1);
+                    localStorage.setItem(upvotedKey, 'true');
+                    upvoteBtn.disabled = true;
+                    upvoteBtn.style.opacity = 0.7;
+                }
+            });
             const nativeShareBtn = document.getElementById('nativeShareBtn');
             if (navigator.share) {
                 nativeShareBtn.addEventListener('click', async () => {
