@@ -480,6 +480,271 @@
   tr:nth-child(even) {
     background-color: #f9f9f9;
   }
+
+  @media (max-width: 480px) {
+        .nav-links {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .nav-links a {
+            width: calc(100% - 2.2rem);
+            text-align: center;
+            padding: 0.6rem 1.1rem;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .container {
+            padding: 0 0.3rem;
+        }
+        .post-content {
+            padding: 0.7rem 0.3rem;
+        }
+        .post-header {
+            margin-bottom: 1.5rem;
+        }
+        .post-title {
+            font-size: 1.5rem;
+        }
+        .post-subtitle {
+            font-size: 1rem;
+        }
+        .post-cover, .inline-image {
+            width: 100%;
+            max-height: 300px;
+        }
+        .author-bio {
+            flex-direction: column;
+            text-align: center;
+        }
+        .author-bio .bio-image {
+            margin-bottom: 0.5rem;
+        }
+        .related-posts ul {
+            grid-template-columns: 1fr;
+        }
+        .footer-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        .footer-section {
+            min-width: 0;
+            padding-right: 0;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-container {
+            width: 70px;
+            height: 70px;
+        }
+        .blog-title {
+            font-size: 1.25rem;
+        }
+        .blog-subtitle {
+            font-size: 0.98rem;
+        }
+        .post-title {
+            font-size: 1.2rem;
+        }
+        .post-subtitle {
+            font-size: 0.9rem;
+        }
+        .footer-title {
+            font-size: 0.98rem;
+        }
+        .footer-links a {
+            font-size: 0.93rem;
+        }
+        .copyright {
+            font-size: 0.85rem;
+        }
+        .post-content {
+            padding: 0.5rem 0.1rem;
+        }
+        .post-header {
+            margin-bottom: 1rem;
+        }
+        .post-meta {
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .post-cover, .inline-image {
+            max-height: 200px;
+            width: 100%;
+        }
+        .related-posts ul {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 1100px) {
+        .container {
+            max-width: 98vw;
+            padding: 0 0.5rem;
+        }
+        .post-content {
+            padding: 1.5rem;
+        }
+        .post-cover, .inline-image {
+            max-height: 400px;
+            width: 90%;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .footer-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        .footer-section {
+            min-width: 0;
+            padding-right: 0;
+            width: 100%;
+        }
+    }
+    @media (max-width: 480px) {
+        .footer-content {
+            gap: 1rem;
+        }
+        .footer-section {
+            font-size: 0.95rem;
+        }
+        .footer-title {
+            font-size: 1rem;
+        }
+    }
+    @media (max-width: 1100px) {
+        .container {
+            max-width: 98vw;
+            padding: 0 0.5rem;
+        }
+        .post-content {
+            padding: 1.5rem;
+        }
+        .post-cover, .inline-image {
+            max-height: 400px;
+            width: 90%;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .footer-content {
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+        .footer-section {
+            min-width: 120px;
+            padding-right: 0;
+        }
+    }
+
+    @media (max-width: 700px) {
+        .profile-container {
+            width: 70px;
+            height: 70px;
+        }
+        .blog-title {
+            font-size: 1.25rem;
+        }
+        .blog-subtitle {
+            font-size: 0.98rem;
+        }
+        .post-title {
+            font-size: 1.5rem;
+        }
+        .post-subtitle {
+            font-size: 1rem;
+        }
+        .post-content {
+            padding: 0.7rem 0.3rem;
+        }
+        .post-header {
+            margin-bottom: 1.5rem;
+        }
+        .post-meta {
+            gap: 0.5rem;
+            font-size: 0.93rem;
+        }
+        .post-cover, .inline-image {
+            max-height: 400px;
+            width: 100%;
+        }
+        .highlight-box {
+            padding: 0.7rem 0.7rem 0.7rem 1rem;
+        }
+        .cta-box {
+            padding: 1rem;
+        }
+        .author-bio {
+            flex-direction: column;
+            text-align: center;
+        }
+        .author-bio .bio-image {
+            margin-bottom: 0.5rem;
+        }
+        .related-posts h2::before,
+        .related-posts h2::after {
+            width: 20%;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        .terminal-code {
+            padding: 1rem;
+            font-size: 0.85rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-container {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 0.7rem;
+        }
+        .blog-title {
+            font-size: 2rem;
+        }
+        .blog-subtitle {
+            font-size: 0.85rem;
+        }
+        .post-title {
+            font-size: 1.2rem;
+        }
+        .post-subtitle {
+            font-size: 0.9rem;
+        }
+        .footer-title {
+            font-size: 0.98rem;
+        }
+        .footer-links a {
+            font-size: 0.93rem;
+        }
+        .copyright {
+            font-size: 0.85rem;
+        }
+        .post-content {
+            padding: 0.5rem 0.1rem;
+        }
+        .post-header {
+            margin-bottom: 1rem;
+        }
+        .post-meta {
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+        .post-cover, .inline-image {
+            max-height: 350px;
+            width: 100%;
+        }
+        .related-posts ul {
+            grid-template-columns: 1fr;
+        }
+    }
 </style>
 </head>
 <body>
