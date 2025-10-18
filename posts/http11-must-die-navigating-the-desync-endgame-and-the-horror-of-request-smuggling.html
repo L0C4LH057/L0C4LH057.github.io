@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Desync Endgame: Bypassing Modern Defenses | Bashir Kabir Zarewa</title>
+    <meta name="description" content="After six years of warnings, the fundamental flaw in HTTP/1.1 continues to expose web applications to devastating Desync Attacks and Request Smuggling, demanding an urgent shift to modern protocols.">
+    <meta property="og:type" content="article">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="The Desync Endgame: Bypassing Modern Defenses">
+    <meta property="og:description" content="After six years of warnings, the fundamental flaw in HTTP/1.1 continues to expose web applications to devastating Desync Attacks and Request Smuggling, demanding an urgent shift to modern protocols.">
+    <meta property="og:image" content="https://l0c4lh057.github.io/images/">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://l0c4lh057.github.io/images/">
+    <meta property="og:url" content="https://l0c4lh057.github.io/posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html">
+    <meta name="twitter:title" content="The Desync Endgame: Bypassing Modern Defenses">
+    <meta name="twitter:description" content="After six years of warnings, the fundamental flaw in HTTP/1.1 continues to expose web applications to devastating Desync Attacks and Request Smuggling, demanding an urgent shift to modern protocols.">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Your exact CSS styles from the original template */
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light-gray: #f5f7fa;
+            --medium-gray: #e1e5eb;
+            --dark-gray: #7f8c8d;
+            --text: #2c3e50;
+            --text-light: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
+            --border-radius: 14px;
+            --transition: 0.3s cubic-bezier(.4,2,.6,1);
+            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: linear-gradient(120deg, var(--light-gray) 60%, #fdecea 100%);
+            color: var(--text);
+            line-height: 1.7;
+            font-size: 1.08rem;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.2rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            padding: 2.5rem 0 2rem 0;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            border-radius: 0 0 24px 24px;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-container {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 4px solid var(--white);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .blog-title {
+            font-size: 3.0rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0px;
+            text-shadow: 0 2px 8px rgba(44,62,80,0.08);
+        }
+
+        .blog-subtitle {
+            font-size: 1.1rem;
+            font-weight: 400;
+            opacity: 0.92;
+            margin-bottom: 1.5rem;
+            color: #e1e5eb;
+        }
+
+        nav {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 1.2rem;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 1.08rem;
+            font-weight: 600;
+            padding: 0.5rem 1.1rem;
+            border-radius: var(--border-radius);
+            transition: background var(--transition), color var(--transition);
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255,255,255,0.18);
+            color: #fff;
+        }
+
+        /* Post Content */
+        .post-content {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 4rem;
+        }
+
+        .post-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .post-title {
+            font-size: 2.3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            line-height: 1.3;
+        }
+
+        .post-subtitle {
+            font-size: 1.2rem;
+            color: var(--dark-gray);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: center;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            background: var(--light-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.98rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .meta-item i {
+            margin-right: 5px;
+            color: var(--accent);
+        }
+
+        .post-cover {
+            width: 70%;
+            height: auto;
+            border-radius: var(--border-radius);
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            max-height: 590px;
+            object-fit: cover;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .inline-image {
+            width: 70%;
+            display: block;
+            margin: 2.5rem auto;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .share-buttons {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .share-buttons button,
+        .share-buttons a {
+            font-size: 1rem;
+        }
+
+        .post-body p {
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+            font-size: 1.08rem;
+        }
+
+        .post-body h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 3rem 0 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--medium-gray);
+            position: relative;
+            color: var(--primary);
+        }
+
+        .post-body h2::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 60px;
+            height: 2px;
+            background-color: var(--accent);
+        }
+
+        .post-body h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem;
+            color: var(--primary);
+        }
+
+        .post-body a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent);
+            transition: color 0.2s, border-bottom-color 0.2s;
+        }
+
+        .post-body a:hover {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .post-body ul, .post-body ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .post-body li {
+            margin-bottom: 0.8rem;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: rgba(52, 152, 219, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1.2rem;
+            margin: 2rem 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 2.2rem 0 1.2rem 0;
+            margin-top: 3rem;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 180px;
+            margin-bottom: 1.2rem;
+            padding-right: 1.2rem;
+        }
+
+        .footer-title {
+            font-size: 1.15rem;
+            margin-bottom: 1.1rem;
+            position: relative;
+            padding-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 32px;
+            height: 2px;
+            background-color: var(--accent);
+            border-radius: 2px;
+        }
+
+        .footer-section p {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.85);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.7rem;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: color var(--transition);
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: 0.7rem;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: rgba(255,255,255,0.13);
+            border-radius: 50%;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 18px;
+            transition: background var(--transition), transform var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            transform: translateY(-3px) scale(1.08);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 1.2rem;
+            margin-top: 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.13);
+            color: rgba(255,255,255,0.7);
+            font-size: 0.95rem;
+        }
+
+        /* Additional CSS for content elements */
+        .scenario {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+        
+        .scenario .highlight {
+            font-style: normal;
+        }
+
+        .post-body .highlight {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .cta-box {
+            background: var(--primary);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .cta-box h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .cta-box p a {
+            color: var(--white);
+            text-decoration: underline;
+        }
+
+        .cta-box p a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        @media (max-width: 480px) {
+        .nav-links {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .nav-links a {
+            width: calc(100% - 2.2rem);
+            text-align: center;
+            padding: 0.6rem 1.1rem;
+        }
+    }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 0 0.3rem;
+            }
+            .post-content {
+                padding: 0.7rem 0.3rem;
+            }
+            .post-header {
+                margin-bottom: 1.5rem;
+            }
+            .post-title {
+                font-size: 1.5rem;
+            }
+            .post-subtitle {
+                font-size: 1rem;
+            }
+            .post-cover, .inline-image {
+                width: 100%;
+                max-height: 300px;
+            }
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-bio .bio-image {
+                margin-bottom: 0.5rem;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            .footer-section {
+                min-width: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 70px;
+                height: 70px;
+            }
+            .blog-title {
+                font-size: 1.25rem;
+            }
+            .blog-subtitle {
+                font-size: 0.98rem;
+            }
+            .post-title {
+                font-size: 1.2rem;
+            }
+            .post-subtitle {
+                font-size: 0.9rem;
+            }
+            .footer-title {
+                font-size: 0.98rem;
+            }
+            .footer-links a {
+                font-size: 0.93rem;
+            }
+            .copyright {
+                font-size: 0.85rem;
+            }
+            .post-content {
+                padding: 0.5rem 0.1rem;
+            }
+            .post-header {
+                margin-bottom: 1rem;
+            }
+            .post-meta {
+                gap: 0.3rem;
+                font-size: 0.9rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 200px;
+                width: 100%;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 98vw;
+                padding: 0 0.5rem;
+            }
+            .post-content {
+                padding: 1.5rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            .footer-section {
+                min-width: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .footer-content {
+                gap: 1rem;
+            }
+            .footer-section {
+                font-size: 0.95rem;
+            }
+            .footer-title {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 98vw;
+                padding: 0 0.5rem;
+            }
+            .post-content {
+                padding: 1.5rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+            .footer-section {
+                min-width: 120px;
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .profile-container {
+                width: 70px;
+                height: 70px;
+            }
+            .blog-title {
+                font-size: 1.25rem;
+            }
+            .blog-subtitle {
+                font-size: 0.98rem;
+            }
+            .post-title {
+                font-size: 1.5rem;
+            }
+            .post-subtitle {
+                font-size: 1rem;
+            }
+            .post-content {
+                padding: 0.7rem 0.3rem;
+            }
+            .post-header {
+                margin-bottom: 1.5rem;
+            }
+            .post-meta {
+                gap: 0.5rem;
+                font-size: 0.93rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 100%;
+            }
+            .highlight-box {
+                padding: 0.7rem 0.7rem 0.7rem 1rem;
+            }
+            .cta-box {
+                padding: 1rem;
+            }
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-bio .bio-image {
+                margin-bottom: 0.5rem;
+            }
+            .related-posts h2::before,
+            .related-posts h2::after {
+                width: 20%;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            .terminal-code {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 0.7rem;
+            }
+            .blog-title {
+                font-size: 2rem;
+            }
+            .blog-subtitle {
+                font-size: 0.85rem;
+            }
+            .post-title {
+                font-size: 1.2rem;
+            }
+            .post-subtitle {
+                font-size: 0.9rem;
+            }
+            .footer-title {
+                font-size: 0.98rem;
+            }
+            .footer-links a {
+                font-size: 0.93rem;
+            }
+            .copyright {
+                font-size: 0.85rem;
+            }
+            .post-content {
+                padding: 0.5rem 0.1rem;
+            }
+            .post-header {
+                margin-bottom: 1rem;
+            }
+            .post-meta {
+                gap: 0.3rem;
+                font-size: 0.9rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 350px;
+                width: 100%;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* New styles for comments section */
+        .comments-section {
+            margin-top: 2rem;
+            background: #fff;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(44,62,80,0.06);
+        }
+
+        .comments-section h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        #commentsList {
+            margin-bottom: 1rem;
+            font-size: 0.98rem;
+            color: var(--dark-gray);
+        }
+
+        #commentForm {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        #commenterName,
+        #commentText {
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        #submitComment {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        small {
+            color: var(--text-light);
+        }
+
+    </style>
+    <style>
+  body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f9f9f9; }
+  h1 { color: #FFFFFF; margin-top: 1.5em; margin-bottom: 0.5em; } /* Updated: Main title text color set to white */
+  h2, h3 { color: #2c3e50; margin-top: 1.5em; margin-bottom: 0.5em; }
+  h2 { border-bottom: 2px solid #e0e0e0; padding-bottom: 0.3em; }
+  strong { color: #c0392b; }
+  em { font-style: italic; color: #3498db; }
+  ul { list-style-type: disc; margin-left: 20px; }
+  li { margin-bottom: 0.5em; }
+  p { margin-bottom: 1em; }
+  .highlight-code { background-color: #ecf0f1; padding: 2px 4px; border-radius: 3px; font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace; }
+  blockquote { border-left: 4px solid #3498db; margin: 1.5em 0; padding: 0.5em 1em; background-color: #eaf4fa; color: #2c3e50; font-style: italic; }
+  pre {
+    background-color: #2d2d2d; /* Dark background for code blocks */
+    color: #f8f8f2; /* Light text color */
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto; /* Enable horizontal scrolling for long lines */
+    font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin-bottom: 1.5em;
+  }
+  pre code {
+    background-color: transparent; /* Override default .highlight-code background */
+    color: inherit; /* Inherit color from pre */
+    padding: 0;
+    border-radius: 0;
+  }
+  code {
+    background-color: #e0e0e0; /* Light grey background for inline code */
+    padding: 0.1em 0.3em;
+    border-radius: 3px;
+    font-family: 'Fira Code', 'Cascadia Code', 'Consolas', monospace;
+    font-size: 0.85em; /* Slightly smaller than body text */
+    color: #c0392b; /* A distinct color for inline code text */
+  }
+</style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-container">
+                    <img src="../images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                </div>
+                
+                <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
+                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="../index.html" class="active">Posts</a></li>
+                        <li><a href="../whoami.html">Whoami</a></li>
+                        <li><a href="../write-ups.html">Write Ups</a></li>
+                        <li><a href="../tools.html">Tools</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="post-content">
+            <div class="post-header">
+                <h1 class="post-title">The Desync Endgame: Bypassing Modern Defenses</h1>
+                <p class="post-subtitle">After six years of warnings, the fundamental flaw in HTTP/1.1 continues to expose web applications to devastating Desync Attacks and Request Smuggling, demanding an urgent shift to modern protocols.</p>
+                <div class="post-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i> Published: October 18, 2025
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tags"></i> HTTP1.1, WebSecurity, RequestSmuggling, DesyncAttacks, Cybersecurity
+                    </div>
+                </div>
+                <img src="../images/" alt="" class="post-cover">
+            </div>
+            <div class="share-buttons" style="text-align:center; margin: 1.5rem 0;">
+                <button id="nativeShareBtn" style="background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; margin-bottom: 0.7rem;">
+                    <i class="fas fa-share-alt"></i> Share This Post
+                </button>
+                <div style="margin-top: 0.7rem;">
+                    <a href="#" id="twitterShare" title="Share on Twitter" style="margin:0 8px; color: #1da1f2;"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#" id="facebookShare" title="Share on Facebook" style="margin:0 8px; color: #1877f3;"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#" id="linkedinShare" title="Share on LinkedIn" style="margin:0 8px; color: #0077b5;"><i class="fab fa-linkedin fa-lg"></i></a>
+                    <a href="#" id="whatsappShare" title="Share on WhatsApp" style="margin:0 8px; color: #25d366;"><i class="fab fa-whatsapp fa-lg"></i></a>
+                    <a href="#" id="copyLink" title="Copy Link" style="margin:0 8px; color: #555;"><i class="fas fa-link fa-lg"></i></a>
+                </div>
+            </div>
+            <div class="post-body">
+                <p>For over six years, a silent, insidious threat has gnawed at the foundational security of the web. <code>HTTP/1.1</code>, the venerable protocol powering much of our online world, harbors a fatal flaw: its fundamental isolation between individual HTTP requests is broken. This isn't just a theoretical vulnerability; I believe it's a systemic failure leading to the persistent menace known as <strong>HTTP Desync Attacks</strong>, primarily executed through the terrifying technique of <strong>Request Smuggling</strong>.</p>
+
+<p>My deep dive into web security has consistently highlighted the insidious threat of <strong>HTTP Desync Attacks</strong>, primarily executed through <strong>Request Smuggling</strong>. While my understanding and perspective are my own, I recognize the invaluable contributions of researchers, most notably <strong>James Kettle, Head of Research at PortSwigger Web Security</strong>, whose seminal work has profoundly shaped our collective understanding of these vulnerabilities. For those seeking comprehensive insights into the evolving attack techniques and real-world impact, I encourage exploring the extensive resources available at <a href="https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn" target="_blank" rel="noopener noreferrer">PortSwigger's dedicated resource</a>.</p>
+
+<p>The web security community has sounded the alarm repeatedly, yet vast swathes of the internet remain vulnerable. I find it imperative to confront the reality: <code>HTTP/1.1</code>, in its current state, is a ticking time bomb, and the 'Desync Endgame' is upon us.</p>
+
+<p>Despite the development of newer, safer protocols like <code>HTTP/2</code> and <code>HTTP/3</code>, the continued reliance on <code>HTTP/1.1</code> for upstream connections routinely exposes millions of websites to catastrophic compromises, including full cache poisoning, credential theft, and session hijacking. Recent research has demonstrated that these techniques could compromise over 30 million websites by exploiting flaws within major Content Delivery Networks (CDNs).</p>
+
+<p>Over the last six years, lightweight defenses, often based on WAFs using regular expressions, have been deployed to block common attack detection methods (like those using <code>Transfer-Encoding</code>) but have not fixed the underlying <code>H1</code> vulnerability. This necessitates sophisticated, multi-stage attacks.</p>
+
+<h2>The Core Vulnerability: Conflicting Message Lengths in a Text-Based Protocol</h2>
+<p>At the heart of <code>HTTP/1.1</code>'s vulnerability lies a parsing ambiguity, stemming from its fundamental nature as an old, lenient, **text-based protocol**. Unlike modern protocols like <code>HTTP/2</code> and <code>HTTP/3</code> which use clear, explicit binary framing to delineate message boundaries, <code>HTTP/1.1</code> relies on inspecting specific headers (like <code>Content-Length</code> and <code>Transfer-Encoding</code>) to determine where one request ends and the next begins. This reliance on text-based delimiters makes it inherently susceptible to misinterpretation.</p>
+<p>In <code>HTTP/1.1</code>, multiple requests are typically concatenated back-to-back over a shared TCP connection. The danger arises because the protocol offers multiple ambiguous ways to define where one message ends and the next begins. When an HTTP request traverses multiple intermediaries&mdash;like a load balancer, reverse proxy, or Web Application Firewall (WAF)&mdash;before reaching the origin server, each component independently interprets the request boundary. The problem intensifies when these components disagree on where one request ends and the next begins, leading to a desynchronization (desync) of the request stream.</p>
+<p style="text-align: center;"><img src="https://portswigger.net/cms/images/3b/af/c28234336ee3-article-revproxy.svg" alt="Requests from multiple different users routed over a single TCP/TLS connection." style="max-width: 100%; height: auto; display: block; margin: 0 auto;"></p>
+<p>This ambiguity is typically caused by inconsistencies in how servers interpret the two primary length headers:</p>
+<ul>
+  <li><code>Content-Length</code> (<code>CL</code>): Specifies the body size in exact bytes.</li>
+  <li><code>Transfer-Encoding: chunked</code> (<code>TE</code>): Indicates the body is sent in variable chunks, terminating with a zero-length chunk.</li>
+</ul>
+<p>While the <code>HTTP/1.1</code> specification technically dictates that <code>Transfer-Encoding</code> should take precedence over <code>Content-Length</code> if both are present, not all servers adhere strictly or consistently to this rule. This inconsistency is the attacker's playground.</p>
+
+<h2>High-Impact Attack Primitives</h2>
+<p>HTTP Desync attacks leverage a variety of sophisticated techniques to exploit the parsing discrepancies between front-end proxies and back-end servers. These "attack primitives" often involve crafting malformed or ambiguous HTTP requests to manipulate how intermediaries interpret message boundaries, leading to request smuggling.</p>
+
+<p>For those looking for more detailed demonstrations and a comprehensive collection of attack patterns, including live examples and visual walkthroughs, I recommend exploring the dedicated resources available at <a href="https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn" target="_blank" rel="noopener noreferrer">this external resource</a>.</p>
+
+<h3>Exploiting the Zero-CL Deadlock</h3>
+<p>A successful request smuggling attack exploits a tiny parser discrepancy between two servers&mdash;a front-end proxy (like a load balancer or CDN) and a back-end origin server&mdash;regarding the message boundary. An attacker crafts a request in a way that causes the front-end proxy (e.g., a load balancer) to interpret the request length differently from the back-end origin server. The front-end might process only the first part of the malicious request, forwarding the 'remainder' (a hidden, second request) as the *start* of the next legitimate user's request to the back-end.</p>
+<p>For five years, a specific desync scenario&mdash;where the front end doesn't see a smuggled <code>Content-Length</code> header but the back end does&mdash;was considered unexploitable because it resulted in a zero-<code>CL</code> deadlock, leaving the back-end waiting for more data. The breakthrough that bypassed this deadlock was finding an early response gadget. Some servers, like Nginx or Microsoft IIS (when hitting paths like <code>/con/</code>), will respond early if the request targets a static file, thereby breaking the deadlock and making this scenario exploitable. Once the deadlock is broken, the back end chops off bytes from the next legitimate request. To achieve full control and prefix an arbitrary payload onto a victim's request, this typically requires a <strong>double desync attack</strong>: the first attacker request causes the initial zero-<code>CL</code> desync, which then 'weaponizes' the second attacker request to cause a <code>CL:0</code> desync, enabling the arbitrary payload to be smuggled.</p>
+
+<h4>A Common Smuggling Scenario: <code>CL.TE</code> and <code>TE.CL</code></h4>
+<p>The HTTP specification technically prohibits using both headers simultaneously. However, when an attacker provides both, if the front end prioritises one (e.g., <code>CL</code>) and the back end prioritises the other (e.g., <code>TE</code>), a desynchronization (desync) occurs. The attacker can then smuggle malicious data that prefixes the next legitimate user's request.</p>
+
+<p><strong><code>CL.TE</code> (<code>Content-Length</code> then <code>Transfer-Encoding</code>):</strong> The front-end proxy prioritizes <code>Content-Length</code>, while the back-end server prioritizes <code>Transfer-Encoding</code>. An attacker sends a request with a short <code>Content-Length</code> that hides a <code>chunked</code> body containing a second, malicious request. The front-end sees the short <code>CL</code>, forwards it. The back-end sees the <code>TE</code>, processes the <code>chunked</code> body, and then processes the 'leftover' as a new request.</p>
+<pre><code>POST / HTTP/1.1
+Host: example.com
+Content-Length: 13
+Transfer-Encoding: chunked
+
+0
+
+GET /admin HTTP/1.1</code></pre>
+
+<p><strong><code>TE.CL</code> (<code>Transfer-Encoding</code> then <code>Content-Length</code>):</strong> The front-end proxy prioritizes <code>Transfer-Encoding</code>, while the back-end server prioritizes <code>Content-Length</code>. Here, the attacker uses a malformed <code>chunked encoding</code> that the front-end processes fully, but the back-end, ignoring the <code>chunking</code>, uses a <code>Content-Length</code> header to cut off the request early, leaving a smuggled payload for the next request.</p>
+<pre><code>POST / HTTP/1.1
+Host: example.com
+Content-Length: 4
+Transfer-Encoding: chunked
+
+5c
+GET /admin HTTP/1.1
+Host: example.com
+Content-Length: 10
+
+0</code></pre>
+
+<p>Beyond these classic <code>HTTP/1.1</code> ambiguities, modern infrastructure introduces new vectors. For example, in one notable case, systems like the front end used by Netflix failed to verify that a manually supplied <code>Content-Length</code> header in an <code>HTTP/2</code> request was correct. An attacker could supply an incorrect length, causing the request (when downgraded to <code>HTTP/1.1</code> for the back end) to be interpreted as 1.5 requests. This allowed for successfully smuggling a malicious prefix and earned a $20,000 bounty for the researcher.</p>
+<h3>Connection-Specific Header Bypass</h3>
+<p>The H2 RFC states that any message containing connection-specific header fields (such as <code>Transfer-Encoding: chunked</code>) must be treated as malformed. Amazon’s Application Load Balancer (ALB) and systems using Encapsula’s WAF failed to obey this rule. By sending an H2 request containing the <code>Transfer-Encoding: chunked</code> header, the ALB forwarded it, allowing the back end to prioritise <code>TE</code> over the correct <code>CL</code>, causing a desync.</p>
+
+<h3>The <code>Expect</code> Header</h3>
+<p>The <code>Expect</code> header is an advanced primitive because it forces the request into a two-part process, introducing statefulness into the core logic. Sending this <code>Expect</code> header causes inconsistencies that leak memory (including secret keys) or break front-end attempts to strip sensitive headers. By sending a valid <code>Expect</code> header, researchers triggered zero-<code>CL</code> desyncs on numerous targets, including a pre-production server for T-Mobile ($12,000 bounty).</p>
+
+<h3>Response Queue Poisoning</h3>
+<p>This occurs when the attacker smuggles exactly two complete requests. The front end loses track of response ordering, leading to random responses being sent to random users. On Atlassian Jira, this caused users to be persistently logged into random accounts via exposed <code>Set-Cookie</code> headers, forcing Atlassian to log out everyone worldwide.</p>
+
+<h4>The <code>HEAD</code> Technique (Request Tunneling)</h4>
+<p>The <code>HEAD</code> technique, often employed for <strong>Request Tunneling</strong>, is particularly useful when servers deploy mitigations like AWS Desync Guardian. These mitigations often refuse to reuse a connection after detecting a suspicious request, thereby preventing immediate follow-up attacks. Request Tunneling bypasses this by smuggling an entire, valid, and benign request *within* another request that the front-end processes differently. This makes the front-end *think* it's seen one request, but the back-end sees two, effectively tunneling the second request through the defense.</p>
+<p>Specifically with the <code>HEAD</code> method, by smuggling a <code>HEAD</code> request, the back end responds with headers but crucially, no body. This allows an attacker to control the back-end's perception of request boundaries without consuming any of the connection's data stream with response bodies. The back end still includes the <code>Content-Length</code> header for the absent body, which can then be exploited for further desynchronization or to make otherwise blind attacks non-blind, as the response headers themselves can reveal valuable information about the smuggled request's processing.</p>
+
+<h2>The Desync Endgame: Devastating Impacts</h2>
+<ul>
+  <li><strong>WAF Bypass:G</strong> Smuggled requests can slip past security controls, allowing malicious payloads to reach the application directly.</li>
+  <li><strong>Authentication Bypass:</strong> An attacker might append a request for an administrative page to a legitimate user's request, gaining unauthorized access.</li>
+  <li><strong>Information Disclosure:</strong> Desync attacks can force the front end to miscalculate response lengths, causing it to read into the headers and content of the next legitimate request's response. This exposes sensitive information, such as session tokens, internal API keys, or private user data (e.g., compromising Bitbucket for a maximum bounty payout).</li>
+  <li><strong>Cache Poisoning:</strong> Injecting malicious content into shared caches, leading to widespread distribution of compromised data or XSS payloads to subsequent users.</li>
+  <li><strong>Cross-Site Scripting (XSS):</strong> Delivering payloads to unsuspecting users by injecting them into responses served to others.</li>
+  <li><strong>Session Hijacking:</strong> Capturing or manipulating session cookies.</li>
+  <li><strong>Remote Code Execution (RCE):</strong> In some severe cases, full server compromise by exploiting vulnerabilities in how the back-end processes the smuggled requests.</li>
+</ul>
+
+<h2>Why Does This Persist?</h2>
+<ul>
+  <li><strong>Legacy Systems:</strong> Many critical systems still rely heavily on <code>HTTP/1.1</code>, making a complete overhaul difficult and costly.</li>
+  <li><strong>Distributed Architecture:</strong> The very nature of load balancers, proxies, and CDNs means multiple vendors and configurations are involved, each with their own parsing quirks.</li>
+  <li><strong>'Chicken and Egg' Problem:</strong> Upgrading one component without ensuring compatibility across the entire chain can introduce new issues.</li>
+  <li><strong>Blind Spots:</strong> Many organizations simply aren't aware of the severity or prevalence of these attacks, or lack the tools to detect them effectively.</li>
+</ul>
+
+<h2>The Path Forward: <code>HTTP/2</code>, <code>HTTP/3</code>, and Beyond</h2>
+<p>The ultimate and most robust solution, in my opinion, is a migration to modern HTTP versions like <code>HTTP/2</code> and <code>HTTP/3</code>. These protocols inherently resolve these ambiguities through their binary framing layers, which explicitly define message boundaries, eliminating the header-based parsing issues that plague <code>HTTP/1.1</code>.</p>
+
+<p>For systems still reliant on <code>HTTP/1.1</code>, several mitigation strategies are crucial:</p>
+<ul>
+  <li><strong>Strict Header Normalization:</strong> Configure all intermediary proxies to normalize headers, remove ambiguous headers, or consistently prioritize one header (e.g., always remove <code>Content-Length</code> if <code>Transfer-Encoding</code> is present).</li>
+  <li><strong>Disable Keep-Alives:</strong> While impacting performance, disabling keep-alive connections can prevent smuggled requests from being processed by subsequent users on the same connection.</li>
+  <li><strong>WAFs and Security Tools:</strong> Employ WAFs specifically tuned to detect and block request smuggling attempts, though these often serve as a reactive measure against a deeply systemic issue.</li>
+  <li><strong>Regular Audits:</strong> Conduct frequent penetration testing and security audits to identify and rectify parsing discrepancies.</li>
+</ul>
+
+<h2><code>HTTP/1.1</code> Must Die</h2>
+<p>The warnings have been clear for years: <code>HTTP/1.1</code>, despite its historical significance, is no longer fit for the security demands of the modern web. Its fundamental design flaws create an open door for sophisticated attacks that can compromise data, bypass security controls, and undermine user trust.</p>
+
+<p>It's time for the industry to collectively accelerate the transition to <code>HTTP/2</code> and <code>HTTP/3</code>. This isn't just about adopting newer technologies; it's about shoring up the very foundations of web security. The desync endgame is real, and the horror of request smuggling will continue until we decisively retire <code>HTTP/1.1</code> from its prominent role.</p>
+            </div>
+
+            <!-- New: Comments section -->
+            <div class="comments-section" style="margin-top:2rem; background: #fff; padding:1.2rem; border-radius:12px; box-shadow: 0 6px 18px rgba(44,62,80,0.06);">
+                <h3 style="margin-top:0; margin-bottom:0.5rem; color:var(--primary);">Comments</h3>
+                <div id="commentsList" style="margin-bottom:1rem; font-size:0.98rem; color:var(--dark-gray);">
+                    Loading comments...
+                </div>
+
+                <form id="commentForm" style="display:flex; flex-direction:column; gap:0.6rem;">
+                    <input id="commenterName" type="text" placeholder="Your name (optional)" style="padding:0.6rem; border-radius:8px; border:1px solid var(--medium-gray);">
+                    <textarea id="commentText" rows="4" placeholder="Share your thoughts..." required style="padding:0.6rem; border-radius:8px; border:1px solid var(--medium-gray); resize:vertical;"></textarea>
+                    <div style="display:flex; gap:0.6rem; align-items:center;">
+                        <button id="submitComment" type="submit" style="background:var(--accent); color:#fff; border:none; padding:0.6rem 1rem; border-radius:8px; cursor:pointer;">Post Comment</button>
+                        <small style="color:var(--text-light);">Be respectful — comments are public.</small>
+                    </div>
+                </form>
+            </div>
+            <!-- End comments section -->
+
+            <p style="text-align: center; margin-top: 2rem;">
+                <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
+            </p>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title">Bashir Kabir Zarewa</h4>
+                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Quick Links</h4>   
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Posts</a></li>
+                        <li><a href="../whoami.html">Whoami</a></li>
+                        <li><a href="../tools.html">Tools</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Connect</h4>
+                    <div class="social-links">
+                        <a href="https://x.com/bashirkabirz" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All Rights Reserved. Opinions are my own.
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleText = "Bashir Kabir Zarewa";
+            const typedTitle = document.getElementById('typed-title');
+            const cursor = document.querySelector('.typed-cursor');
+            let i = 0;
+
+            function typeWriter() {
+                if (i <= titleText.length) {
+                    typedTitle.textContent = titleText.slice(0, i);
+                    i++;
+                    setTimeout(typeWriter, 120);
+                } else {
+                    cursor.style.display = 'none';
+                }
+            }
+            typeWriter();
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Sharing logic
+            const postUrl = window.location.href;
+            const postTitle = document.querySelector('.post-title').innerText;
+
+            const twitterShare = document.getElementById('twitterShare');
+            twitterShare.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(postUrl)}&text=${encodeURIComponent(postTitle)}`;
+            twitterShare.target = '_blank';
+
+            const facebookShare = document.getElementById('facebookShare');
+            facebookShare.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(postUrl)}`;
+            facebookShare.target = '_blank';
+
+            const linkedinShare = document.getElementById('linkedinShare');
+            linkedinShare.href = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(postUrl)}&title=${encodeURIComponent(postTitle)}&summary=${encodeURIComponent(document.querySelector('.post-subtitle').innerText)}&source=${encodeURIComponent(window.location.origin)}`;
+            linkedinShare.target = '_blank';
+
+            const whatsappShare = document.getElementById('whatsappShare');
+            whatsappShare.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(postTitle + " " + postUrl)}`;
+            whatsappShare.target = '_blank';
+
+            const copyLink = document.getElementById('copyLink');
+            copyLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                navigator.clipboard.writeText(postUrl).then(() => {
+                    alert('Link copied to clipboard!');
+                });
+            });
+
+            // Firebase config (use your own config)
+            const firebaseConfig = {
+                apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+                authDomain: "personalblog-e8d0d.firebaseapp.com",
+                databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "personalblog-e8d0d",
+                storageBucket: "personalblog-e8d0d.appspot.com",
+                messagingSenderId: "746191305731",
+                appId: "1:746191305731:web:b2802db970e04979fe2236"
+            };
+            // Initialize Firebase only if not already initialized
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const db = firebase.database();
+
+            // --- Upvote logic (existing) ---
+            const upvoteBtn = document.getElementById('upvoteBtn');
+            const upvoteCount = document.getElementById('upvoteCount');
+            const upvotedKey = 'ai-kids-upvoted-global';
+
+            // Listen for upvote count changes
+            db.ref('upvotes/ai-kids').on('value', (snapshot) => {
+                const count = snapshot.val() || 0;
+                if (upvoteCount) upvoteCount.textContent = count;
+            });
+
+            // Check if user already upvoted
+            if (upvoteBtn && localStorage.getItem(upvotedKey) === 'true') {
+                upvoteBtn.disabled = true;
+                upvoteBtn.style.opacity = 0.7;
+            }
+
+            // Upvote logic
+            if (upvoteBtn) {
+                upvoteBtn.addEventListener('click', function() {
+                    if (localStorage.getItem(upvotedKey) !== 'true') {
+                        const upvoteRef = db.ref('upvotes/ai-kids');
+                        upvoteRef.transaction(function(current) {
+                            return (current || 0) + 1;
+                        }, function(error, committed) {
+                            if (committed && !error) {
+                                localStorage.setItem(upvotedKey, 'true');
+                                upvoteBtn.disabled = true;
+                                upvoteBtn.style.opacity = 0.7;
+                            }
+                        });
+                    }
+                });
+            }
+
+            const nativeShareBtn = document.getElementById('nativeShareBtn');
+            if (navigator.share) {
+                if (nativeShareBtn) {
+                    nativeShareBtn.addEventListener('click', async () => {
+                        try {
+                            await navigator.share({
+                                title: postTitle,
+                                text: document.querySelector('.post-subtitle').innerText,
+                                url: postUrl,
+                            });
+                        } catch (err) {
+                            console.error("Share failed:", err.message);
+                        }
+                    });
+                }
+            } else {
+                if (nativeShareBtn) nativeShareBtn.style.display = 'none';
+            }
+
+            // --- Comments logic (new) ---
+            // Try to use the template slug; fallback to deriving from URL when empty (preview)
+            let postSlug = "http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling";
+            if (!postSlug || postSlug.trim() === "") {
+                // derive a slug from URL as fallback
+                const pathParts = window.location.pathname.split('/');
+                const last = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2] || '';
+                postSlug = last.replace('.html','') || 'unknown-post';
+            }
+
+            const commentsListEl = document.getElementById('commentsList');
+            const commentForm = document.getElementById('commentForm');
+            const commenterNameEl = document.getElementById('commenterName');
+            const commentTextEl = document.getElementById('commentText');
+
+            const commentsRef = db.ref(`comments/${postSlug}`);
+
+            // Render comments (simple, XSS-safe by using textContent)
+            function renderComments(snapshot) {
+                const data = snapshot.val();
+                commentsListEl.innerHTML = '';
+                if (!data) {
+                    commentsListEl.textContent = 'No comments yet. Be the first to leave a thought!';
+                    return;
+                }
+                // Sort comments by timestamp ascending
+                const items = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                items.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                items.forEach(item => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.borderTop = '1px solid var(--medium-gray)';
+                    wrapper.style.padding = '0.6rem 0';
+                    const header = document.createElement('div');
+                    header.style.fontSize = '0.95rem';
+                    header.style.color = 'var(--text)';
+                    header.style.fontWeight = '600';
+                    header.textContent = item.name ? item.name : 'Anonymous';
+                    const meta = document.createElement('div');
+                    meta.style.fontSize = '0.8rem';
+                    meta.style.color = 'var(--text-light)';
+                    const date = new Date(item.timestamp || Date.now());
+                    meta.textContent = date.toLocaleString();
+                    const body = document.createElement('div');
+                    body.style.marginTop = '0.4rem';
+                    body.style.color = 'var(--text)';
+                    // Use textContent to avoid HTML injection
+                    body.textContent = item.text;
+
+                    wrapper.appendChild(header);
+                    wrapper.appendChild(meta);
+                    wrapper.appendChild(body);
+                    commentsListEl.appendChild(wrapper);
+                });
+            }
+
+            // Listen for realtime updates
+            commentsRef.on('value', snapshot => {
+                renderComments(snapshot);
+            }, err => {
+                console.error('Failed to load comments:', err);
+                if (commentsListEl) commentsListEl.textContent = 'Failed to load comments.';
+            });
+
+            // Submit a comment
+            if (commentForm) {
+                commentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = (commenterNameEl && commenterNameEl.value.trim()) || '';
+                    const text = (commentTextEl && commentTextEl.value.trim()) || '';
+                    if (!text) return alert('Please enter a comment.');
+
+                    const commentObj = {
+                        name: name,
+                        text: text,
+                        timestamp: Date.now()
+                        // optional: add moderation flag, ip hash, etc.
+                    };
+
+                    commentsRef.push(commentObj)
+                        .then(() => {
+                            if (commentTextEl) commentTextEl.value = '';
+                            if (commenterNameEl) commenterNameEl.value = '';
+                        })
+                        .catch(err => {
+                            console.error('Error posting comment:', err);
+                            alert('Could not post comment. Please try again later.');
+                        });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
