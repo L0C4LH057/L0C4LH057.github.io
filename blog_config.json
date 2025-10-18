@@ -1,0 +1,27 @@
+{
+  "blog_directory": "./posts",
+  "template_file": "template.html",
+  "images_directory": "./images",
+  "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+  "llm_model": "models/gemini-2.5-flash",
+  "gcp_project_id": "personalblog-e8d0d",
+  "gcp_location": "us-central1",
+  "openai_api_key": "",
+  "gemini_api_key":"AIzaSyDroBpDUyxdb0l2CFYabQE3rNX09yivl0I",
+  "huggingface_token":"",
+  "modelslab_api_key": "",
+  "github_repo_path": "./",
+  "falai_api_key":"3508893a-cf0e-4dd4-9591-2dfff68ef8fd:bb1911d8f9477e7ad8a8242c2dbf775b",
+  "auto_commit": true,
+  "image_generation_enabled": true,
+  "max_images_per_post": 4,
+  "author_name": "Bashir Kabir Zarewa",
+  "author_twitter": "@bashirkabirz",
+  "blog_url": "https://l0c4lh057.github.io",
+  "firebase_config": {
+    "apiKey": "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+    "authDomain": "personalblog-e8d0d.firebaseapp.com",
+    "databaseURL": "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+    "projectId": "personalblog-e8d0d"
+  }
+}

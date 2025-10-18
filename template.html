@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -427,7 +428,320 @@
             color: var(--accent);
             border-bottom-color: var(--accent);
         }
+        @media (max-width: 480px) {
+        .nav-links {
+            flex-direction: column;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        .nav-links a {
+            width: calc(100% - 2.2rem);
+            text-align: center;
+            padding: 0.6rem 1.1rem;
+        }
+    }
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 0 0.3rem;
+            }
+            .post-content {
+                padding: 0.7rem 0.3rem;
+            }
+            .post-header {
+                margin-bottom: 1.5rem;
+            }
+            .post-title {
+                font-size: 1.5rem;
+            }
+            .post-subtitle {
+                font-size: 1rem;
+            }
+            .post-cover, .inline-image {
+                width: 100%;
+                max-height: 300px;
+            }
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-bio .bio-image {
+                margin-bottom: 0.5rem;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            .footer-section {
+                min-width: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 70px;
+                height: 70px;
+            }
+            .blog-title {
+                font-size: 1.25rem;
+            }
+            .blog-subtitle {
+                font-size: 0.98rem;
+            }
+            .post-title {
+                font-size: 1.2rem;
+            }
+            .post-subtitle {
+                font-size: 0.9rem;
+            }
+            .footer-title {
+                font-size: 0.98rem;
+            }
+            .footer-links a {
+                font-size: 0.93rem;
+            }
+            .copyright {
+                font-size: 0.85rem;
+            }
+            .post-content {
+                padding: 0.5rem 0.1rem;
+            }
+            .post-header {
+                margin-bottom: 1rem;
+            }
+            .post-meta {
+                gap: 0.3rem;
+                font-size: 0.9rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 200px;
+                width: 100%;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 98vw;
+                padding: 0 0.5rem;
+            }
+            .post-content {
+                padding: 1.5rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            .footer-section {
+                min-width: 0;
+                padding-right: 0;
+                width: 100%;
+            }
+        }
+        @media (max-width: 480px) {
+            .footer-content {
+                gap: 1rem;
+            }
+            .footer-section {
+                font-size: 0.95rem;
+            }
+            .footer-title {
+                font-size: 1rem;
+            }
+        }
+        @media (max-width: 1100px) {
+            .container {
+                max-width: 98vw;
+                padding: 0 0.5rem;
+            }
+            .post-content {
+                padding: 1.5rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 1.2rem;
+            }
+            .footer-section {
+                min-width: 120px;
+                padding-right: 0;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .profile-container {
+                width: 70px;
+                height: 70px;
+            }
+            .blog-title {
+                font-size: 1.25rem;
+            }
+            .blog-subtitle {
+                font-size: 0.98rem;
+            }
+            .post-title {
+                font-size: 1.5rem;
+            }
+            .post-subtitle {
+                font-size: 1rem;
+            }
+            .post-content {
+                padding: 0.7rem 0.3rem;
+            }
+            .post-header {
+                margin-bottom: 1.5rem;
+            }
+            .post-meta {
+                gap: 0.5rem;
+                font-size: 0.93rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 400px;
+                width: 100%;
+            }
+            .highlight-box {
+                padding: 0.7rem 0.7rem 0.7rem 1rem;
+            }
+            .cta-box {
+                padding: 1rem;
+            }
+            .author-bio {
+                flex-direction: column;
+                text-align: center;
+            }
+            .author-bio .bio-image {
+                margin-bottom: 0.5rem;
+            }
+            .related-posts h2::before,
+            .related-posts h2::after {
+                width: 20%;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+            .terminal-code {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-container {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 0.7rem;
+            }
+            .blog-title {
+                font-size: 2rem;
+            }
+            .blog-subtitle {
+                font-size: 0.85rem;
+            }
+            .post-title {
+                font-size: 1.2rem;
+            }
+            .post-subtitle {
+                font-size: 0.9rem;
+            }
+            .footer-title {
+                font-size: 0.98rem;
+            }
+            .footer-links a {
+                font-size: 0.93rem;
+            }
+            .copyright {
+                font-size: 0.85rem;
+            }
+            .post-content {
+                padding: 0.5rem 0.1rem;
+            }
+            .post-header {
+                margin-bottom: 1rem;
+            }
+            .post-meta {
+                gap: 0.3rem;
+                font-size: 0.9rem;
+            }
+            .post-cover, .inline-image {
+                max-height: 350px;
+                width: 100%;
+            }
+            .related-posts ul {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* New styles for comments section */
+        .comments-section {
+            margin-top: 2rem;
+            background: #fff;
+            padding: 1.2rem;
+            border-radius: 12px;
+            box-shadow: 0 6px 18px rgba(44,62,80,0.06);
+        }
+
+        .comments-section h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        #commentsList {
+            margin-bottom: 1rem;
+            font-size: 0.98rem;
+            color: var(--dark-gray);
+        }
+
+        #commentForm {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        #commenterName,
+        #commentText {
+            padding: 0.6rem;
+            border-radius: 8px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        #submitComment {
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        small {
+            color: var(--text-light);
+        }
+
     </style>
+    {{CUSTOM_STYLES}}
 </head>
 <body>
     <header>
@@ -436,7 +750,8 @@
                 <div class="profile-container">
                     <img src="../images/profile.jpg" alt="{{AUTHOR_NAME}}" class="profile-image">
                 </div>
-                <h1 class="blog-title">{{AUTHOR_NAME}}</h1>
+                
+                <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
                 <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
                 <nav>
                     <ul class="nav-links">
@@ -480,6 +795,25 @@
             <div class="post-body">
                 {{CONTENT}}
             </div>
+
+            <!-- New: Comments section -->
+            <div class="comments-section" style="margin-top:2rem; background: #fff; padding:1.2rem; border-radius:12px; box-shadow: 0 6px 18px rgba(44,62,80,0.06);">
+                <h3 style="margin-top:0; margin-bottom:0.5rem; color:var(--primary);">Comments</h3>
+                <div id="commentsList" style="margin-bottom:1rem; font-size:0.98rem; color:var(--dark-gray);">
+                    Loading comments...
+                </div>
+
+                <form id="commentForm" style="display:flex; flex-direction:column; gap:0.6rem;">
+                    <input id="commenterName" type="text" placeholder="Your name (optional)" style="padding:0.6rem; border-radius:8px; border:1px solid var(--medium-gray);">
+                    <textarea id="commentText" rows="4" placeholder="Share your thoughts..." required style="padding:0.6rem; border-radius:8px; border:1px solid var(--medium-gray); resize:vertical;"></textarea>
+                    <div style="display:flex; gap:0.6rem; align-items:center;">
+                        <button id="submitComment" type="submit" style="background:var(--accent); color:#fff; border:none; padding:0.6rem 1rem; border-radius:8px; cursor:pointer;">Post Comment</button>
+                        <small style="color:var(--text-light);">Be respectful — comments are public.</small>
+                    </div>
+                </form>
+            </div>
+            <!-- End comments section -->
+
             <p style="text-align: center; margin-top: 2rem;">
                 <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
             </p>
@@ -517,7 +851,28 @@
         </div>
     </footer>
 
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleText = "Bashir Kabir Zarewa";
+            const typedTitle = document.getElementById('typed-title');
+            const cursor = document.querySelector('.typed-cursor');
+            let i = 0;
+
+            function typeWriter() {
+                if (i <= titleText.length) {
+                    typedTitle.textContent = titleText.slice(0, i);
+                    i++;
+                    setTimeout(typeWriter, 120);
+                } else {
+                    cursor.style.display = 'none';
+                }
+            }
+            typeWriter();
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             // Sharing logic
             const postUrl = window.location.href;
@@ -547,21 +902,165 @@
                 });
             });
 
-            const nativeShareBtn = document.getElementById('nativeShareBtn');
-            if (navigator.share) {
-                nativeShareBtn.addEventListener('click', async () => {
-                    try {
-                        await navigator.share({
-                            title: postTitle,
-                            text: document.querySelector('.post-subtitle').innerText,
-                            url: postUrl,
+            // Firebase config (use your own config)
+            const firebaseConfig = {
+                apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+                authDomain: "personalblog-e8d0d.firebaseapp.com",
+                databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "personalblog-e8d0d",
+                storageBucket: "personalblog-e8d0d.appspot.com",
+                messagingSenderId: "746191305731",
+                appId: "1:746191305731:web:b2802db970e04979fe2236"
+            };
+            // Initialize Firebase only if not already initialized
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            const db = firebase.database();
+
+            // --- Upvote logic (existing) ---
+            const upvoteBtn = document.getElementById('upvoteBtn');
+            const upvoteCount = document.getElementById('upvoteCount');
+            const upvotedKey = 'ai-kids-upvoted-global';
+
+            // Listen for upvote count changes
+            db.ref('upvotes/ai-kids').on('value', (snapshot) => {
+                const count = snapshot.val() || 0;
+                if (upvoteCount) upvoteCount.textContent = count;
+            });
+
+            // Check if user already upvoted
+            if (upvoteBtn && localStorage.getItem(upvotedKey) === 'true') {
+                upvoteBtn.disabled = true;
+                upvoteBtn.style.opacity = 0.7;
+            }
+
+            // Upvote logic
+            if (upvoteBtn) {
+                upvoteBtn.addEventListener('click', function() {
+                    if (localStorage.getItem(upvotedKey) !== 'true') {
+                        const upvoteRef = db.ref('upvotes/ai-kids');
+                        upvoteRef.transaction(function(current) {
+                            return (current || 0) + 1;
+                        }, function(error, committed) {
+                            if (committed && !error) {
+                                localStorage.setItem(upvotedKey, 'true');
+                                upvoteBtn.disabled = true;
+                                upvoteBtn.style.opacity = 0.7;
+                            }
                         });
-                    } catch (err) {
-                        console.error("Share failed:", err.message);
                     }
                 });
+            }
+
+            const nativeShareBtn = document.getElementById('nativeShareBtn');
+            if (navigator.share) {
+                if (nativeShareBtn) {
+                    nativeShareBtn.addEventListener('click', async () => {
+                        try {
+                            await navigator.share({
+                                title: postTitle,
+                                text: document.querySelector('.post-subtitle').innerText,
+                                url: postUrl,
+                            });
+                        } catch (err) {
+                            console.error("Share failed:", err.message);
+                        }
+                    });
+                }
             } else {
-                nativeShareBtn.style.display = 'none';
+                if (nativeShareBtn) nativeShareBtn.style.display = 'none';
+            }
+
+            // --- Comments logic (new) ---
+            // Try to use the template slug; fallback to deriving from URL when empty (preview)
+            let postSlug = "{{SLUG}}";
+            if (!postSlug || postSlug.trim() === "") {
+                // derive a slug from URL as fallback
+                const pathParts = window.location.pathname.split('/');
+                const last = pathParts[pathParts.length - 1] || pathParts[pathParts.length - 2] || '';
+                postSlug = last.replace('.html','') || 'unknown-post';
+            }
+
+            const commentsListEl = document.getElementById('commentsList');
+            const commentForm = document.getElementById('commentForm');
+            const commenterNameEl = document.getElementById('commenterName');
+            const commentTextEl = document.getElementById('commentText');
+
+            const commentsRef = db.ref(`comments/${postSlug}`);
+
+            // Render comments (simple, XSS-safe by using textContent)
+            function renderComments(snapshot) {
+                const data = snapshot.val();
+                commentsListEl.innerHTML = '';
+                if (!data) {
+                    commentsListEl.textContent = 'No comments yet. Be the first to leave a thought!';
+                    return;
+                }
+                // Sort comments by timestamp ascending
+                const items = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                items.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+
+                items.forEach(item => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.borderTop = '1px solid var(--medium-gray)';
+                    wrapper.style.padding = '0.6rem 0';
+                    const header = document.createElement('div');
+                    header.style.fontSize = '0.95rem';
+                    header.style.color = 'var(--text)';
+                    header.style.fontWeight = '600';
+                    header.textContent = item.name ? item.name : 'Anonymous';
+                    const meta = document.createElement('div');
+                    meta.style.fontSize = '0.8rem';
+                    meta.style.color = 'var(--text-light)';
+                    const date = new Date(item.timestamp || Date.now());
+                    meta.textContent = date.toLocaleString();
+                    const body = document.createElement('div');
+                    body.style.marginTop = '0.4rem';
+                    body.style.color = 'var(--text)';
+                    // Use textContent to avoid HTML injection
+                    body.textContent = item.text;
+
+                    wrapper.appendChild(header);
+                    wrapper.appendChild(meta);
+                    wrapper.appendChild(body);
+                    commentsListEl.appendChild(wrapper);
+                });
+            }
+
+            // Listen for realtime updates
+            commentsRef.on('value', snapshot => {
+                renderComments(snapshot);
+            }, err => {
+                console.error('Failed to load comments:', err);
+                if (commentsListEl) commentsListEl.textContent = 'Failed to load comments.';
+            });
+
+            // Submit a comment
+            if (commentForm) {
+                commentForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const name = (commenterNameEl && commenterNameEl.value.trim()) || '';
+                    const text = (commentTextEl && commentTextEl.value.trim()) || '';
+                    if (!text) return alert('Please enter a comment.');
+
+                    const commentObj = {
+                        name: name,
+                        text: text,
+                        timestamp: Date.now()
+                        // optional: add moderation flag, ip hash, etc.
+                    };
+
+                    commentsRef.push(commentObj)
+                        .then(() => {
+                            if (commentTextEl) commentTextEl.value = '';
+                            if (commenterNameEl) commenterNameEl.value = '';
+                        })
+                        .catch(err => {
+                            console.error('Error posting comment:', err);
+                            alert('Could not post comment. Please try again later.');
+                        });
+                });
             }
         });
     </script>
