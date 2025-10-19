@@ -805,17 +805,27 @@ Content-Length: 10
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            
+            const firebaseConfig = {
+                apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+                authDomain: "personalblog-e8d0d.firebaseapp.com",
+                databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "personalblog-e8d0d",
+                storageBucket: "personalblog-e8d0d.appspot.com",
+                messagingSenderId: "746191305731",
+                appId: "1:746191305731:web:b2802db970e04979fe2236"
+            };
 
-            firebase.initializeApp(firebaseConfig);
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
             const db = firebase.database();
 
             const upvoteBtn = document.getElementById('upvoteBtn');
             const upvoteCount = document.getElementById('upvoteCount');
-            const upvotedKey = 'future-of-ai-upvoted-global';
+            const upvotedKey = 'http11-must-die-upvoted';
 
             // Listen for upvote count changes
-            db.ref('upvotes/future-of-ai').on('value', (snapshot) => {
+            db.ref('upvotes/http11-must-die').on('value', (snapshot) => {
                 const count = snapshot.val() || 0;
                 upvoteCount.textContent = count;
             });
@@ -829,11 +839,16 @@ Content-Length: 10
             // Upvote logic
             upvoteBtn.addEventListener('click', function() {
                 if (localStorage.getItem(upvotedKey) !== 'true') {
-                    const upvoteRef = db.ref('upvotes/future-of-ai');
-                    upvoteRef.transaction(current => (current || 0) + 1);
-                    localStorage.setItem(upvotedKey, 'true');
-                    upvoteBtn.disabled = true;
-                    upvoteBtn.style.opacity = 0.7;
+                    const upvoteRef = db.ref('upvotes/http11-must-die');
+                    upvoteRef.transaction(current => (current || 0) + 1)
+                        .then(() => {
+                            localStorage.setItem(upvotedKey, 'true');
+                            upvoteBtn.disabled = true;
+                            upvoteBtn.style.opacity = 0.7;
+                        })
+                        .catch(err => {
+                            console.error('Upvote failed:', err);
+                        });
                 }
             });
 
@@ -881,16 +896,7 @@ Content-Length: 10
                 nativeShareBtn.style.display = 'none';
             }
 
-            // Firebase config (comments only)
-            const firebaseConfig = {
-                apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
-                authDomain: "personalblog-e8d0d.firebaseapp.com",
-                databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
-                projectId: "personalblog-e8d0d",
-                storageBucket: "personalblog-e8d0d.appspot.com",
-                messagingSenderId: "746191305731",
-                appId: "1:746191305731:web:b2802db970e04979fe2236"
-            };
+            
             if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
 
             const postSlug = "http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling";
