@@ -1,123 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Finance & Accounting Infographic</title>
+  <title>Mai Hajja Finance Suite — Interactive Features Demo</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/framer-motion@10.12.16/dist/framer-motion.umd.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f9fafb;
+      background-color: #f0f4f8;
     }
-    .card {
-      transition: all 0.3s ease;
+    .feature-item {
       cursor: pointer;
+      transition: all 0.2s ease-in-out;
     }
-    .card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    .feature-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     }
-    .demo-box {
-      transition: opacity 0.4s ease;
-    }
-    .fade-in {
-      opacity: 1 !important;
-    }
-    .category-pill {
-      border-radius: 1rem;
-      padding: 0.2rem 0.6rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
+    .modal-backdrop {
+      background-color: rgba(17, 24, 39, 0.85);
     }
   </style>
 </head>
-<body class="min-h-screen p-6">
-  <div class="max-w-7xl mx-auto">
-    <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Enterprise Finance & Accounting Suite</h1>
-    <p class="text-center text-gray-600 mb-8">Explore key modules and intelligent business features with live previews</p>
+<body class="p-6 sm:p-10">
 
-    <!-- Filter -->
-    <div class="flex justify-center mb-8 space-x-3">
-      <button onclick="filterCategory('All')" class="filter-btn bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">All</button>
-      <button onclick="filterCategory('Finance')" class="filter-btn bg-emerald-500 text-white px-3 py-1 rounded-lg text-sm">Finance</button>
-      <button onclick="filterCategory('Sales')" class="filter-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-sm">Sales</button>
-      <button onclick="filterCategory('Operations')" class="filter-btn bg-amber-500 text-white px-3 py-1 rounded-lg text-sm">Operations</button>
-      <button onclick="filterCategory('Analytics')" class="filter-btn bg-purple-500 text-white px-3 py-1 rounded-lg text-sm">Analytics</button>
-      <button onclick="filterCategory('System')" class="filter-btn bg-gray-700 text-white px-3 py-1 rounded-lg text-sm">System</button>
+  <h1 class="text-3xl font-extrabold text-gray-800 mb-6 text-center">
+    💼 Mai Hajja Finance & Accounting Suite — Interactive Infographic
+  </h1>
+
+  <div id="feature-container" class="grid md:grid-cols-3 sm:grid-cols-2 gap-5"></div>
+
+  <!-- Modal -->
+  <div id="feature-modal" class="fixed inset-0 hidden items-center justify-center z-50">
+    <div class="modal-backdrop absolute inset-0"></div>
+    <div class="relative bg-white rounded-lg shadow-2xl max-w-2xl w-full mx-4 p-6 overflow-y-auto max-h-[90vh]">
+      <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl">✕</button>
+      <h2 id="modal-title" class="text-2xl font-bold text-primary-green mb-4"></h2>
+      <div id="modal-content" class="text-gray-700 text-sm"></div>
     </div>
-
-    <!-- Grid -->
-    <div id="featureGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-
-    <!-- Demo Box -->
-    <div id="demoBox" class="demo-box mt-10 opacity-0 bg-white p-6 rounded-2xl shadow-md border border-gray-200 transition-all duration-500"></div>
   </div>
 
   <script>
-    const featureData = [
-      { category: 'Finance', title: 'Ledger & Audit Trail', icon: '💼', demoTitle: 'Audit Trail Overview', demoContent: 'Tracks all financial activities with timestamps and user logs.' },
-      { category: 'Finance', title: 'Cash Flow Forecasting', icon: '📈', demoTitle: 'Projected Cash Flow Overview', demoContent: 'Predicts upcoming liquidity and financial health using past data.' },
-      { category: 'Finance', title: 'Tax Compliance Center', icon: '🧾', demoTitle: 'Automated Tax Filing', demoContent: 'Prepares VAT/WHT summaries and helps generate returns.' },
-      { category: 'Sales', title: 'E-Invoicing Integration', icon: '💳', demoTitle: 'Digital Invoice View', demoContent: 'Generate and send invoices directly via Paystack or Flutterwave links.' },
-      { category: 'Sales', title: 'Customer Credit Scoring', icon: '📊', demoTitle: 'Credit Analysis Dashboard', demoContent: 'Rates customers based on transaction history and overdue trends.' },
-      { category: 'Operations', title: 'Branch Management', icon: '🏢', demoTitle: 'Branch Overview', demoContent: 'Compare performance metrics across branches and teams.' },
-      { category: 'Operations', title: 'Employee Performance Analytics', icon: '👨‍💼', demoTitle: 'Staff Efficiency View', demoContent: 'Visualizes attendance and output data to identify trends.' },
-      { category: 'Analytics', title: 'Predictive Sales Forecasting', icon: '🔮', demoTitle: 'AI-Based Sales Forecast', demoContent: 'Forecasts next month’s sales based on AI pattern detection.' },
-      { category: 'Analytics', title: 'Expense Heatmap Visualization', icon: '🌡️', demoTitle: 'Spending Heatmap', demoContent: 'Highlights departments with highest spending patterns.' },
-      { category: 'System', title: 'Role-Based Access Control', icon: '🔐', demoTitle: 'User Role Permissions', demoContent: 'Restricts access by admin, accountant, or branch manager roles.' },
-      { category: 'System', title: 'Cloud Backup & Restore', icon: '☁️', demoTitle: 'Data Backup Status', demoContent: 'Hybrid local/cloud data backup for continuous protection.' },
-    ];
-
-    const featureGrid = document.getElementById('featureGrid');
-    const demoBox = document.getElementById('demoBox');
-
-    function renderFeatures(data) {
-      featureGrid.innerHTML = '';
-      data.forEach((item, index) => {
-        const colorMap = {
-          Finance: 'emerald',
-          Sales: 'blue',
-          Operations: 'amber',
-          Analytics: 'purple',
-          System: 'gray'
-        };
-        const color = colorMap[item.category] || 'gray';
-        featureGrid.innerHTML += `
-          <div onclick="showDemo(${index})" class="card bg-white p-6 rounded-2xl border border-gray-200 hover:border-${color}-400 hover:bg-${color}-50 shadow-sm">
-            <div class="flex items-center mb-3 space-x-2">
-              <div class="text-${color}-600 text-2xl">${item.icon}</div>
-              <h3 class="text-lg font-semibold text-gray-800">${item.title}</h3>
-            </div>
-            <span class="category-pill bg-${color}-100 text-${color}-700">${item.category}</span>
-          </div>
-        `;
-      });
-    }
-
-    function showDemo(index) {
-      const feature = featureData[index];
-      demoBox.innerHTML = `
-        <h2 class="text-xl font-bold text-gray-800 mb-2">${feature.demoTitle}</h2>
-        <p class="text-gray-600 mb-2">${feature.demoContent}</p>
-        <div class="mt-4 p-3 rounded-lg bg-gray-50 border text-sm text-gray-500">✨ Tip: Click another card to explore different module simulations.</div>
-      `;
-      demoBox.classList.add('fade-in');
-      demoBox.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    function filterCategory(category) {
-      if (category === 'All') {
-        renderFeatures(featureData);
-      } else {
-        renderFeatures(featureData.filter(item => item.category === category));
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-green': '#047857',
+            'secondary-blue': '#1d4ed8',
+            'accent-yellow': '#d97706',
+            'neutral-gray': '#e5e7eb'
+          }
+        }
       }
     }
 
-    renderFeatures(featureData);
+    // -------------------------
+    // 🔹 ENHANCED FEATURE DATA
+    // -------------------------
+    const featureData = [
+      // 💰 Finance & Core Accounting
+      { category: 'Finance', title: 'AI-Powered Budget Forecasting', icon: `<path d="M12 20V10M18 20V4M6 20v-4" stroke-width="2"/>`, demoTitle: 'Smart Forecast Panel', demoContent: `<div class="p-4 bg-green-50 rounded-lg"><p class="text-sm font-semibold mb-2 text-primary-green">Projected vs Actual (AI Forecast)</p><div class="h-32 bg-white border rounded p-3 flex items-end justify-around"><div class="w-1/6 bg-green-500 h-3/4"></div><div class="w-1/6 bg-green-400 h-4/5"></div><div class="w-1/6 bg-green-600 h-full"></div><div class="w-1/6 bg-green-300 h-2/3"></div></div><p class="mt-3 text-xs text-gray-600">The system automatically forecasts next quarter’s profit & expenses using historical trends and seasonality.</p></div>`},
+      { category: 'Finance', title: 'Multi-Currency & Exchange Rate Automation', icon: `<path d="M4 4h16v16H4z" stroke-width="2"/>`, demoTitle: 'Currency Dashboard', demoContent: `<div class="p-4 bg-blue-50 rounded-lg"><p class="text-sm font-semibold mb-2 text-secondary-blue">Real-Time FX Conversion</p><div class="bg-white rounded-md shadow-sm p-3"><p>₦1 = $0.00066 | €0.00061</p><p class="text-xs text-gray-600 mt-2">System updates exchange rates hourly via CBN API.</p></div></div>`},
+      { category: 'Finance', title: 'Expense Tracking & Budget Control', icon: `<path d="M9 12h6m-3-3v6" stroke-width="2"/>`, demoTitle: 'Expense Overview', demoContent: `<div class="p-4 bg-red-50 rounded-lg"><p class="text-sm font-semibold text-red-700 mb-2">Departmental Expense Report</p><table class="text-xs bg-white border rounded-md"><tr><th class="p-1">Dept</th><th>Budget</th><th>Spent</th><th>Status</th></tr><tr><td>HR</td><td>N200k</td><td>N180k</td><td class="text-green-600">✓ OK</td></tr><tr><td>Procurement</td><td>N500k</td><td>N520k</td><td class="text-red-600">Over</td></tr></table></div>`},
+
+      // 🧾 Sales & Procurement
+      { category: 'Sales', title: 'Client Credit Scoring Engine', icon: `<path d="M12 22s8-4 8-10V5l-8-3-8 3" stroke-width="2"/>`, demoTitle: 'Client Risk Assessment', demoContent: `<div class="p-4 bg-yellow-50 rounded-lg"><p class="text-sm font-semibold text-accent-yellow mb-2">Client Risk Ratings (AI-Driven)</p><div class="bg-white rounded-md p-3 text-xs"><p>AgroMart Ltd — Score: <span class="text-green-600 font-bold">A+</span></p><p>FoodWorld — Score: <span class="text-red-600 font-bold">C</span></p><p>Zenith Foods — Score: <span class="text-yellow-600 font-bold">B</span></p></div></div>`},
+      { category: 'Sales', title: 'E-Invoice & Payment Gateway Integration', icon: `<path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5" stroke-width="2"/>`, demoTitle: 'Invoice Payment Demo', demoContent: `<div class="p-4 bg-gray-50 rounded-lg"><p class="text-sm font-semibold text-secondary-blue mb-2">Online Payment Example</p><p class="text-xs bg-white rounded-md p-3 border">Invoice #INV3002 | Total: ₦75,000<br><button class="bg-primary-green text-white px-3 py-1 rounded mt-2 text-xs">Pay via Paystack</button></p><p class="mt-3 text-xs text-gray-600">Invoices connect to Paystack/Flutterwave API for instant payment posting and reconciliation.</p></div>`},
+
+      // ⚙️ Operations & HR
+      { category: 'Operations', title: 'Automated Payroll & Compliance', icon: `<path d="M12 22c-5.523 0-10-4.477" stroke-width="2"/>`, demoTitle: 'Payroll Automation', demoContent: `<div class="p-4 bg-yellow-50 rounded-lg"><p class="text-sm font-semibold text-accent-yellow mb-2">Monthly Payroll Run</p><div class="text-xs bg-white rounded-md p-3"><p><strong>Processing:</strong> Payroll for Oct 2025</p><p><strong>Status:</strong> Auto-calculated via attendance</p><p><strong>Compliance:</strong> Pension, Tax, NHF auto-deductions</p></div></div>`},
+      { category: 'Operations', title: 'Smart Inventory with Auto-Reorder', icon: `<path d="M3 3h18v18H3z" stroke-width="2"/>`, demoTitle: 'Auto-Stock Alert', demoContent: `<div class="p-4 bg-yellow-50 rounded-lg"><p class="text-sm font-semibold text-accent-yellow mb-2">Low Stock Trigger</p><div class="text-xs bg-white rounded-md p-3"><p>Flour (50kg) — 10 Bags Remaining</p><p class="text-red-600 mt-1">Auto-reorder initiated to Supplier A</p></div></div>`},
+
+      // 📊 Analytics & Intelligence
+      { category: 'Analytics', title: 'Business Intelligence Dashboard', icon: `<path d="M8 12h4m-4 4h4m6-4v4" stroke-width="2"/>`, demoTitle: 'BI Insights', demoContent: `<div class="p-4 bg-blue-50 rounded-lg"><p class="text-sm font-semibold text-secondary-blue mb-2">KPI Snapshot</p><div class="grid grid-cols-3 gap-3"><div class="bg-white p-2 rounded shadow text-center"><p class="text-xl font-bold">+14%</p><p class="text-xs">Sales Growth</p></div><div class="bg-white p-2 rounded shadow text-center"><p class="text-xl font-bold text-red-500">3.2%</p><p class="text-xs">Cost Ratio</p></div><div class="bg-white p-2 rounded shadow text-center"><p class="text-xl font-bold text-green-600">85%</p><p class="text-xs">Profit Margin</p></div></div></div>`},
+      { category: 'Analytics', title: 'Audit Trail & Activity Monitoring', icon: `<path d="M12 22s8-4 8-10V5l-8-3" stroke-width="2"/>`, demoTitle: 'Recent Logs', demoContent: `<div class="p-4 bg-gray-50 rounded-lg"><p class="text-sm font-semibold text-primary-green mb-2">Audit Log (Simulation)</p><div class="text-xs space-y-1 bg-white p-3 rounded-md"><p>🕒 User <strong>Aminu</strong> edited invoice INV002 at 10:34</p><p>🕒 User <strong>Maryam</strong> added new vendor AgroLink</p></div></div>`},
+
+      // ⚡ Automation & Integrations
+      { category: 'Automation', title: 'Automatic Backup & Cloud Sync', icon: `<path d="M12 22c-5.523 0-10-4.477" stroke-width="2"/>`, demoTitle: 'Cloud Backup Demo', demoContent: `<div class="p-4 bg-blue-50 rounded-lg"><p class="text-sm font-semibold text-secondary-blue mb-2">Last Backup: 10 mins ago</p><div class="bg-white rounded-md p-3 text-xs"><p>Cloud Sync Status: ✅ Up-to-date</p><p>Storage: AWS S3 — Encrypted</p></div></div>`},
+      { category: 'Automation', title: 'Mobile Alerts & Notifications', icon: `<path d="M8 6h10a2 2 0 012 2" stroke-width="2"/>`, demoTitle: 'Alert Center', demoContent: `<div class="p-4 bg-green-50 rounded-lg"><p class="text-sm font-semibold text-primary-green mb-2">Sample Alerts</p><div class="bg-white rounded-md p-3 text-xs"><p>🔔 Stock below minimum (Factory: Maize)</p><p>💳 Invoice INV-402 paid via Flutterwave</p><p>⚙️ Payroll run completed successfully</p></div></div>`}
+    ];
+
+    // -------------------------
+    // 🧠 Rendering & Interactivity
+    // -------------------------
+    const container = document.getElementById('feature-container');
+    featureData.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = "feature-item bg-white rounded-xl shadow p-4 hover:border-primary-green border border-gray-100";
+      div.innerHTML = `
+        <div class="flex items-center space-x-3">
+          <svg class="w-8 h-8 text-primary-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">${f.icon}</svg>
+          <div>
+            <h3 class="font-bold text-gray-800">${f.title}</h3>
+            <p class="text-xs text-gray-500">${f.category}</p>
+          </div>
+        </div>
+      `;
+      div.onclick = () => openModal(f);
+      container.appendChild(div);
+    });
+
+    function openModal(f) {
+      document.getElementById('modal-title').innerText = f.demoTitle;
+      document.getElementById('modal-content').innerHTML = f.demoContent;
+      document.getElementById('feature-modal').classList.remove('hidden');
+      document.getElementById('feature-modal').classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('feature-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
   </script>
 </body>
 </html>
