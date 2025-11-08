@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise Finance & Accounting Infographic</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #f9fafb;
+      font-family: 'Inter', sans-serif;
+    }
+    .card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+    .demo-box {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .fade-in {
+      opacity: 1 !important;
+    }
+    .category-pill {
+      border-radius: 1rem;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen p-6">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-4xl font-extrabold text-gray-800 mb-2">Enterprise Finance & Accounting Suite</h1>
+      <p class="text-gray-600">A modular infographic of advanced business features</p>
+    </div>
+
+    <!-- Filter Controls -->
+    <div class="flex justify-center mb-8 space-x-3 flex-wrap">
+      <button onclick="filterCategory('All')" class="filter-btn bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">All</button>
+      <button onclick="filterCategory('Finance')" class="filter-btn bg-emerald-500 text-white px-3 py-1 rounded-lg text-sm">Finance</button>
+      <button onclick="filterCategory('Sales')" class="filter-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-sm">Sales</button>
+      <button onclick="filterCategory('Operations')" class="filter-btn bg-amber-500 text-white px-3 py-1 rounded-lg text-sm">Operations</button>
+      <button onclick="filterCategory('Analytics')" class="filter-btn bg-purple-500 text-white px-3 py-1 rounded-lg text-sm">Analytics</button>
+      <button onclick="filterCategory('System')" class="filter-btn bg-gray-700 text-white px-3 py-1 rounded-lg text-sm">System</button>
+    </div>
+
+    <!-- Features Grid -->
+    <div id="featureGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <!-- Demo Box -->
+    <div id="demoBox" class="demo-box mt-12 bg-white p-6 rounded-2xl shadow-md border border-gray-200 transition-all duration-500"></div>
+  </div>
+
+  <script>
+    const featureData = [
+      // --- FINANCE ---
+      {
+        category: 'Finance',
+        title: 'General Ledger & Audit Trail',
+        icon: '💼',
+        demoTitle: 'Ledger System Overview',
+        demoContent: `<p class='text-sm text-gray-600'>Tracks every transaction, including timestamp, user, and account involved. Ensures transparent financial monitoring.</p>`
+      },
+      {
+        category: 'Finance',
+        title: 'Cash Flow Forecasting',
+        icon: '📈',
+        demoTitle: '3-Month Cash Flow Forecast',
+        demoContent: `<ul class='text-sm bg-green-50 p-3 rounded-lg border'>
+          <li>📅 Nov 2025: +₦12.4M inflow</li>
+          <li>📅 Dec 2025: +₦10.9M inflow</li>
+          <li>📅 Jan 2026: -₦2.1M deficit</li>
+        </ul><p class='text-xs text-gray-500 mt-2'>AI-driven projection helps maintain liquidity and budget accuracy.</p>`
+      },
+      {
+        category: 'Finance',
+        title: 'Tax Compliance Center',
+        icon: '🧾',
+        demoTitle: 'Automated Tax Filing',
+        demoContent: `<p class='text-sm text-gray-600'>Prepares VAT, WHT, and PAYE summaries automatically. Supports local Nigerian tax templates for export to FIRS e-filing.</p>`
+      },
+
+      // --- SALES ---
+      {
+        category: 'Sales',
+        title: 'E-Invoicing Integration',
+        icon: '💳',
+        demoTitle: 'Digital Invoice',
+        demoContent: `<p class='text-sm text-gray-600'>Creates secure, payment-ready invoices with QR codes or Paystack/Flutterwave links embedded for direct customer payment.</p>`
+      },
+      {
+        category: 'Sales',
+        title: 'Customer Credit Scoring',
+        icon: '📊',
+        demoTitle: 'Credit Score Matrix',
+        demoContent: `<p class='text-sm text-gray-600'>Analyzes past due payments and order patterns to calculate client risk score. Helps prevent cashflow bottlenecks.</p>`
+      },
+      {
+        category: 'Sales',
+        title: 'Supplier Evaluation Matrix',
+        icon: '📦',
+        demoTitle: 'Vendor Performance Tracker',
+        demoContent: `<p class='text-sm text-gray-600'>Rates suppliers by reliability, delivery time, and price consistency to enhance procurement decisions.</p>`
+      },
+
+      // --- OPERATIONS ---
+      {
+        category: 'Operations',
+        title: 'Branch Performance Management',
+        icon: '🏢',
+        demoTitle: 'Branch Comparison Dashboard',
+        demoContent: `<p class='text-sm text-gray-600'>Compares revenue, expenses, and growth metrics across branches to guide expansion and optimization strategies.</p>`
+      },
+      {
+        category: 'Operations',
+        title: 'Asset & Inventory Tracking',
+        icon: '📦',
+        demoTitle: 'Asset Tagging System',
+        demoContent: `<p class='text-sm text-gray-600'>Integrates barcode/QR scanning for physical asset management and automatic depreciation logging.</p>`
+      },
+      {
+        category: 'Operations',
+        title: 'HR & Payroll Management',
+        icon: '👨‍💼',
+        demoTitle: 'Employee Data Panel',
+        demoContent: `<p class='text-sm text-gray-600'>Handles salary computations, attendance tracking, and branch-level HR reporting seamlessly.</p>`
+      },
+
+      // --- ANALYTICS ---
+      {
+        category: 'Analytics',
+        title: 'Predictive Sales Forecasting',
+        icon: '🔮',
+        demoTitle: 'AI-Based Forecast Simulation',
+        demoContent: `<div class='p-3 bg-purple-50 rounded-lg'>
+          <p class='text-sm text-gray-700'>AI projects a 12% revenue growth next quarter using trend analysis from 18 months of sales data.</p>
+        </div>`
+      },
+      {
+        category: 'Analytics',
+        title: 'Expense Heatmap Visualization',
+        icon: '🌡️',
+        demoTitle: 'Expense Hotspot Map',
+        demoContent: `<p class='text-sm text-gray-600'>Shows a color-coded heatmap of departments with the highest expenditures and cost-saving opportunities.</p>`
+      },
+
+      // --- SYSTEM ---
+      {
+        category: 'System',
+        title: 'Role-Based Access Control (RBAC)',
+        icon: '🔐',
+        demoTitle: 'Access Control Table',
+        demoContent: `<table class='min-w-full text-xs border bg-gray-50 rounded-md'>
+          <tr class='border-b'><th class='p-1'>Role</th><th class='p-1'>Access</th></tr>
+          <tr><td class='p-1'>Admin</td><td class='p-1 text-green-600 font-semibold'>Full</td></tr>
+          <tr><td class='p-1'>Accountant</td><td class='p-1 text-yellow-600 font-semibold'>Finance Only</td></tr>
+          <tr><td class='p-1'>Branch Manager</td><td class='p-1 text-blue-600 font-semibold'>Sales/HR</td></tr>
+        </table>`
+      },
+      {
+        category: 'System',
+        title: 'Cloud Backup & Restore',
+        icon: '☁️',
+        demoTitle: 'Backup Status',
+        demoContent: `<p class='text-sm text-gray-600'>Provides scheduled and manual backups to cloud and local storage with restore checkpoints.</p>`
+      }
+    ];
+
+    const featureGrid = document.getElementById('featureGrid');
+    const demoBox = document.getElementById('demoBox');
+
+    function renderFeatures(data) {
+      featureGrid.innerHTML = '';
+      data.forEach((item, index) => {
+        const colorMap = {
+          Finance: 'emerald',
+          Sales: 'blue',
+          Operations: 'amber',
+          Analytics: 'purple',
+          System: 'gray'
+        };
+        const color = colorMap[item.category] || 'gray';
+        featureGrid.innerHTML += `
+          <div onclick="showDemo(${index})" class="card bg-white p-6 rounded-2xl border border-gray-200 hover:border-${color}-400 hover:bg-${color}-50 shadow-sm">
+            <div class="flex items-center mb-3 space-x-2">
+              <div class="text-${color}-600 text-2xl">${item.icon}</div>
+              <h3 class="text-lg font-semibold text-gray-800">${item.title}</h3>
+            </div>
+            <span class="category-pill bg-${color}-100 text-${color}-700">${item.category}</span>
+          </div>
+        `;
+      });
+    }
+
+    function showDemo(index) {
+      const feature = featureData[index];
+      demoBox.innerHTML = `
+        <h2 class="text-2xl font-bold text-gray-800 mb-3">${feature.demoTitle}</h2>
+        <div class="text-gray-700">${feature.demoContent}</div>
+        <p class="text-xs text-gray-400 mt-3">✨ Click another feature to explore more modules.</p>
+      `;
+      demoBox.classList.add('fade-in');
+      demoBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function filterCategory(category) {
+      if (category === 'All') {
+        renderFeatures(featureData);
+      } else {
+        renderFeatures(featureData.filter(item => item.category === category));
+      }
+    }
+
+    renderFeatures(featureData);
+  </script>
+</body>
+</html>
