@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Finance & Accounting Infographic</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/framer-motion@10.12.16/dist/framer-motion.umd.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f9fafb;
+    }
+    .card {
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+    }
+    .demo-box {
+      transition: opacity 0.4s ease;
+    }
+    .fade-in {
+      opacity: 1 !important;
+    }
+    .category-pill {
+      border-radius: 1rem;
+      padding: 0.2rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+  <div class="max-w-7xl mx-auto">
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">Enterprise Finance & Accounting Suite</h1>
+    <p class="text-center text-gray-600 mb-8">Explore key modules and intelligent business features with live previews</p>
+
+    <!-- Filter -->
+    <div class="flex justify-center mb-8 space-x-3">
+      <button onclick="filterCategory('All')" class="filter-btn bg-blue-600 text-white px-3 py-1 rounded-lg text-sm">All</button>
+      <button onclick="filterCategory('Finance')" class="filter-btn bg-emerald-500 text-white px-3 py-1 rounded-lg text-sm">Finance</button>
+      <button onclick="filterCategory('Sales')" class="filter-btn bg-blue-500 text-white px-3 py-1 rounded-lg text-sm">Sales</button>
+      <button onclick="filterCategory('Operations')" class="filter-btn bg-amber-500 text-white px-3 py-1 rounded-lg text-sm">Operations</button>
+      <button onclick="filterCategory('Analytics')" class="filter-btn bg-purple-500 text-white px-3 py-1 rounded-lg text-sm">Analytics</button>
+      <button onclick="filterCategory('System')" class="filter-btn bg-gray-700 text-white px-3 py-1 rounded-lg text-sm">System</button>
+    </div>
+
+    <!-- Grid -->
+    <div id="featureGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+    <!-- Demo Box -->
+    <div id="demoBox" class="demo-box mt-10 opacity-0 bg-white p-6 rounded-2xl shadow-md border border-gray-200 transition-all duration-500"></div>
+  </div>
+
+  <script>
+    const featureData = [
+      { category: 'Finance', title: 'Ledger & Audit Trail', icon: '💼', demoTitle: 'Audit Trail Overview', demoContent: 'Tracks all financial activities with timestamps and user logs.' },
+      { category: 'Finance', title: 'Cash Flow Forecasting', icon: '📈', demoTitle: 'Projected Cash Flow Overview', demoContent: 'Predicts upcoming liquidity and financial health using past data.' },
+      { category: 'Finance', title: 'Tax Compliance Center', icon: '🧾', demoTitle: 'Automated Tax Filing', demoContent: 'Prepares VAT/WHT summaries and helps generate returns.' },
+      { category: 'Sales', title: 'E-Invoicing Integration', icon: '💳', demoTitle: 'Digital Invoice View', demoContent: 'Generate and send invoices directly via Paystack or Flutterwave links.' },
+      { category: 'Sales', title: 'Customer Credit Scoring', icon: '📊', demoTitle: 'Credit Analysis Dashboard', demoContent: 'Rates customers based on transaction history and overdue trends.' },
+      { category: 'Operations', title: 'Branch Management', icon: '🏢', demoTitle: 'Branch Overview', demoContent: 'Compare performance metrics across branches and teams.' },
+      { category: 'Operations', title: 'Employee Performance Analytics', icon: '👨‍💼', demoTitle: 'Staff Efficiency View', demoContent: 'Visualizes attendance and output data to identify trends.' },
+      { category: 'Analytics', title: 'Predictive Sales Forecasting', icon: '🔮', demoTitle: 'AI-Based Sales Forecast', demoContent: 'Forecasts next month’s sales based on AI pattern detection.' },
+      { category: 'Analytics', title: 'Expense Heatmap Visualization', icon: '🌡️', demoTitle: 'Spending Heatmap', demoContent: 'Highlights departments with highest spending patterns.' },
+      { category: 'System', title: 'Role-Based Access Control', icon: '🔐', demoTitle: 'User Role Permissions', demoContent: 'Restricts access by admin, accountant, or branch manager roles.' },
+      { category: 'System', title: 'Cloud Backup & Restore', icon: '☁️', demoTitle: 'Data Backup Status', demoContent: 'Hybrid local/cloud data backup for continuous protection.' },
+    ];
+
+    const featureGrid = document.getElementById('featureGrid');
+    const demoBox = document.getElementById('demoBox');
+
+    function renderFeatures(data) {
+      featureGrid.innerHTML = '';
+      data.forEach((item, index) => {
+        const colorMap = {
+          Finance: 'emerald',
+          Sales: 'blue',
+          Operations: 'amber',
+          Analytics: 'purple',
+          System: 'gray'
+        };
+        const color = colorMap[item.category] || 'gray';
+        featureGrid.innerHTML += `
+          <div onclick="showDemo(${index})" class="card bg-white p-6 rounded-2xl border border-gray-200 hover:border-${color}-400 hover:bg-${color}-50 shadow-sm">
+            <div class="flex items-center mb-3 space-x-2">
+              <div class="text-${color}-600 text-2xl">${item.icon}</div>
+              <h3 class="text-lg font-semibold text-gray-800">${item.title}</h3>
+            </div>
+            <span class="category-pill bg-${color}-100 text-${color}-700">${item.category}</span>
+          </div>
+        `;
+      });
+    }
+
+    function showDemo(index) {
+      const feature = featureData[index];
+      demoBox.innerHTML = `
+        <h2 class="text-xl font-bold text-gray-800 mb-2">${feature.demoTitle}</h2>
+        <p class="text-gray-600 mb-2">${feature.demoContent}</p>
+        <div class="mt-4 p-3 rounded-lg bg-gray-50 border text-sm text-gray-500">✨ Tip: Click another card to explore different module simulations.</div>
+      `;
+      demoBox.classList.add('fade-in');
+      demoBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function filterCategory(category) {
+      if (category === 'All') {
+        renderFeatures(featureData);
+      } else {
+        renderFeatures(featureData.filter(item => item.category === category));
+      }
+    }
+
+    renderFeatures(featureData);
+  </script>
+</body>
+</html>
