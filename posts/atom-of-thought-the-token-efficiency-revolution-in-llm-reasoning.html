@@ -1363,49 +1363,57 @@ def atom_of_thought(problem):
             const ttsStatus = document.getElementById('ttsStatus');
             const ttsSlower = document.getElementById('ttsSlower');
             const ttsFaster = document.getElementById('ttsFaster');
-            const postBody = document.getElementById('postBody');
 
-            let speechSynthesis = window.speechSynthesis;
-            let utterance = null;
+            // Use server-generated audio with gentle "Kore" voice
+            const audioPlayer = new Audio('../audio/atom-of-thought-narration.wav');
             let isPlaying = false;
             let ttsRate = 1.0;
 
-            function getPostText() {
-                return postBody.innerText || postBody.textContent;
-            }
-
-            function startTTS() {
-                if (!speechSynthesis) {
-                    ttsStatus.textContent = 'TTS not supported';
-                    return;
-                }
-
-                speechSynthesis.cancel();
-                utterance = new SpeechSynthesisUtterance(getPostText());
-                utterance.rate = ttsRate;
-                utterance.pitch = 1;
-                utterance.lang = 'en-US';
-
-                utterance.onstart = () => { isPlaying = true; ttsIcon.className = 'fas fa-pause'; ttsStatus.textContent = 'Playing...'; };
-                utterance.onend = () => { isPlaying = false; ttsIcon.className = 'fas fa-play'; ttsStatus.textContent = 'Finished'; };
-                utterance.onerror = () => { isPlaying = false; ttsIcon.className = 'fas fa-play'; ttsStatus.textContent = 'Error occurred'; };
-
-                speechSynthesis.speak(utterance);
-            }
-
-            ttsPlayBtn.addEventListener('click', () => {
+            function toggleAudio() {
                 if (isPlaying) {
-                    speechSynthesis.cancel();
-                    isPlaying = false;
-                    ttsIcon.className = 'fas fa-play';
-                    ttsStatus.textContent = 'Paused';
+                    audioPlayer.pause();
                 } else {
-                    startTTS();
+                    audioPlayer.play().then(() => {
+                        // Playback started successfully
+                    }).catch(e => {
+                        console.error("Audio playback error:", e);
+                        ttsStatus.textContent = 'Audio file not found';
+                    });
                 }
+            }
+
+            audioPlayer.addEventListener('play', () => {
+                isPlaying = true;
+                ttsIcon.className = 'fas fa-pause';
+                ttsStatus.textContent = 'Playing (Kore Voice)';
             });
 
-            ttsSlower.addEventListener('click', () => { ttsRate = Math.max(0.5, ttsRate - 0.25); ttsStatus.textContent = `Speed: ${ttsRate.toFixed(2)}x`; if (isPlaying) startTTS(); });
-            ttsFaster.addEventListener('click', () => { ttsRate = Math.min(2.0, ttsRate + 0.25); ttsStatus.textContent = `Speed: ${ttsRate.toFixed(2)}x`; if (isPlaying) startTTS(); });
+            audioPlayer.addEventListener('pause', () => {
+                isPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                ttsStatus.textContent = 'Paused';
+            });
+
+            audioPlayer.addEventListener('ended', () => {
+                isPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                ttsStatus.textContent = 'Finished';
+                audioPlayer.currentTime = 0;
+            });
+
+            ttsPlayBtn.addEventListener('click', toggleAudio);
+
+            ttsSlower.addEventListener('click', () => {
+                ttsRate = Math.max(0.5, ttsRate - 0.25);
+                audioPlayer.playbackRate = ttsRate;
+                ttsStatus.textContent = `Speed: ${ttsRate.toFixed(2)}x`;
+            });
+
+            ttsFaster.addEventListener('click', () => {
+                ttsRate = Math.min(2.0, ttsRate + 0.25);
+                audioPlayer.playbackRate = ttsRate;
+                ttsStatus.textContent = `Speed: ${ttsRate.toFixed(2)}x`;
+            });
 
             const postUrl = window.location.href;
             const postTitle = document.querySelector('.post-title').innerText;
