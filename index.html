@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="index, follow">
@@ -7,70 +8,228 @@
     <meta name="msvalidate.01" content="63582FFA42AECA34B358CAB48DCC83C3" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bashir Kabir Zarewa | Hacking, AI, CTFs and More</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <meta name="description"
+        content="Cybersecurity researcher exploring ethical hacking, AI security, and modern defensive strategies.">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        /* ============================================
+           PROFESSIONAL PREMIUM BLOG INDEX
+           Dark Theme with Gradient Mesh & Glow Effects
+           ============================================ */
+
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #3498db;
-            --light-gray: #f5f7fa;
-            --medium-gray: #e1e5eb;
-            --dark-gray: #7f8c8d;
-            --text: #2c3e50;
-            --text-light: #95a5a6;
-            --white: #ffffff;
-            --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
-            --border-radius: 14px;
-            --transition: 0.3s cubic-bezier(.4,2,.6,1);
-            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Dark Theme - Rich & Premium */
+            --bg-primary: #0a0f1a;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-hover: rgba(20, 184, 166, 0.05);
+
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+
+            --accent: #14b8a6;
+            --accent-light: #2dd4bf;
+            --accent-glow: rgba(20, 184, 166, 0.25);
+            --accent-gradient: linear-gradient(135deg, #14b8a6, #06b6d4);
+
+            --border: rgba(255, 255, 255, 0.08);
+            --border-glow: rgba(20, 184, 166, 0.3);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 30px rgba(20, 184, 166, 0.15);
+
+            --header-bg: linear-gradient(135deg, #0a0f1a 0%, #1e293b 100%);
+            --mesh-gradient:
+                radial-gradient(ellipse at 20% 0%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(255, 255, 255, 0.9);
+            --bg-hover: rgba(13, 148, 136, 0.05);
+
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+
+            --accent: #0d9488;
+            --accent-light: #14b8a6;
+            --accent-glow: rgba(13, 148, 136, 0.15);
+
+            --border: rgba(0, 0, 0, 0.08);
+            --border-glow: rgba(13, 148, 136, 0.3);
+            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-glow: 0 0 30px rgba(13, 148, 136, 0.1);
+
+            --header-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --mesh-gradient: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: var(--font-main);
-            background: linear-gradient(120deg, var(--light-gray) 60%, #eaf1fb 100%);
-            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.7;
-            font-size: 1.08rem;
-            margin: 0;
-            padding: 0;
+            font-size: 1rem;
             min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.2rem;
-        }
-
-        /* --- Header --- */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 2.5rem 0 2rem 0;
-            margin-bottom: 2.5rem;
-            box-shadow: var(--shadow);
             position: relative;
-            border-radius: 0 0 24px 24px;
+        }
+
+        /* Gradient Mesh Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--mesh-gradient);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animated Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.3;
+            }
+
+            90% {
+                opacity: 0.3;
+            }
+
+            100% {
+                transform: translateY(-100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            padding: 12px 16px;
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+            color: var(--accent);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            color: #fff;
+            padding: 4rem 0 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
         }
 
         .header-content {
+            position: relative;
+            z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
-            position: relative;
-            z-index: 2;
         }
 
         .profile-container {
             width: 120px;
             height: 120px;
             border-radius: 50%;
-            border: 4px solid var(--white);
+            padding: 3px;
+            background: var(--accent-gradient);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 40px rgba(20, 184, 166, 0.3);
+        }
+
+        .profile-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
             overflow: hidden;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.13);
+            border: 3px solid var(--bg-primary);
         }
 
         .profile-image {
@@ -81,167 +240,345 @@
 
         .blog-title {
             font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 0.3rem;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .typed-cursor {
+            animation: blink 1s infinite;
+            -webkit-text-fill-color: var(--accent);
+        }
+
+        @keyframes blink {
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0;
+            }
         }
 
         .blog-subtitle {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 400;
-            opacity: 0.92;
-            margin-bottom: 1.5rem;
-            color: #e1e5eb;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        nav {
-            width: 100%;
-            max-width: 600px;
-            margin-top: 0.5rem;
-        }
-
+        /* Navigation */
         .nav-links {
             display: flex;
             justify-content: center;
             list-style: none;
-            gap: 1.2rem;
-            padding: 0;
-            flex-wrap: wrap; /* Added for responsiveness */
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
-            color: var(--white);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            font-size: 1.08rem;
-            font-weight: 600;
-            padding: 0.5rem 1.1rem;
-            border-radius: var(--border-radius);
-            transition: background var(--transition), color var(--transition);
-            letter-spacing: 0.02em;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
         }
 
         .nav-links a:hover,
         .nav-links a.active {
-            background-color: rgba(255,255,255,0.18);
-            color: #fff;
+            background: rgba(20, 184, 166, 0.15);
+            border-color: rgba(20, 184, 166, 0.3);
+            color: var(--accent-light);
         }
 
+        /* Header Social */
         .header-social {
             position: absolute;
-            top: 22px;
-            right: 22px;
+            top: 20px;
+            left: 20px;
             display: flex;
             gap: 10px;
             z-index: 3;
         }
 
         .header-social a {
-            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.13);
-            border-radius: 50%;
-            color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
             text-decoration: none;
-            font-size: 18px;
-            transition: background var(--transition), transform var(--transition);
+            transition: all 0.3s ease;
         }
 
         .header-social a:hover {
             background: var(--accent);
-            transform: translateY(-3px) scale(1.08);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(20, 184, 166, 0.4);
         }
 
-        /* --- Main Content --- */
-        .main-content {
-            margin-bottom: 3rem;
+        /* Main Content */
+        main {
+            padding: 3rem 0;
         }
 
-        .typed-cursor {
-            font-weight: 800;
-            color: var(--accent);
-            animation: blink 0.8s steps(1) infinite;
-            font-size: inherit;
-            margin-left: 2px;
-        }
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-
+        /* Section Title */
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--medium-gray);
-            position: relative;
-            letter-spacing: -0.5px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .section-title::after {
+        .section-title::before {
             content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 48px;
-            height: 2px;
-            background-color: var(--accent);
+            width: 4px;
+            height: 24px;
+            background: var(--accent-gradient);
             border-radius: 2px;
         }
 
-        .posts-column, .featured-post {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 2rem 1.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem; /* Add margin below each section */
+        /* Featured Hero */
+        .featured-hero {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(20px);
+            position: relative;
         }
 
-        .post-card {
+        .featured-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--accent-gradient);
+        }
+
+        .featured-hero-inner {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .featured-image-container {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            background: var(--accent-gradient);
+            color: #fff;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .featured-content {
             display: flex;
-            align-items: flex-start;
-            gap: 1.2rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-            /* border-bottom: 1px solid var(--medium-gray); */ /* Removed border, using hr instead */
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .post-card:last-child {
-            margin-bottom: 0;
-            padding-bottom: 0;
-            border-bottom: none;
+        .featured-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .featured-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .featured-meta-item i {
+            color: var(--accent);
+        }
+
+        .featured-content h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+        }
+
+        .featured-content h2 a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .featured-content h2 a:hover {
+            color: var(--accent);
+        }
+
+        .featured-excerpt {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .read-more-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-gradient);
+            color: #fff;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .read-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+        }
+
+        /* Posts Grid */
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Post Card with Animated Border */
+        .post-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+        }
+
+        .post-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 20px;
+            padding: 1px;
+            background: linear-gradient(135deg, var(--border), transparent, var(--border));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .post-card:hover::before {
+            background: linear-gradient(135deg, var(--accent), transparent, var(--accent-light));
+            animation: borderGlow 3s linear infinite;
+        }
+
+        @keyframes borderGlow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .post-thumb-container {
+            position: relative;
+            height: 180px;
+            overflow: hidden;
         }
 
         .post-thumb {
-            width: 100px;
-            height: 100px;
-            border-radius: 10px;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            box-shadow: 0 2px 8px rgba(44,62,80,0.10);
-            flex-shrink: 0;
+            transition: transform 0.5s ease;
+        }
+
+        .post-card:hover .post-thumb {
+            transform: scale(1.05);
         }
 
         .post-card-content {
-            flex: 1;
-            min-width: 0;
+            padding: 1.5rem;
+        }
+
+        .post-date {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .post-date i {
+            color: var(--accent);
+            font-size: 0.75rem;
         }
 
         .post-title {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
-            letter-spacing: -0.5px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+            line-height: 1.4;
         }
 
         .post-title a {
-            color: inherit;
+            color: var(--text-primary);
             text-decoration: none;
-            transition: color var(--transition);
+            transition: color 0.2s;
         }
 
         .post-title a:hover {
@@ -249,493 +586,594 @@
         }
 
         .post-excerpt {
-            color: var(--dark-gray);
-            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
             line-height: 1.6;
-            font-size: 0.98rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-tag {
+            background: var(--accent-glow);
+            color: var(--accent);
+            padding: 0.25rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(20, 184, 166, 0.2);
         }
 
         .read-more {
-            display: inline-block;
-            color: var(--accent);
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 0.98rem;
-            transition: color var(--transition);
-        }
-
-        .read-more i {
-            margin-left: 5px;
-            transition: transform 0.2s;
-        }
-
-        .read-more:hover i {
-            transform: translateX(4px);
-        }
-
-        /* --- Featured Post Specifics --- */
-        .featured-post {
-            padding: 2.2rem 2rem;
-        }
-
-        .post-cover {
-            width: 50%;
-            border-radius: var(--border-radius);
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-            display: block;
-            max-height: 350px;
-            object-fit: cover;
-        }
-
-        .post-meta {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            margin-bottom: 1.2rem;
-            color: var(--dark-gray);
-            font-size: 0.97rem;
-            gap: 1.2rem;
-            flex-wrap: wrap;
+            gap: 6px;
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: gap 0.2s ease;
         }
 
-        .post-meta-item {
-            background: var(--light-gray);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-weight: 500;
+        .read-more:hover {
+            gap: 10px;
         }
 
-        .featured-post-content p {
-            margin-bottom: 1.1rem;
+        /* Newsletter Section */
+        .newsletter-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-top: 3rem;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
         }
 
-        /* STYLES FOR THE CORRECTED CHECKLIST */
-        .checklist {
-            list-style: none;
-            padding-left: 0;
+        .newsletter-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: var(--accent-gradient);
+        }
+
+        .newsletter-section h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .newsletter-section p {
+            color: var(--text-secondary);
             margin-bottom: 1.5rem;
         }
 
-        .checklist li {
-            position: relative;
-            padding-left: 1.8em;
-            margin-bottom: 0.8rem;
+        .newsletter-form {
+            display: flex;
+            gap: 0.8rem;
+            max-width: 500px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
-        .checklist li::before {
-            content: '✔';
-            position: absolute;
-            left: 0;
-            top: 1px;
-            color: var(--accent);
+        .newsletter-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.9rem 1.2rem;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        .newsletter-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .newsletter-btn {
+            background: var(--accent-gradient);
+            color: #fff;
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 30px;
             font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        /* --- Footer --- */
+        .newsletter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+        }
+
+        /* Footer */
         footer {
-            background: var(--primary);
-            color: var(--white);
-            padding: 2.5rem 0 1.5rem 0;
-            margin-top: 3rem;
-            border-radius: 24px 24px 0 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 3rem 0 1.5rem;
+            margin-top: 4rem;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 2rem;
+            margin-bottom: 2rem;
         }
 
-        .footer-section h3 {
-            font-size: 1.15rem;
-            margin-bottom: 1.1rem;
+        .footer-section h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
             position: relative;
-            padding-bottom: 0.4rem;
-            font-weight: 700;
+            padding-bottom: 0.5rem;
         }
 
-        .footer-section h3::after {
+        .footer-section h4::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
-            width: 32px;
+            width: 30px;
             height: 2px;
-            background-color: var(--accent);
+            background: var(--accent);
             border-radius: 2px;
         }
 
         .footer-section p {
-            opacity: 0.8;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
             line-height: 1.7;
-            margin-bottom: 1rem;
         }
 
         .footer-links {
             list-style: none;
-            padding: 0;
         }
 
         .footer-links li {
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.5rem;
         }
 
         .footer-links a {
-            color: rgba(255,255,255,0.85);
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: color var(--transition);
-            font-size: 1rem;
+            font-size: 0.9rem;
+            transition: color 0.2s;
         }
 
         .footer-links a:hover {
             color: var(--accent);
         }
 
-        .footer-social {
+        .social-links {
             display: flex;
             gap: 0.8rem;
-            margin-top: 0.7rem;
         }
 
-        .footer-social a {
-            display: inline-flex;
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.13);
-            border-radius: 50%;
-            color: var(--white);
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 18px;
-            transition: background var(--transition), transform var(--transition);
+            transition: all 0.3s ease;
         }
 
-        .footer-social a:hover {
+        .social-links a:hover {
             background: var(--accent);
-            transform: translateY(-3px) scale(1.08);
+            border-color: var(--accent);
+            color: #fff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(20, 184, 166, 0.4);
         }
 
         .copyright {
             text-align: center;
-            padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.13);
-            color: rgba(255,255,255,0.7);
-            font-size: 0.95rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
 
-        /* --- RESPONSIVE BREAKPOINTS --- */
-        @media (max-width: 992px) {
-            /* No specific changes for this breakpoint for index page */
+        /* Responsive */
+        @media (max-width: 900px) {
+            .featured-hero-inner {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-image {
+                height: 220px;
+            }
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
+            .posts-grid {
+                grid-template-columns: 1fr;
             }
-            .profile-container {
-                width: 100px;
-                height: 100px;
+
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
             }
+
+            header {
+                padding: 3rem 0 2rem;
+            }
+
             .blog-title {
-                font-size: 2rem;
-            }
-            .blog-subtitle {
-                font-size: 1rem;
-            }
-            .posts-column, .featured-post {
-                padding: 1.5rem;
-            }
-            .section-title {
-                font-size: 1.3rem;
-            }
-            .footer-content {
-                gap: 1.5rem;
-            }
-            .nav-links { /* Adjust gap for smaller screens */
-                gap: 0.8rem;
-            }
-            .nav-links a { /* Smaller padding for smaller nav items */
-                padding: 0.4rem 0.9rem;
-                font-size: 1rem;
+                font-size: 1.8rem;
             }
         }
 
         @media (max-width: 480px) {
-            body {
-                font-size: 1rem;
-            }
             .header-social {
-                top: 10px;
-                right: 10px;
-                gap: 8px;
+                position: static;
+                justify-content: center;
+                margin-bottom: 1.5rem;
             }
-            .blog-title {
-                font-size: 1.8rem;
+
+            .profile-container {
+                width: 100px;
+                height: 100px;
             }
-            .post-card {
-                gap: 1rem;
-            }
-            .post-thumb {
-                width: 80px;
-                height: 80px;
-            }
-            .post-title {
-                font-size: 1.05rem;
-            }
-            .post-excerpt, .read-more, .post-meta {
-                font-size: 0.95rem;
-            }
-            .footer-content {
-                grid-template-columns: 1fr;
-            }
-            .nav-links { /* Stack nav items vertically if needed or spread them */
+
+            .newsletter-form {
                 flex-direction: column;
-                gap: 0.5rem; /* Smaller gap when stacked */
-                align-items: center; /* Center items when stacked */
             }
-            .nav-links a {
-                width: calc(100% - 2.2rem); /* Make links full width minus padding */
-                text-align: center;
-                padding: 0.6rem 1.1rem; /* Adjust padding for better tap area */
+
+            .newsletter-input {
+                width: 100%;
             }
         }
     </style>
 </head>
+
 <body>
+    <!-- Animated Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+        <i class="fas fa-sun" id="themeIcon"></i>
+    </button>
+
     <header>
         <div class="header-social">
             <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
             <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i
+                    class="fab fa-linkedin-in"></i></a>
         </div>
 
         <div class="container">
             <div class="header-content">
                 <div class="profile-container">
-                    <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                    <div class="profile-inner">
+                        <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                    </div>
                 </div>
                 <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
                 <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
-
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.html" class="active">Posts</a></li>
                         <li><a href="whoami.html">Whoami</a></li>
-                        <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html">Tools</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li>
+                        <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="posts-column">
+    <main>
+        <div class="container">
+            <!-- Featured Hero -->
+            <div class="featured-hero">
+                <div class="featured-hero-inner">
+                    <div class="featured-image-container">
+                        <img src="images/desync_cover.png" alt="HTTP/1.1 Must Die" class="featured-image">
+                        <span class="featured-badge"><i class="fas fa-star"></i> Featured</span>
+                    </div>
+                    <div class="featured-content">
+                        <div class="featured-meta">
+                            <span class="featured-meta-item"><i class="fas fa-calendar-alt"></i> Oct 18, 2025</span>
+                            <span class="featured-meta-item"><i class="fas fa-clock"></i> 12 min read</span>
+                        </div>
+                        <h2><a
+                                href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html">The
+                                Desync Endgame: Bypassing Modern Defenses</a></h2>
+                        <p class="featured-excerpt">After six years of warnings, the fundamental flaw in HTTP/1.1
+                            continues to expose web applications to devastating Desync Attacks and Request Smuggling.
+                        </p>
+                        <a href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html"
+                            class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Posts Section -->
             <h2 class="section-title">Latest Posts</h2>
-            <div class="post-card">
-                <img src="images/desync_cover.png" alt="AI and the Future" class="post-thumb">
-                
-                <div class="post-card-content">
-                    <h3 class="post-title"><a href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html">The Desync Endgame: Bypassing Modern Defenses</a></h3>
-                    <p class="post-excerpt">After six years of warnings, the fundamental flaw in HTTP/1.1 continues to expose web applications to devastating Desync Attacks and Request Smuggling, demanding an urgent shift to modern protocols.</p>
-                    <a href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="post-card">
-                <img src="images/contex_eng_cover.png" alt="AI and the Future" class="post-thumb">
-                
-                <div class="post-card-content">
-                    <h3 class="post-title"><a href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html">Beyond Prompts: Mastering Context Engineering for Smarter AI Agents</a></h3>
-                    <p class="post-excerpt">Discover how shaping the contextual landscape empowers AI agents to deliver precise, relevant, and truly intelligent responses.</p>
-                    <a href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="post-card">
-                <img src="images/ai-kids_cover.png" alt="AI and the Future" class="post-thumb">
-                
-                <div class="post-card-content">
-                    <h3 class="post-title"><a href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html">Can AI Make Kids Forget How to Think? Memory and Problem-Solving in the Digital Age</a></h3>
-                    <p class="post-excerpt">Exploring the impact of AI on children's cognitive skills and problem-solving abilities.</p>
-                    <a href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="post-card">
-                <img src="images/ai-and-future.png" alt="AI and the Future" class="post-thumb">
-                
-                <div class="post-card-content">
-                    <h3 class="post-title"><a href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html">The Future of AI: How Daniel Miessler Changed My Mind (and What Comes Next)</a></h3>
-                    <p class="post-excerpt">A tribute to a visionary and a deep dive into the predictable, yet challenging, path toward an AI-augmented future.</p>
-                    <a href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            
-            
-            
 
+            <div class="posts-grid" id="postsGrid">
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/aot_hero.png" alt="Atom of Thought" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> January 26, 2026</div>
+                        <h3 class="post-title"><a
+                                href="posts/atom-of-thought-the-token-efficiency-revolution-in-llm-reasoning.html">Atom
+                                of Thought: The Token Efficiency Revolution</a></h3>
+                        <p class="post-excerpt">How a new reasoning paradigm is reducing LLM costs by 70-90% while
+                            improving accuracy.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">AI</span>
+                            <span class="post-tag">LLM</span>
+                            <span class="post-tag">Efficiency</span>
+                        </div>
+                        <a href="posts/atom-of-thought-the-token-efficiency-revolution-in-llm-reasoning.html"
+                            class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/contex_eng_cover.png" alt="Context Engineering" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> October 5, 2025</div>
+                        <h3 class="post-title"><a
+                                href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html">Beyond
+                                Prompts: Mastering Context Engineering</a></h3>
+                        <p class="post-excerpt">Discover how shaping the contextual landscape empowers AI agents to
+                            deliver intelligent responses.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">AI</span>
+                            <span class="post-tag">Context Engineering</span>
+                        </div>
+                        <a href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html"
+                            class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/ai-kids_cover.png" alt="AI and Kids" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> September 18, 2025</div>
+                        <h3 class="post-title"><a
+                                href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html">Can
+                                AI Make Kids Forget How to Think?</a></h3>
+                        <p class="post-excerpt">Exploring the impact of AI on children's cognitive skills and
+                            problem-solving abilities.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">AI</span>
+                            <span class="post-tag">Education</span>
+                        </div>
+                        <a href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html"
+                            class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/ai-and-future.png" alt="Future of AI" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> July 27, 2025</div>
+                        <h3 class="post-title"><a
+                                href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html">The Future of AI:
+                                How Daniel Miessler Changed My Mind</a></h3>
+                        <p class="post-excerpt">A tribute to a visionary and a deep dive into the AI-augmented future.
+                        </p>
+                        <div class="post-tags">
+                            <span class="post-tag">AI</span>
+                            <span class="post-tag">Future</span>
+                        </div>
+                        <a href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html" class="read-more">Read
+                            more <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/ai_yourJob.png" alt="AI and Your Job" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> July 16, 2025</div>
+                        <h3 class="post-title"><a href="posts/ai-and-your-job.html">AI & Your Job: Transformation, Not
+                                Just Loss</a></h3>
+                        <p class="post-excerpt">Unpacking myths and truths about AI's impact on your career.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">AI</span>
+                            <span class="post-tag">Career</span>
+                        </div>
+                        <a href="posts/ai-and-your-job.html" class="read-more">Read more <i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/glowing_brain.png" alt="Brain Rewiring" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> June 25, 2025</div>
+                        <h3 class="post-title"><a
+                                href="posts/rewire-your-brain-effortless-learning-perfect-recall.html">Rewire Your
+                                Brain: Effortless Learning & Perfect Recall</a></h3>
+                        <p class="post-excerpt">Unlock your brain's true potential with neuroscience-backed strategies.
+                        </p>
+                        <div class="post-tags">
+                            <span class="post-tag">Productivity</span>
+                            <span class="post-tag">Learning</span>
+                        </div>
+                        <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read
+                            more <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/adversary.png" alt="Active Directory" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> June 17, 2025</div>
+                        <h3 class="post-title"><a href="posts/active-directory-attack-techniques.html">Unmasking the
+                                Adversary: Active Directory Attacks</a></h3>
+                        <p class="post-excerpt">Understanding how Active Directory operates and how it can be exploited.
+                        </p>
+                        <div class="post-tags">
+                            <span class="post-tag">Red Team</span>
+                            <span class="post-tag">Active Directory</span>
+                        </div>
+                        <a href="posts/active-directory-attack-techniques.html" class="read-more">Read more <i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/prompt_war.png" alt="Prompt Wars" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> June 9, 2025</div>
+                        <h3 class="post-title"><a href="posts/AI-security-and-vulnerability.html">Prompt Wars:
+                                Navigating AI Security</a></h3>
+                        <p class="post-excerpt">A new battlefield in cybersecurity has emerged with LLM integration.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">AI Security</span>
+                            <span class="post-tag">LLM</span>
+                        </div>
+                        <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read more <i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/support.png" alt="Community Support" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> June 1, 2025</div>
+                        <h3 class="post-title"><a href="posts/support.html">The Power of Genuine Support</a></h3>
+                        <p class="post-excerpt">The practice of wholeheartedly rooting for the people around you.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">Community</span>
+                            <span class="post-tag">Growth</span>
+                        </div>
+                        <a href="posts/support.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/africa_at_crossroad.png" alt="Africa 4IR" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> November 27, 2022</div>
+                        <h3 class="post-title"><a href="posts/fourth-industrial-revolution-in-africa.html">Africa at the
+                                Crossroads: Will the 4IR Be Different?</a></h3>
+                        <p class="post-excerpt">The Fourth Industrial Revolution is reshaping economies worldwide.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">Africa</span>
+                            <span class="post-tag">4IR</span>
+                        </div>
+                        <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">Read more <i
+                                class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Newsletter Section -->
+            <div class="newsletter-section">
+                <h3>📬 Stay Updated</h3>
+                <p>Get notified when I publish new articles about hacking, AI, and security.</p>
+                <form class="newsletter-form" onsubmit="return false;">
+                    <input type="email" class="newsletter-input" placeholder="Enter your email">
+                    <button type="submit" class="newsletter-btn">Subscribe</button>
+                </form>
+            </div>
         </div>
-        <hr style="border: 2px solid var(--accent); margin: 3rem 0;">
-
-        <div class="featured-post">
-            <h2 class="section-title">Featured Post</h2>
-            <img src="images/desync_cover.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">18th October, 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> HTTP1.1, WebSecurity, RequestSmuggling </span>
-            </div>
-            <div class="featured-post-content">
-                <h3>The Desync Endgame: Bypassing Modern Defenses</h3>
-                <p>After six years of warnings, the fundamental flaw in HTTP/1.1 continues to expose web applications to devastating Desync Attacks and Request Smuggling, demanding an urgent shift to modern protocols.</p>
-                <a href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <img src="images/contex_eng_cover.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">5th October, 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> AI Agents, Context Engineering</span>
-            </div>
-            <div class="featured-post-content">
-                <h3>Beyond Prompts: Mastering Context Engineering for Smarter AI Agents</h3>
-                <p>Discover how shaping the contextual landscape empowers AI agents to deliver precise, relevant, and truly intelligent responses.</p>
-                <a href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <img src="images/ai-kids_cover.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">18th September 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> AI, Child Development, Education, Technology</span>
-            </div>
-            <div class="featured-post-content">
-                <h3>Can AI Make Kids Forget How to Think? Memory and Problem-Solving in the Digital Age</h3>
-                <p>Exploring the impact of AI on children's cognitive skills and problem-solving abilities.</p>
-                <a href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <img src="images/ai-and-future.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">27th July 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> AI, Technology, Future</span>
-            </div>
-            <div class="featured-post-content">
-                <h3>The Future of AI: How Daniel Miessler Changed My Mind (and What Comes Next)</h3>
-                <p>A tribute to a visionary and a deep dive into the predictable, yet challenging, path toward an AI-augmented future. </p>
-                <a href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <img src="images/ai_yourJob.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">16th July 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> AI, Techno, Future Skills, Collaboration</span>
-            </div>
-            <div class="featured-post-content">
-                <h3>AI & Your Job: The Real Story of Transformation, Not Just Loss</h3>
-                <p>Unpacking the myths and truths about AI’s impact on your career, with a focus on tech roles and a hopeful outlook for the future. </p>
-                <a href="posts/ai-and-your-job.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <img src="images/glowing_brain.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">25th Jun 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> Productivity, Learning</span>
-            </div>
-            <div class="featured-post-content">
-                <h3>Rewire Your Brain: The Ultimate Guide to Effortless Learning & Perfect Recall</h3>
-                <p>Unlock your brain's true potential with these neuroscience-backed strategies for superior learning and memory. </p>
-                <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <img src="images/adversary.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">17th Jun 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> Red Team, Active Directory</span>
-            </div>
-            <div class="featured-post-content">
-                <h3>Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques</h3>
-                <p>For cybersecurity professionals, whether they are <b>blue team</b> members focused on defence or <b>red team</b> members conducting audits, understanding how Active Directory operates and how it can be exploited is paramount. </p>
-                <a href="posts/active-directory-attack-techniques.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <div class="featured-post-content">
-                <img src="images/prompt_war.png" alt="Africa at the Crossroads" class="post-cover">
-                <div class="post-meta">
-                <span class="post-meta-item">9th Jun 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> AI Security</span>
-            </div>
-                <h3>Prompt Wars: Navigating the New Landscape of AI Security</h3>
-                <p>As Large Language Models (LLMs) like ChatGPT, Gemini, and Claude integrate into applications, a new battlefield in cybersecurity has emerged. </p>
-                <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <div class="featured-post-content">
-                <img src="images/africa_at_crossroad.png" alt="Africa at the Crossroads" class="post-cover">
-                <div class="post-meta">
-                <span class="post-meta-item">27th Nov 2022</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> Africa, 4IR, AI, Technology</span>
-            </div>
-                <h3>Africa at the Crossroads: Will the 4IR Be Different?</h3>
-                <p>The Fourth Industrial Revolution (4IR) marked by breakthroughs in AI, cloud computing, robotics, IoT, and blockchain is reshaping economies worldwide.</p>
-                <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            <img src="images/support.png" alt="Community Support" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">1st Jun 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> Community</span>
-            </div>
-            <div class="featured-post-content">
-                <h3>The Power of Genuine Support</h3>
-                <p>In cybersecurity, it’s easy to measure our worth against others. But one of the most transformative habits you can cultivate isn’t a technical skill: it’s the practice of wholeheartedly rooting for the people around you.</p>
-                <a href="posts/support.html" class="read-more">Read Full Post <i class="fas fa-arrow-right"></i></a>
-            </div>
-        </div>
-    </div>
+    </main>
 
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Bashir Kabir Zarewa</h3>
-                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+                    <h4>Bashir Kabir Zarewa</h4>
+                    <p>Cybersecurity researcher exploring ethical hacking, AI security, and modern defense strategies.
+                    </p>
                 </div>
-
                 <div class="footer-section">
-                    <h3>Navigation</h3>
+                    <h4>Navigation</h4>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="whoami.html">Whoami</a></li>
-                        <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html">Tools</a></li>
-                        <li><a href="#">Categories</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li>
+                        <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-section">
-                    <h3>Connect</h3>
-                    <p>Follow me on social media to get the latest updates and engage with my content.</p>
-                    <div class="footer-social">
-                        <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <h4>Connect</h4>
+                    <div class="social-links">
+                        <a href="https://x.com/bashirkabirz" target="_blank" title="Twitter"><i
+                                class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" target="_blank" title="GitHub"><i
+                                class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank"
+                            title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
-
             <div class="copyright">
-                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All Rights Reserved.
             </div>
         </div>
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
+            // Copyright Year
+            document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+            // Create Particles
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+
+            // Typed Title Animation
             const titleText = "Bashir Kabir Zarewa";
             const typedTitle = document.getElementById('typed-title');
             const cursor = document.querySelector('.typed-cursor');
@@ -745,12 +1183,34 @@
                 if (i <= titleText.length) {
                     typedTitle.textContent = titleText.slice(0, i);
                     i++;
-                    setTimeout(typeWriter, 120);
+                    setTimeout(typeWriter, 80);
+                } else {
+                    cursor.style.display = 'none';
                 }
             }
             typeWriter();
+
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const savedTheme = localStorage.getItem('blog-theme') || 'dark';
+
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('blog-theme', next);
+                updateThemeIcon(next);
+            });
+
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
         });
-        document.getElementById('copyright-year').textContent = new Date().getFullYear();
     </script>
 </body>
+
 </html>
