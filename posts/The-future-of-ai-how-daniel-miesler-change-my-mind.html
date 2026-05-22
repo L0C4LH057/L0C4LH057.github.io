@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="same-origin">
     <title>The Future of AI: How Daniel Miessler Changed My Mind (and What Comes Next) | Bashir Kabir Zarewa</title>
     <meta name="description" content="A deep dive into Daniel Miessler's visionary concepts for an AI-augmented future, and a look at the real-world challenges of privacy, hardware, and human connection we must navigate.">
     <meta property="og:type" content="article">
@@ -1074,6 +1075,13 @@
                     <div class="audio-status" id="ttsStatus">Click play to listen to this article</div>
                 </div>
                 <div class="audio-controls">
+                    <div class="voice-selector-wrapper" style="position: relative; display: flex; align-items: center; margin-right: 0.5rem;">
+                        <i class="fas fa-headset" style="position: absolute; left: 10px; font-size: 0.75rem; color: var(--text-secondary);"></i>
+                        <select id="ttsVoice" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 1.8rem 0.4rem 2rem; cursor: pointer; font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); outline: none; appearance: none; -webkit-appearance: none; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; transition: all 0.2s ease;">
+                            <option value="cloud-natural">Cloud Voice (Natural)</option>
+                        </select>
+                        <i class="fas fa-chevron-down" style="position: absolute; right: 10px; font-size: 0.7rem; color: var(--text-secondary); pointer-events: none;"></i>
+                    </div>
                     <button id="ttsSlower"><i class="fas fa-minus"></i> Speed -</button>
                     <button id="ttsFaster"><i class="fas fa-plus"></i> Speed +</button>
                 </div>
@@ -1107,13 +1115,13 @@
             <div class="post-body" id="postBody">
                 
 <p>As someone who spends a lot of time thinking about hacking and new AI tech, I've always looked for big ideas that go beyond just the latest gadgets. I wanted to understand where all this amazing technology is really taking us. That's when I found Daniel Miessler's work. For me, he's like a walking encyclopedia for our industry, someone I truly look up to. His way of explaining complicated tech stuff in a simple, almost predictable way is just brilliant. Daniel Miessler has made a huge impact in the cybersecurity and bug hunting industry, and this is just one small way we can try to repay him for his incredible contributions. We will never forget him.</p>
-<img alt="Conceptual art of a human mind connecting with a digital AI network, symbolizing the future of human-AI integration." class="inline-image" src="../images/ai_human_future.png">
+<img alt="Conceptual art of a human mind connecting with a digital AI network, symbolizing the future of human-AI integration." class="inline-image" src="../images/ai_human_future.png"/>
 <h2><i class="fas fa-lightbulb"></i> The "Why" of AI: Daniel Miessler's Game-Changing Perspective</h2>
 <p>Daniel's blog post, <a href="https://danielmiessler.com/blog/ai-predictable-path-7-components-2024" rel="noopener noreferrer" target="_blank">"AI's Predictable Path,"</a> and his deeper dive, <a href="https://danielmiessler.com/blog/the-real-internet-of-things" rel="noopener noreferrer" target="_blank">"The Real Internet of Things"</a>, didn't just teach me new things; they completely changed how I see the future. Before reading his work, my focus, like many in our field, was mostly on the "how"  like, how do these AI programs work? What kind of computer power do they need? But Daniel brilliantly flipped that around. He said, "Forget the 'how' for a moment. Let's talk about the 'why'." He believes that even though the way technology grows might seem random, where it's going is actually very clear. Why? Because it's always trying to meet our basic human needs: to feel safe, to do well in life, and to connect with others. This simple but powerful idea suddenly made all the crazy AI news make perfect sense.</p>
 <p>His ideas about "Universal Daemonization" really blew my mind. Imagine every object, your car, your house, even you having a special digital "tag" or "daemon" that lets it share information and talk to other things. It's like how in anime or movies, characters sometimes have an "aura" that shows how strong or what kind of person they are. The more intense their aura, the more powerful they seem! Daniel's "human daemons" or "auras" would be like that, but for your digital self, sharing what you want, when you want. And then, your "Digital Assistant" (DA) would be your personal AI helper, talking to all these digital "tags" for you. It would be like having a super-smart friend who knows you inside out, always working to make your life better, finding things you like, and even protecting you. The thought of Augmented Reality (AR) glasses letting us see these digital "auras" and information overlaid on the real world? That's not just cool, it feels like the next big step for humanity. I'm so excited for that to happen in real life!</p>
 <p>This new way of looking at things changed everything for me. It made me see beyond just the cool new tech to the bigger picture of how society will change. It’s not just about building smarter machines; it’s about building a world that naturally helps humans live better, more connected lives.</p>
 <h2><i class="fas fa-project-diagram"></i> Daniel Miessler's Projects: Building the AI-Augmented Human</h2>
-<img alt="A diagram showing how different projects like Telos and Fabric connect to form a system for human enhancement." class="inline-image" src="../images/ai-project-system.png"/>
+<img alt="A diagram showing how different projects like Telos and Fabric connect to form a system for human enhancement." class="inline-image" src="../images/ai-project-system.png">
 <p>Daniel isn't just talking about ideas; he's building them. His projects like Telos, Fabric, Substrate, and Daemon are all about helping us get ready for this future. They're designed to help you become an "AI-augmented" human, giving you superpowers to navigate this new world.</p>
 <ul>
 <li><strong>Telos:</strong> This project is all about giving your personal AI (your DA) the ability to truly understand you. It's like building a deep, personal profile of your life's mission, goals, and strategies. This means your DA can know everything about you, not in a creepy way, but so it can help you live your best life, making decisions that truly align with your purpose.</li>
@@ -1125,21 +1133,21 @@
 <h2><i class="fas fa-road-barricade"></i> The Unseen Side of AI's Progress: Real-World Obstacles</h2>
 <p>While Daniel's vision shows us a super exciting picture, my own research and a little bit of real-world experience have made me think about some "bumps in the road." These aren't reasons why his vision won't happen, but rather things we need to figure out to make sure it happens smoothly and fairly for everyone.</p>
 <h3>Your Digital "Aura": The Privacy Puzzle</h3>
-<img alt="A digital aura representing a person's personal data, surrounded by privacy locks and security symbols." class="inline-image" src="../images/your-digital-aura.png"/>
+<img alt="A digital aura representing a person's personal data, surrounded by privacy locks and security symbols." class="inline-image" src="../images/your-digital-aura.png">
 <p>Daniel talks about his "Telos" project, where your personal AI (your DA) gets to know everything about you. You might think, "If it's my DA and my data, why worry about privacy laws?"</p>
 <ul>
 <li><strong>The Challenge:</strong> Here's the thing: even if your DA is totally yours and you give it permission to know everything about you, the moment it starts talking to other "daemons" like a business's digital tag, a public service's tag, or even another person's DA, it steps into a world with <a href="https://www.smarsh.com/blog/thought-leadership/managing-ai-to-ensure-compliance-with-data-privacy-laws" rel="noopener noreferrer" target="_blank">privacy rules</a>. Laws are there to protect how all organizations handle personal information, no matter where it comes from. So, while you control your DA, its conversations with the outside world mean privacy isn't just about your personal bubble. For example, if your DA helps you apply for a loan, it might share some of your financial data with the bank's daemon, and that bank has to follow strict privacy laws.</li>
 <li><strong>How We Might Solve It (and we're already trying!):</strong> This challenge is actually pushing us towards smarter solutions. Imagine having a digital wallet for your personal information, where you decide exactly what gets shared, and when. This is called <a href="https://www.dock.io/post/self-sovereign-identity" rel="noopener noreferrer" target="_blank">Self-Sovereign Identity (SSI)</a>. It's a big deal because it puts you in charge. So, your "human daemon" would work with your permission, not just openly broadcast everything. This puts you in charge of your digital self, allowing deep personalization while still respecting your privacy, rather than making privacy irrelevant.</li>
 </ul>
 <h3>Smart Glasses: Are We Ready for the AR Revolution?</h3>
-<img alt="A." class="inline-image" src="../images/vr_glasses_visual.png"/>
+<img alt="A." class="inline-image" src="../images/vr_glasses_visual.png">
 <p>Daniel's vision of AR glasses showing us digital information overlaid on the real world is exciting. You're right to point out that this is a prediction for the next decade or more, and the tiny computer chips (GPUs, TPUs, microchips) inside these devices are getting incredibly powerful, incredibly fast!</p>
 <ul>
 <li><strong>The Challenge:</strong> While the processing power is indeed soaring, other physical hurdles remain. For example, <a href="https://www.edge-ai-vision.com/2025/02/3-challenges-facing-the-wearable-sensors-market/" rel="noopener noreferrer" target="_blank">battery life is still a big concern for AR glasses</a> that are packed with features. Also, making them affordable and proving their everyday value to everyone, not just tech enthusiasts, is a continuous race.</li>
 <li><strong>How We Might Solve It:</strong> The good news is that these tiny, powerful chips are making AR glasses smaller, lighter, and more capable than ever. Companies are constantly working on better batteries and more efficient designs to extend their use. The big goal is to make them so comfy, affordable, and useful that they become as common as smartphones, seamlessly fitting into our daily lives. Since we're talking about the next decade, the advancements will be truly amazing, likely giving us even more than we expect! For example, new <a href="https://www.mckinsey.com/featured-insights/mckinsey-explainers/what-is-multimodal-ai" rel="noopener noreferrer" target="_blank">"multimodal AI"</a> models like <a href="https://deepmind.google/models/gemini/pro/" rel="noopener noreferrer" target="_blank">Gemini 2.5 Pro</a> and <a href="https://www.anthropic.com/claude/opus" rel="noopener noreferrer" target="_blank">Claude Opus</a> can now understand and combine information from text, images, audio, and even video. This means AR glasses can process what you see, hear, and say all at once, leading to much smarter and more helpful digital overlays. Imagine an AR app that not only shows you directions but also understands your voice commands and adjusts based on what it "sees" around you. This kind of <a href="https://milvus.io/ai-quick-reference/how-does-multimodal-ai-enhance-augmented-reality-ar" rel="noopener noreferrer" target="_blank">"context awareness"</a> is exactly what Daniel envisioned for AR.</li>
 </ul>
 <h3>The Human Heart of AI: Why Connection Still Matters</h3>
-<img alt="A compassionate human talking to another person, with a helpful AI assisting discreetly in the background." class="inline-image" src="../images/ai_human_connection.png">
+<img alt="A compassionate human talking to another person, with a helpful AI assisting discreetly in the background." class="inline-image" src="../images/ai_human_connection.png"/>
 <p>Even with super-smart AI, people still want to talk to real humans for important or sensitive things. You've noticed that AI can already pick up on emotions and use tones that fit the user's feeling.</p>
 <ul>
 <li><strong>The Challenge:</strong> It's true that AI can now understand what you're saying, how you're saying it, and even respond in a way that <a href="https://coacharya.com/uncategorized/ai-in-coaching-therapy-future/" rel="noopener noreferrer" target="_blank">sounds empathetic</a>. It can even "read" facial expressions and body language. But there's a big difference between acting like it understands and truly feeling emotions like we do. For really deep, personal stuff, like getting advice on tough life problems or dealing with big emotions, humans still offer a unique sense of safety, trust, and nuanced understanding that AI hasn't quite matched.</li>
@@ -1163,6 +1171,7 @@
 </ul>
 <p style="margin-top: 1rem;">They are truly eye-opening reads!</p>
 </div>
+</img>
 </img></img>
             </div>
 
@@ -1318,17 +1327,249 @@
             const ttsStatus = document.getElementById('ttsStatus');
             const soundWave = document.getElementById('soundWave');
             const postBody = document.getElementById('postBody');
+            const ttsVoice = document.getElementById('ttsVoice');
 
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
             let playRate = 1.0;
+            let voices = [];
+            
+            // Cloud TTS playback variables
+            let audioPlayer = new Audio();
+            let audioChunks = [];
+            let currentChunkIndex = 0;
+            let isCloudPlaying = false;
 
             function getCleanText(element) {
                 const clone = element.cloneNode(true);
                 clone.querySelectorAll('pre, code, style, script, .comments-section, .audio-player, .citations').forEach(el => el.remove());
                 return clone.textContent.trim();
             }
+
+            function chunkText(text, maxLen = 180) {
+                const chunks = [];
+                let remaining = text.trim();
+                
+                while (remaining.length > 0) {
+                    if (remaining.length <= maxLen) {
+                        chunks.push(remaining);
+                        break;
+                    }
+                    
+                    let chunk = remaining.substring(0, maxLen);
+                    let splitIndex = -1;
+                    const sentenceBoundaries = /[.!?;\n]/g;
+                    let match;
+                    let lastBoundary = -1;
+                    
+                    while ((match = sentenceBoundaries.exec(chunk)) !== null) {
+                        lastBoundary = match.index;
+                    }
+                    
+                    if (lastBoundary !== -1) {
+                        splitIndex = lastBoundary + 1;
+                    } else {
+                        const clauseBoundaries = /[,]/g;
+                        let lastClause = -1;
+                        while ((match = clauseBoundaries.exec(chunk)) !== null) {
+                            lastClause = match.index;
+                        }
+                        if (lastClause !== -1) {
+                            splitIndex = lastClause + 1;
+                        } else {
+                            splitIndex = chunk.lastIndexOf(' ');
+                        }
+                    }
+                    
+                    if (splitIndex <= 0) {
+                        splitIndex = maxLen;
+                    }
+                    
+                    const finalChunk = remaining.substring(0, splitIndex).trim();
+                    if (finalChunk.length > 0) {
+                        chunks.push(finalChunk);
+                    }
+                    remaining = remaining.substring(splitIndex).trim();
+                }
+                
+                return chunks;
+            }
+
+            function getBestVoice(englishVoicesList) {
+                const priorities = [
+                    (v) => v.name.toLowerCase().includes('natural') || v.name.toLowerCase().includes('neural'),
+                    (v) => v.name.toLowerCase().includes('google') && !v.name.toLowerCase().includes('google translation'),
+                    (v) => v.name.toLowerCase().includes('premium') || v.name.toLowerCase().includes('enhanced'),
+                    (v) => v.lang === 'en-US',
+                    (v) => v.lang === 'en-GB',
+                    (v) => v.lang.startsWith('en')
+                ];
+                for (const test of priorities) {
+                    const match = englishVoicesList.find(test);
+                    if (match) return match;
+                }
+                return englishVoicesList[0];
+            }
+
+            function populateVoices() {
+                // Clear dropdown
+                ttsVoice.innerHTML = '';
+                
+                // Add Cloud Voice (Natural) option as default
+                const cloudOption = document.createElement('option');
+                cloudOption.value = 'cloud-natural';
+                cloudOption.textContent = 'Cloud Voice (Natural)';
+                ttsVoice.appendChild(cloudOption);
+                
+                if (synth) {
+                    voices = synth.getVoices();
+                    const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+                    const listToUse = englishVoices.length > 0 ? englishVoices : voices;
+                    listToUse.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        let cleanName = voice.name
+                            .replace(/Microsoft|Google|Apple/gi, '')
+                            .replace(/Desktop|Natural/gi, '')
+                            .replace(/ - /g, ' ')
+                            .trim();
+                        if (!cleanName) cleanName = voice.name;
+                        option.textContent = `${cleanName} (${voice.lang})`;
+                        ttsVoice.appendChild(option);
+                    });
+                }
+                
+                // Set/restore voice selection
+                const savedVoice = localStorage.getItem('selectedTtsVoice') || 'cloud-natural';
+                let hasSaved = false;
+                for (let i = 0; i < ttsVoice.options.length; i++) {
+                    if (ttsVoice.options[i].value === savedVoice) {
+                        hasSaved = true;
+                        break;
+                    }
+                }
+                ttsVoice.value = hasSaved ? savedVoice : 'cloud-natural';
+            }
+
+            if (synth) {
+                if (synth.onvoiceschanged !== undefined) {
+                    synth.onvoiceschanged = populateVoices;
+                }
+                populateVoices();
+                setTimeout(() => {
+                    if (voices.length === 0) populateVoices();
+                }, 500);
+            } else {
+                populateVoices(); // Still populate Cloud voice even if synth isn't supported
+            }
+
+            // Audio Player Event Listeners
+            audioPlayer.addEventListener('play', () => {
+                isCloudPlaying = true;
+                ttsIcon.className = 'fas fa-pause';
+                ttsStatus.textContent = 'Playing audio...';
+                soundWave.classList.add('playing');
+            });
+
+            audioPlayer.addEventListener('pause', () => {
+                isCloudPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                ttsStatus.textContent = 'Audio playback paused';
+                soundWave.classList.remove('playing');
+            });
+
+            audioPlayer.addEventListener('ended', () => {
+                currentChunkIndex++;
+                if (currentChunkIndex < audioChunks.length) {
+                    playCloudChunk(currentChunkIndex);
+                } else {
+                    isCloudPlaying = false;
+                    ttsIcon.className = 'fas fa-play';
+                    ttsStatus.textContent = 'Audio playback complete';
+                    soundWave.classList.remove('playing');
+                    audioChunks = [];
+                    currentChunkIndex = 0;
+                }
+            });
+
+            audioPlayer.addEventListener('error', (e) => {
+                console.error('Cloud audio player error, falling back to browser synthesis...', e);
+                isCloudPlaying = false;
+                audioChunks = [];
+                currentChunkIndex = 0;
+                // Auto transition to first browser voice if one is available
+                if (ttsVoice.options.length > 1) {
+                    ttsVoice.value = ttsVoice.options[1].value;
+                    showToast('Cloud audio failed, using browser synthesis.');
+                    startPlayback();
+                } else {
+                    ttsStatus.textContent = 'Playback error occurred.';
+                }
+            });
+
+            function playCloudChunk(index) {
+                if (index < audioChunks.length) {
+                    audioPlayer.src = audioChunks[index];
+                    audioPlayer.playbackRate = playRate;
+                    audioPlayer.play().catch(err => {
+                        console.error('Playback failed for chunk:', err);
+                        if (ttsVoice.options.length > 1) {
+                            ttsVoice.value = ttsVoice.options[1].value;
+                            startPlayback();
+                        }
+                    });
+                }
+            }
+
+            function stopAllPlayback() {
+                audioPlayer.pause();
+                audioPlayer.src = '';
+                isCloudPlaying = false;
+                
+                if (synth) {
+                    synth.cancel();
+                }
+                isPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                soundWave.classList.remove('playing');
+            }
+
+            function startPlayback() {
+                const selectedMode = ttsVoice.value;
+                if (selectedMode === 'cloud-natural') {
+                    if (audioChunks.length === 0) {
+                        const cleanText = getCleanText(postBody);
+                        const rawChunks = chunkText(cleanText);
+                        audioChunks = rawChunks.map(chunk => 
+                            `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(chunk)}`
+                        );
+                        currentChunkIndex = 0;
+                    }
+                    if (audioChunks.length > 0) {
+                        playCloudChunk(currentChunkIndex);
+                    } else {
+                        ttsStatus.textContent = 'No text to read.';
+                    }
+                } else {
+                    if (!utterance) initTTS();
+                    if (synth) {
+                        synth.speak(utterance);
+                    }
+                }
+            }
+
+            ttsVoice.addEventListener('change', () => {
+                localStorage.setItem('selectedTtsVoice', ttsVoice.value);
+                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
+                
+                stopAllPlayback();
+                utterance = null; // force recreation if they switch back to browser
+                
+                if (wasSpeaking) {
+                    startPlayback();
+                }
+            });
 
             function initTTS() {
                 if (!synth) {
@@ -1340,6 +1581,14 @@
                 const textToSpeak = getCleanText(postBody);
                 utterance = new SpeechSynthesisUtterance(textToSpeak);
                 utterance.rate = playRate;
+
+                const selectedVoiceName = ttsVoice.value;
+                if (selectedVoiceName && selectedVoiceName !== 'cloud-natural' && voices.length > 0) {
+                    const selectedVoice = voices.find(v => v.name === selectedVoiceName);
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                    }
+                }
 
                 utterance.onstart = () => {
                     isPlaying = true;
@@ -1365,24 +1614,41 @@
             }
 
             ttsPlayBtn.addEventListener('click', () => {
-                if (!utterance) initTTS();
-
-                if (synth.speaking) {
-                    if (synth.paused) {
-                        synth.resume();
-                        isPlaying = true;
-                        ttsIcon.className = 'fas fa-pause';
-                        ttsStatus.textContent = 'Playing audio...';
-                        soundWave.classList.add('playing');
+                const selectedMode = ttsVoice.value;
+                if (selectedMode === 'cloud-natural') {
+                    if (isCloudPlaying) {
+                        audioPlayer.pause();
                     } else {
-                        synth.pause();
-                        isPlaying = false;
-                        ttsIcon.className = 'fas fa-play';
-                        ttsStatus.textContent = 'Audio playback paused';
-                        soundWave.classList.remove('playing');
+                        if (audioChunks.length > 0 && currentChunkIndex < audioChunks.length) {
+                            audioPlayer.playbackRate = playRate;
+                            audioPlayer.play().catch(err => {
+                                console.error('Play failed:', err);
+                                startPlayback();
+                            });
+                        } else {
+                            startPlayback();
+                        }
                     }
                 } else {
-                    synth.speak(utterance);
+                    if (!utterance) initTTS();
+
+                    if (synth.speaking) {
+                        if (synth.paused) {
+                            synth.resume();
+                            isPlaying = true;
+                            ttsIcon.className = 'fas fa-pause';
+                            ttsStatus.textContent = 'Playing audio...';
+                            soundWave.classList.add('playing');
+                        } else {
+                            synth.pause();
+                            isPlaying = false;
+                            ttsIcon.className = 'fas fa-play';
+                            ttsStatus.textContent = 'Audio playback paused';
+                            soundWave.classList.remove('playing');
+                        }
+                    } else {
+                        synth.speak(utterance);
+                    }
                 }
             });
 
@@ -1390,10 +1656,14 @@
                 if (playRate > 0.6) {
                     playRate -= 0.15;
                     showToast(`Speed set to ${playRate.toFixed(2)}x`);
-                    if (synth.speaking) {
-                        synth.cancel();
-                        initTTS();
-                        synth.speak(utterance);
+                    if (ttsVoice.value === 'cloud-natural') {
+                        audioPlayer.playbackRate = playRate;
+                    } else {
+                        if (synth && synth.speaking) {
+                            synth.cancel();
+                            initTTS();
+                            synth.speak(utterance);
+                        }
                     }
                 }
             });
@@ -1402,16 +1672,24 @@
                 if (playRate < 2.0) {
                     playRate += 0.15;
                     showToast(`Speed set to ${playRate.toFixed(2)}x`);
-                    if (synth.speaking) {
-                        synth.cancel();
-                        initTTS();
-                        synth.speak(utterance);
+                    if (ttsVoice.value === 'cloud-natural') {
+                        audioPlayer.playbackRate = playRate;
+                    } else {
+                        if (synth && synth.speaking) {
+                            synth.cancel();
+                            initTTS();
+                            synth.speak(utterance);
+                        }
                     }
                 }
             });
 
             window.addEventListener('beforeunload', () => {
                 if (synth) synth.cancel();
+                if (audioPlayer) {
+                    audioPlayer.pause();
+                    audioPlayer.src = '';
+                }
             });
 
             // ============================================

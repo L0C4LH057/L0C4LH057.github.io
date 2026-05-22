@@ -31,3 +31,11 @@ Track progress of implementing the secure self-hosted Admin & Analytics Dashboar
 - [x] Modify `getDeterministicBaseLikes` and `getDeterministicBaseViews` to return `0` in `dashboard.html`
 - [x] Compile all blog post/writeup pages using `update_posts.py`
 - [x] Run automated verification script to confirm base counts are 0 across templates, dashboard, and generated files
+
+## Step 7: Improve TTS Audio / Voice Quality [x]
+- [x] Add HTML voice selector dropdown inside the audio player controls in `template.html`
+- [x] Implement `populateVoices` to load and priority-sort natural/neural/Google English voices
+- [x] Update `initTTS` to apply the user's selected voice
+- [x] Compile blog posts and write-ups using `update_posts.py`
+- [x] Verify functionality via automated and manual check
+

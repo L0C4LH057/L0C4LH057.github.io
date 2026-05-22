@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="same-origin">
     <title>Context Engineering: The Unsung Hero of Advanced AI Performance and LLM Mastery | Bashir Kabir Zarewa</title>
     <meta name="description" content="Beyond mere prompts: Discover how strategically designing and optimizing AI input contexts is revolutionizing Large Language Model capabilities and application development.">
     <meta property="og:type" content="article">
@@ -1074,6 +1075,13 @@
                     <div class="audio-status" id="ttsStatus">Click play to listen to this article</div>
                 </div>
                 <div class="audio-controls">
+                    <div class="voice-selector-wrapper" style="position: relative; display: flex; align-items: center; margin-right: 0.5rem;">
+                        <i class="fas fa-headset" style="position: absolute; left: 10px; font-size: 0.75rem; color: var(--text-secondary);"></i>
+                        <select id="ttsVoice" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 1.8rem 0.4rem 2rem; cursor: pointer; font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); outline: none; appearance: none; -webkit-appearance: none; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; transition: all 0.2s ease;">
+                            <option value="cloud-natural">Cloud Voice (Natural)</option>
+                        </select>
+                        <i class="fas fa-chevron-down" style="position: absolute; right: 10px; font-size: 0.7rem; color: var(--text-secondary); pointer-events: none;"></i>
+                    </div>
                     <button id="ttsSlower"><i class="fas fa-minus"></i> Speed -</button>
                     <button id="ttsFaster"><i class="fas fa-plus"></i> Speed +</button>
                 </div>
@@ -1308,17 +1316,249 @@
             const ttsStatus = document.getElementById('ttsStatus');
             const soundWave = document.getElementById('soundWave');
             const postBody = document.getElementById('postBody');
+            const ttsVoice = document.getElementById('ttsVoice');
 
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
             let playRate = 1.0;
+            let voices = [];
+            
+            // Cloud TTS playback variables
+            let audioPlayer = new Audio();
+            let audioChunks = [];
+            let currentChunkIndex = 0;
+            let isCloudPlaying = false;
 
             function getCleanText(element) {
                 const clone = element.cloneNode(true);
                 clone.querySelectorAll('pre, code, style, script, .comments-section, .audio-player, .citations').forEach(el => el.remove());
                 return clone.textContent.trim();
             }
+
+            function chunkText(text, maxLen = 180) {
+                const chunks = [];
+                let remaining = text.trim();
+                
+                while (remaining.length > 0) {
+                    if (remaining.length <= maxLen) {
+                        chunks.push(remaining);
+                        break;
+                    }
+                    
+                    let chunk = remaining.substring(0, maxLen);
+                    let splitIndex = -1;
+                    const sentenceBoundaries = /[.!?;\n]/g;
+                    let match;
+                    let lastBoundary = -1;
+                    
+                    while ((match = sentenceBoundaries.exec(chunk)) !== null) {
+                        lastBoundary = match.index;
+                    }
+                    
+                    if (lastBoundary !== -1) {
+                        splitIndex = lastBoundary + 1;
+                    } else {
+                        const clauseBoundaries = /[,]/g;
+                        let lastClause = -1;
+                        while ((match = clauseBoundaries.exec(chunk)) !== null) {
+                            lastClause = match.index;
+                        }
+                        if (lastClause !== -1) {
+                            splitIndex = lastClause + 1;
+                        } else {
+                            splitIndex = chunk.lastIndexOf(' ');
+                        }
+                    }
+                    
+                    if (splitIndex <= 0) {
+                        splitIndex = maxLen;
+                    }
+                    
+                    const finalChunk = remaining.substring(0, splitIndex).trim();
+                    if (finalChunk.length > 0) {
+                        chunks.push(finalChunk);
+                    }
+                    remaining = remaining.substring(splitIndex).trim();
+                }
+                
+                return chunks;
+            }
+
+            function getBestVoice(englishVoicesList) {
+                const priorities = [
+                    (v) => v.name.toLowerCase().includes('natural') || v.name.toLowerCase().includes('neural'),
+                    (v) => v.name.toLowerCase().includes('google') && !v.name.toLowerCase().includes('google translation'),
+                    (v) => v.name.toLowerCase().includes('premium') || v.name.toLowerCase().includes('enhanced'),
+                    (v) => v.lang === 'en-US',
+                    (v) => v.lang === 'en-GB',
+                    (v) => v.lang.startsWith('en')
+                ];
+                for (const test of priorities) {
+                    const match = englishVoicesList.find(test);
+                    if (match) return match;
+                }
+                return englishVoicesList[0];
+            }
+
+            function populateVoices() {
+                // Clear dropdown
+                ttsVoice.innerHTML = '';
+                
+                // Add Cloud Voice (Natural) option as default
+                const cloudOption = document.createElement('option');
+                cloudOption.value = 'cloud-natural';
+                cloudOption.textContent = 'Cloud Voice (Natural)';
+                ttsVoice.appendChild(cloudOption);
+                
+                if (synth) {
+                    voices = synth.getVoices();
+                    const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+                    const listToUse = englishVoices.length > 0 ? englishVoices : voices;
+                    listToUse.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        let cleanName = voice.name
+                            .replace(/Microsoft|Google|Apple/gi, '')
+                            .replace(/Desktop|Natural/gi, '')
+                            .replace(/ - /g, ' ')
+                            .trim();
+                        if (!cleanName) cleanName = voice.name;
+                        option.textContent = `${cleanName} (${voice.lang})`;
+                        ttsVoice.appendChild(option);
+                    });
+                }
+                
+                // Set/restore voice selection
+                const savedVoice = localStorage.getItem('selectedTtsVoice') || 'cloud-natural';
+                let hasSaved = false;
+                for (let i = 0; i < ttsVoice.options.length; i++) {
+                    if (ttsVoice.options[i].value === savedVoice) {
+                        hasSaved = true;
+                        break;
+                    }
+                }
+                ttsVoice.value = hasSaved ? savedVoice : 'cloud-natural';
+            }
+
+            if (synth) {
+                if (synth.onvoiceschanged !== undefined) {
+                    synth.onvoiceschanged = populateVoices;
+                }
+                populateVoices();
+                setTimeout(() => {
+                    if (voices.length === 0) populateVoices();
+                }, 500);
+            } else {
+                populateVoices(); // Still populate Cloud voice even if synth isn't supported
+            }
+
+            // Audio Player Event Listeners
+            audioPlayer.addEventListener('play', () => {
+                isCloudPlaying = true;
+                ttsIcon.className = 'fas fa-pause';
+                ttsStatus.textContent = 'Playing audio...';
+                soundWave.classList.add('playing');
+            });
+
+            audioPlayer.addEventListener('pause', () => {
+                isCloudPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                ttsStatus.textContent = 'Audio playback paused';
+                soundWave.classList.remove('playing');
+            });
+
+            audioPlayer.addEventListener('ended', () => {
+                currentChunkIndex++;
+                if (currentChunkIndex < audioChunks.length) {
+                    playCloudChunk(currentChunkIndex);
+                } else {
+                    isCloudPlaying = false;
+                    ttsIcon.className = 'fas fa-play';
+                    ttsStatus.textContent = 'Audio playback complete';
+                    soundWave.classList.remove('playing');
+                    audioChunks = [];
+                    currentChunkIndex = 0;
+                }
+            });
+
+            audioPlayer.addEventListener('error', (e) => {
+                console.error('Cloud audio player error, falling back to browser synthesis...', e);
+                isCloudPlaying = false;
+                audioChunks = [];
+                currentChunkIndex = 0;
+                // Auto transition to first browser voice if one is available
+                if (ttsVoice.options.length > 1) {
+                    ttsVoice.value = ttsVoice.options[1].value;
+                    showToast('Cloud audio failed, using browser synthesis.');
+                    startPlayback();
+                } else {
+                    ttsStatus.textContent = 'Playback error occurred.';
+                }
+            });
+
+            function playCloudChunk(index) {
+                if (index < audioChunks.length) {
+                    audioPlayer.src = audioChunks[index];
+                    audioPlayer.playbackRate = playRate;
+                    audioPlayer.play().catch(err => {
+                        console.error('Playback failed for chunk:', err);
+                        if (ttsVoice.options.length > 1) {
+                            ttsVoice.value = ttsVoice.options[1].value;
+                            startPlayback();
+                        }
+                    });
+                }
+            }
+
+            function stopAllPlayback() {
+                audioPlayer.pause();
+                audioPlayer.src = '';
+                isCloudPlaying = false;
+                
+                if (synth) {
+                    synth.cancel();
+                }
+                isPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                soundWave.classList.remove('playing');
+            }
+
+            function startPlayback() {
+                const selectedMode = ttsVoice.value;
+                if (selectedMode === 'cloud-natural') {
+                    if (audioChunks.length === 0) {
+                        const cleanText = getCleanText(postBody);
+                        const rawChunks = chunkText(cleanText);
+                        audioChunks = rawChunks.map(chunk => 
+                            `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(chunk)}`
+                        );
+                        currentChunkIndex = 0;
+                    }
+                    if (audioChunks.length > 0) {
+                        playCloudChunk(currentChunkIndex);
+                    } else {
+                        ttsStatus.textContent = 'No text to read.';
+                    }
+                } else {
+                    if (!utterance) initTTS();
+                    if (synth) {
+                        synth.speak(utterance);
+                    }
+                }
+            }
+
+            ttsVoice.addEventListener('change', () => {
+                localStorage.setItem('selectedTtsVoice', ttsVoice.value);
+                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
+                
+                stopAllPlayback();
+                utterance = null; // force recreation if they switch back to browser
+                
+                if (wasSpeaking) {
+                    startPlayback();
+                }
+            });
 
             function initTTS() {
                 if (!synth) {
@@ -1330,6 +1570,14 @@
                 const textToSpeak = getCleanText(postBody);
                 utterance = new SpeechSynthesisUtterance(textToSpeak);
                 utterance.rate = playRate;
+
+                const selectedVoiceName = ttsVoice.value;
+                if (selectedVoiceName && selectedVoiceName !== 'cloud-natural' && voices.length > 0) {
+                    const selectedVoice = voices.find(v => v.name === selectedVoiceName);
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                    }
+                }
 
                 utterance.onstart = () => {
                     isPlaying = true;
@@ -1355,24 +1603,41 @@
             }
 
             ttsPlayBtn.addEventListener('click', () => {
-                if (!utterance) initTTS();
-
-                if (synth.speaking) {
-                    if (synth.paused) {
-                        synth.resume();
-                        isPlaying = true;
-                        ttsIcon.className = 'fas fa-pause';
-                        ttsStatus.textContent = 'Playing audio...';
-                        soundWave.classList.add('playing');
+                const selectedMode = ttsVoice.value;
+                if (selectedMode === 'cloud-natural') {
+                    if (isCloudPlaying) {
+                        audioPlayer.pause();
                     } else {
-                        synth.pause();
-                        isPlaying = false;
-                        ttsIcon.className = 'fas fa-play';
-                        ttsStatus.textContent = 'Audio playback paused';
-                        soundWave.classList.remove('playing');
+                        if (audioChunks.length > 0 && currentChunkIndex < audioChunks.length) {
+                            audioPlayer.playbackRate = playRate;
+                            audioPlayer.play().catch(err => {
+                                console.error('Play failed:', err);
+                                startPlayback();
+                            });
+                        } else {
+                            startPlayback();
+                        }
                     }
                 } else {
-                    synth.speak(utterance);
+                    if (!utterance) initTTS();
+
+                    if (synth.speaking) {
+                        if (synth.paused) {
+                            synth.resume();
+                            isPlaying = true;
+                            ttsIcon.className = 'fas fa-pause';
+                            ttsStatus.textContent = 'Playing audio...';
+                            soundWave.classList.add('playing');
+                        } else {
+                            synth.pause();
+                            isPlaying = false;
+                            ttsIcon.className = 'fas fa-play';
+                            ttsStatus.textContent = 'Audio playback paused';
+                            soundWave.classList.remove('playing');
+                        }
+                    } else {
+                        synth.speak(utterance);
+                    }
                 }
             });
 
@@ -1380,10 +1645,14 @@
                 if (playRate > 0.6) {
                     playRate -= 0.15;
                     showToast(`Speed set to ${playRate.toFixed(2)}x`);
-                    if (synth.speaking) {
-                        synth.cancel();
-                        initTTS();
-                        synth.speak(utterance);
+                    if (ttsVoice.value === 'cloud-natural') {
+                        audioPlayer.playbackRate = playRate;
+                    } else {
+                        if (synth && synth.speaking) {
+                            synth.cancel();
+                            initTTS();
+                            synth.speak(utterance);
+                        }
                     }
                 }
             });
@@ -1392,16 +1661,24 @@
                 if (playRate < 2.0) {
                     playRate += 0.15;
                     showToast(`Speed set to ${playRate.toFixed(2)}x`);
-                    if (synth.speaking) {
-                        synth.cancel();
-                        initTTS();
-                        synth.speak(utterance);
+                    if (ttsVoice.value === 'cloud-natural') {
+                        audioPlayer.playbackRate = playRate;
+                    } else {
+                        if (synth && synth.speaking) {
+                            synth.cancel();
+                            initTTS();
+                            synth.speak(utterance);
+                        }
                     }
                 }
             });
 
             window.addEventListener('beforeunload', () => {
                 if (synth) synth.cancel();
+                if (audioPlayer) {
+                    audioPlayer.pause();
+                    audioPlayer.src = '';
+                }
             });
 
             // ============================================

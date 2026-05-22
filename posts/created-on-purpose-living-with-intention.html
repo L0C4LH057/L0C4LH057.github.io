@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="same-origin">
     <title>Created on Purpose. Living with Intention. | Bashir Kabir Zarewa</title>
     <meta name="description" content="A guide to the three foundational questions and six goal domains that form the architecture of a deliberate, faith-rooted life lived on purpose.">
     <meta property="og:type" content="article">
@@ -1074,6 +1075,13 @@
                     <div class="audio-status" id="ttsStatus">Click play to listen to this article</div>
                 </div>
                 <div class="audio-controls">
+                    <div class="voice-selector-wrapper" style="position: relative; display: flex; align-items: center; margin-right: 0.5rem;">
+                        <i class="fas fa-headset" style="position: absolute; left: 10px; font-size: 0.75rem; color: var(--text-secondary);"></i>
+                        <select id="ttsVoice" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 1.8rem 0.4rem 2rem; cursor: pointer; font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); outline: none; appearance: none; -webkit-appearance: none; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; transition: all 0.2s ease;">
+                            <option value="cloud-natural">Cloud Voice (Natural)</option>
+                        </select>
+                        <i class="fas fa-chevron-down" style="position: absolute; right: 10px; font-size: 0.7rem; color: var(--text-secondary); pointer-events: none;"></i>
+                    </div>
                     <button id="ttsSlower"><i class="fas fa-minus"></i> Speed -</button>
                     <button id="ttsFaster"><i class="fas fa-plus"></i> Speed +</button>
                 </div>
@@ -1114,7 +1122,7 @@
 <p>Most people answer this question with labels   a profession, a distinction, a role. But labels are not identity. They are costumes. Who you are is closer to something living: the values you hold under pressure, the patterns you repeat in private, the way you respond when everything falls apart.</p>
 <p>Here is the harder truth: the person who never seriously asks this question will spend their life living someone else's answer   their parent's definition, their culture's template, their fear's blueprint. Identity must be chosen, not just inherited. And it must be revisited, because you are not the same person at 35 that you were at 22.</p>
 <p>If you believe you were made by God, this question becomes even richer. It asks: <em>"Who did God originally design me to be   before the wounds, the performance, the people-pleasing?"</em> That is not a psychological question alone. It is a spiritual homecoming.</p>
-<img alt="Three distinct stones placed across calm reflecting water, representing identity, direction, and accomplishment" class="screenshot" src="../images/three_questions.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;"/>
+<img alt="Three distinct stones placed across calm reflecting water, representing identity, direction, and accomplishment" class="screenshot" src="../images/three_questions.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;">
 <h3>2. Where Am I Going?</h3>
 <p>Direction without self-knowledge is just ambition wearing a blindfold. Many people chase destinations based on what looks impressive, what their peers are doing, or what will finally earn them the approval they never received. The question is not just where you are going   it is why.</p>
 <p>Consider this: life is not primarily a destination to arrive at. It is a direction to walk in. The most fulfilled people are not those who reached a finish line   they are those who were deeply aligned with the path they were on. They moved with a sense of meaning even through difficulty, because their direction was rooted in something real.</p>
@@ -1124,7 +1132,7 @@
 <p>When asked at the right time and in the right order, however, this question becomes powerful. It forces you to separate what you want to accumulate from what you want to leave behind   and those are never the same thing. Meaningful accomplishment almost always has a dimension that outlasts the person who built it. Not as legacy in the ego sense, but as stewardship: something was placed in your hands, and you were faithful with it.</p>
 <h2>PART TWO: The Six Goal Domains</h2>
 <p>Once you have wrestled with the three questions, goals become the practical expression of your answers. There are six domains that, when pursued together, form a whole and integrated life.</p>
-<img alt="A circular aperture looking out over mountains at sunrise, representing the six goal domains in harmony" class="screenshot" src="../images/six_domains.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;"/>
+<img alt="A circular aperture looking out over mountains at sunrise, representing the six goal domains in harmony" class="screenshot" src="../images/six_domains.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;">
 <h3>Domain 1: Personal &amp; Family Goals</h3>
 <p>This is the most underrated domain in modern ambition culture   and the one that causes the most quiet devastation when ignored. Society applauds professional achievement. It rarely grades you on whether you were truly present for the people who needed you most.</p>
 <p>A vague wish like "I want a happy family" is not a goal   it is a hope. Real personal goals ask harder questions: What kind of partner do you want to be when you are tired, broke, and under pressure? What values do you want your children to absorb from watching how you live? What does your relationship with your own health, peace, and inner life look like in ten years? The private sphere demands the most intentionality, precisely because no one is grading you there.</p>
@@ -1153,7 +1161,7 @@
 <p>Reviewing these questions is not a lack of faith in God's plan. It is one of the most faithful things you can do   because it says: "I take seriously the life I have been given. I will not waste it. I will understand it, steward it, and show up fully for what is coming."</p>
 <p>That posture   prepared, self-aware, faith-rooted, intentional   is the foundation of a life well lived.</p>
 <p style="margin-top: 2rem; font-weight: 600;">So   which of the three questions do you find hardest to answer honestly? Start there. That is where your growth is waiting.</p>
-
+</img></img>
             </div>
 
             <!-- Comments Section -->
@@ -1308,17 +1316,249 @@
             const ttsStatus = document.getElementById('ttsStatus');
             const soundWave = document.getElementById('soundWave');
             const postBody = document.getElementById('postBody');
+            const ttsVoice = document.getElementById('ttsVoice');
 
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
             let playRate = 1.0;
+            let voices = [];
+            
+            // Cloud TTS playback variables
+            let audioPlayer = new Audio();
+            let audioChunks = [];
+            let currentChunkIndex = 0;
+            let isCloudPlaying = false;
 
             function getCleanText(element) {
                 const clone = element.cloneNode(true);
                 clone.querySelectorAll('pre, code, style, script, .comments-section, .audio-player, .citations').forEach(el => el.remove());
                 return clone.textContent.trim();
             }
+
+            function chunkText(text, maxLen = 180) {
+                const chunks = [];
+                let remaining = text.trim();
+                
+                while (remaining.length > 0) {
+                    if (remaining.length <= maxLen) {
+                        chunks.push(remaining);
+                        break;
+                    }
+                    
+                    let chunk = remaining.substring(0, maxLen);
+                    let splitIndex = -1;
+                    const sentenceBoundaries = /[.!?;\n]/g;
+                    let match;
+                    let lastBoundary = -1;
+                    
+                    while ((match = sentenceBoundaries.exec(chunk)) !== null) {
+                        lastBoundary = match.index;
+                    }
+                    
+                    if (lastBoundary !== -1) {
+                        splitIndex = lastBoundary + 1;
+                    } else {
+                        const clauseBoundaries = /[,]/g;
+                        let lastClause = -1;
+                        while ((match = clauseBoundaries.exec(chunk)) !== null) {
+                            lastClause = match.index;
+                        }
+                        if (lastClause !== -1) {
+                            splitIndex = lastClause + 1;
+                        } else {
+                            splitIndex = chunk.lastIndexOf(' ');
+                        }
+                    }
+                    
+                    if (splitIndex <= 0) {
+                        splitIndex = maxLen;
+                    }
+                    
+                    const finalChunk = remaining.substring(0, splitIndex).trim();
+                    if (finalChunk.length > 0) {
+                        chunks.push(finalChunk);
+                    }
+                    remaining = remaining.substring(splitIndex).trim();
+                }
+                
+                return chunks;
+            }
+
+            function getBestVoice(englishVoicesList) {
+                const priorities = [
+                    (v) => v.name.toLowerCase().includes('natural') || v.name.toLowerCase().includes('neural'),
+                    (v) => v.name.toLowerCase().includes('google') && !v.name.toLowerCase().includes('google translation'),
+                    (v) => v.name.toLowerCase().includes('premium') || v.name.toLowerCase().includes('enhanced'),
+                    (v) => v.lang === 'en-US',
+                    (v) => v.lang === 'en-GB',
+                    (v) => v.lang.startsWith('en')
+                ];
+                for (const test of priorities) {
+                    const match = englishVoicesList.find(test);
+                    if (match) return match;
+                }
+                return englishVoicesList[0];
+            }
+
+            function populateVoices() {
+                // Clear dropdown
+                ttsVoice.innerHTML = '';
+                
+                // Add Cloud Voice (Natural) option as default
+                const cloudOption = document.createElement('option');
+                cloudOption.value = 'cloud-natural';
+                cloudOption.textContent = 'Cloud Voice (Natural)';
+                ttsVoice.appendChild(cloudOption);
+                
+                if (synth) {
+                    voices = synth.getVoices();
+                    const englishVoices = voices.filter(v => v.lang.startsWith('en'));
+                    const listToUse = englishVoices.length > 0 ? englishVoices : voices;
+                    listToUse.forEach(voice => {
+                        const option = document.createElement('option');
+                        option.value = voice.name;
+                        let cleanName = voice.name
+                            .replace(/Microsoft|Google|Apple/gi, '')
+                            .replace(/Desktop|Natural/gi, '')
+                            .replace(/ - /g, ' ')
+                            .trim();
+                        if (!cleanName) cleanName = voice.name;
+                        option.textContent = `${cleanName} (${voice.lang})`;
+                        ttsVoice.appendChild(option);
+                    });
+                }
+                
+                // Set/restore voice selection
+                const savedVoice = localStorage.getItem('selectedTtsVoice') || 'cloud-natural';
+                let hasSaved = false;
+                for (let i = 0; i < ttsVoice.options.length; i++) {
+                    if (ttsVoice.options[i].value === savedVoice) {
+                        hasSaved = true;
+                        break;
+                    }
+                }
+                ttsVoice.value = hasSaved ? savedVoice : 'cloud-natural';
+            }
+
+            if (synth) {
+                if (synth.onvoiceschanged !== undefined) {
+                    synth.onvoiceschanged = populateVoices;
+                }
+                populateVoices();
+                setTimeout(() => {
+                    if (voices.length === 0) populateVoices();
+                }, 500);
+            } else {
+                populateVoices(); // Still populate Cloud voice even if synth isn't supported
+            }
+
+            // Audio Player Event Listeners
+            audioPlayer.addEventListener('play', () => {
+                isCloudPlaying = true;
+                ttsIcon.className = 'fas fa-pause';
+                ttsStatus.textContent = 'Playing audio...';
+                soundWave.classList.add('playing');
+            });
+
+            audioPlayer.addEventListener('pause', () => {
+                isCloudPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                ttsStatus.textContent = 'Audio playback paused';
+                soundWave.classList.remove('playing');
+            });
+
+            audioPlayer.addEventListener('ended', () => {
+                currentChunkIndex++;
+                if (currentChunkIndex < audioChunks.length) {
+                    playCloudChunk(currentChunkIndex);
+                } else {
+                    isCloudPlaying = false;
+                    ttsIcon.className = 'fas fa-play';
+                    ttsStatus.textContent = 'Audio playback complete';
+                    soundWave.classList.remove('playing');
+                    audioChunks = [];
+                    currentChunkIndex = 0;
+                }
+            });
+
+            audioPlayer.addEventListener('error', (e) => {
+                console.error('Cloud audio player error, falling back to browser synthesis...', e);
+                isCloudPlaying = false;
+                audioChunks = [];
+                currentChunkIndex = 0;
+                // Auto transition to first browser voice if one is available
+                if (ttsVoice.options.length > 1) {
+                    ttsVoice.value = ttsVoice.options[1].value;
+                    showToast('Cloud audio failed, using browser synthesis.');
+                    startPlayback();
+                } else {
+                    ttsStatus.textContent = 'Playback error occurred.';
+                }
+            });
+
+            function playCloudChunk(index) {
+                if (index < audioChunks.length) {
+                    audioPlayer.src = audioChunks[index];
+                    audioPlayer.playbackRate = playRate;
+                    audioPlayer.play().catch(err => {
+                        console.error('Playback failed for chunk:', err);
+                        if (ttsVoice.options.length > 1) {
+                            ttsVoice.value = ttsVoice.options[1].value;
+                            startPlayback();
+                        }
+                    });
+                }
+            }
+
+            function stopAllPlayback() {
+                audioPlayer.pause();
+                audioPlayer.src = '';
+                isCloudPlaying = false;
+                
+                if (synth) {
+                    synth.cancel();
+                }
+                isPlaying = false;
+                ttsIcon.className = 'fas fa-play';
+                soundWave.classList.remove('playing');
+            }
+
+            function startPlayback() {
+                const selectedMode = ttsVoice.value;
+                if (selectedMode === 'cloud-natural') {
+                    if (audioChunks.length === 0) {
+                        const cleanText = getCleanText(postBody);
+                        const rawChunks = chunkText(cleanText);
+                        audioChunks = rawChunks.map(chunk => 
+                            `https://translate.google.com/translate_tts?ie=UTF-8&tl=en&client=tw-ob&q=${encodeURIComponent(chunk)}`
+                        );
+                        currentChunkIndex = 0;
+                    }
+                    if (audioChunks.length > 0) {
+                        playCloudChunk(currentChunkIndex);
+                    } else {
+                        ttsStatus.textContent = 'No text to read.';
+                    }
+                } else {
+                    if (!utterance) initTTS();
+                    if (synth) {
+                        synth.speak(utterance);
+                    }
+                }
+            }
+
+            ttsVoice.addEventListener('change', () => {
+                localStorage.setItem('selectedTtsVoice', ttsVoice.value);
+                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
+                
+                stopAllPlayback();
+                utterance = null; // force recreation if they switch back to browser
+                
+                if (wasSpeaking) {
+                    startPlayback();
+                }
+            });
 
             function initTTS() {
                 if (!synth) {
@@ -1330,6 +1570,14 @@
                 const textToSpeak = getCleanText(postBody);
                 utterance = new SpeechSynthesisUtterance(textToSpeak);
                 utterance.rate = playRate;
+
+                const selectedVoiceName = ttsVoice.value;
+                if (selectedVoiceName && selectedVoiceName !== 'cloud-natural' && voices.length > 0) {
+                    const selectedVoice = voices.find(v => v.name === selectedVoiceName);
+                    if (selectedVoice) {
+                        utterance.voice = selectedVoice;
+                    }
+                }
 
                 utterance.onstart = () => {
                     isPlaying = true;
@@ -1355,24 +1603,41 @@
             }
 
             ttsPlayBtn.addEventListener('click', () => {
-                if (!utterance) initTTS();
-
-                if (synth.speaking) {
-                    if (synth.paused) {
-                        synth.resume();
-                        isPlaying = true;
-                        ttsIcon.className = 'fas fa-pause';
-                        ttsStatus.textContent = 'Playing audio...';
-                        soundWave.classList.add('playing');
+                const selectedMode = ttsVoice.value;
+                if (selectedMode === 'cloud-natural') {
+                    if (isCloudPlaying) {
+                        audioPlayer.pause();
                     } else {
-                        synth.pause();
-                        isPlaying = false;
-                        ttsIcon.className = 'fas fa-play';
-                        ttsStatus.textContent = 'Audio playback paused';
-                        soundWave.classList.remove('playing');
+                        if (audioChunks.length > 0 && currentChunkIndex < audioChunks.length) {
+                            audioPlayer.playbackRate = playRate;
+                            audioPlayer.play().catch(err => {
+                                console.error('Play failed:', err);
+                                startPlayback();
+                            });
+                        } else {
+                            startPlayback();
+                        }
                     }
                 } else {
-                    synth.speak(utterance);
+                    if (!utterance) initTTS();
+
+                    if (synth.speaking) {
+                        if (synth.paused) {
+                            synth.resume();
+                            isPlaying = true;
+                            ttsIcon.className = 'fas fa-pause';
+                            ttsStatus.textContent = 'Playing audio...';
+                            soundWave.classList.add('playing');
+                        } else {
+                            synth.pause();
+                            isPlaying = false;
+                            ttsIcon.className = 'fas fa-play';
+                            ttsStatus.textContent = 'Audio playback paused';
+                            soundWave.classList.remove('playing');
+                        }
+                    } else {
+                        synth.speak(utterance);
+                    }
                 }
             });
 
@@ -1380,10 +1645,14 @@
                 if (playRate > 0.6) {
                     playRate -= 0.15;
                     showToast(`Speed set to ${playRate.toFixed(2)}x`);
-                    if (synth.speaking) {
-                        synth.cancel();
-                        initTTS();
-                        synth.speak(utterance);
+                    if (ttsVoice.value === 'cloud-natural') {
+                        audioPlayer.playbackRate = playRate;
+                    } else {
+                        if (synth && synth.speaking) {
+                            synth.cancel();
+                            initTTS();
+                            synth.speak(utterance);
+                        }
                     }
                 }
             });
@@ -1392,16 +1661,24 @@
                 if (playRate < 2.0) {
                     playRate += 0.15;
                     showToast(`Speed set to ${playRate.toFixed(2)}x`);
-                    if (synth.speaking) {
-                        synth.cancel();
-                        initTTS();
-                        synth.speak(utterance);
+                    if (ttsVoice.value === 'cloud-natural') {
+                        audioPlayer.playbackRate = playRate;
+                    } else {
+                        if (synth && synth.speaking) {
+                            synth.cancel();
+                            initTTS();
+                            synth.speak(utterance);
+                        }
                     }
                 }
             });
 
             window.addEventListener('beforeunload', () => {
                 if (synth) synth.cancel();
+                if (audioPlayer) {
+                    audioPlayer.pause();
+                    audioPlayer.src = '';
+                }
             });
 
             // ============================================
