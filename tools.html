@@ -1,57 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bashir Kabir Zarewa | My Tools & Resources</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Open source security tools and resources developed by Bashir Kabir Zarewa for bug bounty hunters and penetration testers.">
+    <title>Bashir Kabir Zarewa | Security Tools & Resources</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #3498db;
-            --light-gray: #f5f7fa;
-            --medium-gray: #e1e5eb;
-            --dark-gray: #7f8c8d;
-            --text: #2c3e50;
-            --text-light: #95a5a6;
-            --white: #ffffff;
-            --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
-            --border-radius: 14px;
-            --transition: 0.3s cubic-bezier(.4,2,.6,1);
-            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Premium Minimalist Light Mode */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-hover: rgba(9, 9, 11, 0.04);
+            --text-primary: #09090b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --header-bg: rgba(250, 250, 250, 0.8);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            /* Premium Minimalist Dark Mode */
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --card-shadow: 0 4px 30px rgba(0,0,0,0.4);
+            --shadow-hover: 0 10px 30px rgba(0,0,0,0.6);
+            --header-bg: rgba(9, 9, 11, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--text-muted) var(--bg-primary);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
 
         body {
-            font-family: var(--font-main);
-            background: linear-gradient(120deg, var(--light-gray) 60%, #eaf1fb 100%);
-            color: var(--text);
-            line-height: 1.7;
-            font-size: 1.08rem;
-            margin: 0;
-            padding: 0;
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.75;
+            font-size: 1.05rem;
+            transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.2rem;
-            flex-grow: 1; /* Allow container to grow and push footer down */
-        }
-
-        /* --- Header --- */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 2.5rem 0 2rem 0;
-            margin-bottom: 2.5rem;
-            box-shadow: var(--shadow);
             position: relative;
-            border-radius: 0 0 24px 24px;
+            overflow-x: hidden;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-secondary);
+            transform: translateY(-1px);
+        }
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 0 2.5rem;
+            position: relative;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .header-content {
@@ -59,45 +144,62 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            position: relative;
-            z-index: 2;
         }
 
         .profile-container {
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            border: 4px solid var(--white);
-            overflow: hidden;
+            padding: 2px;
+            border: 1px solid var(--border);
             margin-bottom: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.13);
+            background: var(--bg-secondary);
+        }
+
+        .profile-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
         }
 
         .profile-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transform: scale(1.2);
         }
 
         .blog-title {
-            font-size: 2.2rem;
+            font-family: var(--font-heading);
+            font-size: 2rem;
             font-weight: 800;
-            margin-bottom: 0.3rem;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .typed-cursor {
+            color: var(--accent);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         .blog-subtitle {
-            font-size: 1.1rem;
-            font-weight: 400;
-            opacity: 0.92;
+            font-size: 0.95rem;
+            font-weight: 500;
             margin-bottom: 1.5rem;
-            color: #e1e5eb;
+            color: var(--text-secondary);
         }
 
+        /* Navigation */
         nav {
             width: 100%;
-            max-width: 600px;
+            max-width: 450px;
             margin-top: 0.5rem;
         }
 
@@ -105,615 +207,584 @@
             display: flex;
             justify-content: center;
             list-style: none;
-            gap: 1.2rem;
-            padding: 0;
-            flex-wrap: wrap; /* Added for responsiveness */
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .nav-links a {
-            color: var(--white);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 1.08rem;
-            font-weight: 600;
-            padding: 0.5rem 1.1rem;
-            border-radius: var(--border-radius);
-            transition: background var(--transition), color var(--transition);
-            letter-spacing: 0.02em;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
         }
 
-        .nav-links a:hover,
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
         .nav-links a.active {
-            background-color: rgba(255,255,255,0.18);
-            color: #fff;
+            border-color: var(--border);
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            font-weight: 600;
+            box-shadow: var(--card-shadow);
         }
 
-        .header-social {
-            position: absolute;
-            top: 22px;
-            right: 22px;
-            display: flex;
-            gap: 10px;
-            z-index: 3;
+        main {
+            padding: 3.5rem 0;
         }
 
-        .header-social a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.13);
-            border-radius: 50%;
-            color: var(--white);
-            text-decoration: none;
-            font-size: 18px;
-            transition: background var(--transition), transform var(--transition);
-        }
-
-        .header-social a:hover {
-            background: var(--accent);
-            transform: translateY(-3px) scale(1.08);
-        }
-
-        /* --- Main Content (Tools Section) --- */
-        .tools-section {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 2.5rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 3rem;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--medium-gray);
-            position: relative;
-            letter-spacing: -0.5px;
-            color: var(--primary);
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background-color: var(--accent);
-            border-radius: 2px;
-        }
-
-        .tools-intro { /* Renamed from .tools-intro to match previous fixes, if this was meant to be the main section container */
+        /* Section Intro */
+        .section-intro {
             text-align: center;
-            margin-bottom: 3rem;
+            margin-bottom: 3.5rem;
         }
 
-        .tools-intro h1 {
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
+        .section-intro h2 {
+            font-family: var(--font-heading);
+            font-size: 2.25rem;
             font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
         }
 
-        .tools-intro p {
-            margin-bottom: 1.5rem;
+        .section-intro p {
+            max-width: 600px;
+            margin: 0 auto;
+            color: var(--text-secondary);
             font-size: 1.05rem;
-            line-height: 1.8;
-            color: var(--dark-gray);
-            max-width: 800px;
-            margin: 0 auto 1.5rem auto; /* Center paragraph and add bottom margin */
-        }
-        .tools-intro p strong {
-            color: var(--primary);
+            line-height: 1.6;
         }
 
-
-        .tool-category h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-top: 2.5rem;
-            margin-bottom: 1.2rem;
-            color: var(--secondary);
-            border-bottom: 1px dashed var(--medium-gray);
-            padding-bottom: 0.5rem;
-        }
-
+        /* Tools Grid Layout */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-bottom: 4rem;
+            margin-bottom: 3rem;
         }
 
+        /* Tool Card */
         .tool-card {
-            background: var(--white);
-            border-radius: var(--border-radius);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             padding: 2rem;
-            box-shadow: var(--shadow);
-            transition: transform 0.3s;
+            box-shadow: var(--card-shadow);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            border: 1px solid var(--medium-gray); /* Added for consistency */
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .tool-card:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 8px 32px rgba(44,62,80,0.13);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
         }
 
+        /* Card Header */
         .tool-header {
             display: flex;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
+            align-items: center;
             gap: 1.2rem;
+            margin-bottom: 1.5rem;
         }
 
         .tool-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--accent);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--white);
-            font-size: 1.8rem;
+            font-size: 1.25rem;
             flex-shrink: 0;
         }
 
-        .tool-title {
-            font-size: 1.3rem;
+        .tool-title-block h3 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 0.2rem;
-            color: var(--primary);
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
 
         .tool-meta {
-            color: var(--dark-gray);
-            font-size: 0.93rem;
-            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-family: var(--font-sans);
+            color: var(--text-muted);
+            margin-top: 2px;
         }
 
-        .tool-description {
-            margin-bottom: 1.2rem;
-            line-height: 1.7;
-            font-size: 1.03rem;
-            flex-grow: 1; /* Allows description to take up available space */
+        .tool-description p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
         }
 
+        /* Features List */
         .tool-features {
-            margin-bottom: 1.2rem;
+            margin-bottom: 2rem;
         }
 
         .tool-features h4 {
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--primary);
+            font-family: var(--font-heading);
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
         }
 
         .tool-features ul {
-            padding-left: 1.3rem;
-            list-style: disc; /* Ensure consistent bullet points */
+            list-style: none;
+            padding-left: 0;
         }
 
         .tool-features li {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
             margin-bottom: 0.5rem;
-            color: var(--text); /* Ensure feature text is readable */
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
+        .tool-features li::before {
+            content: "•";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* Action Buttons */
         .tool-actions {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 1rem;
+            justify-content: space-between;
             margin-top: auto;
-        }
-
-        .read-more {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--white);
-            padding: 0.6rem 1.2rem;
-            border-radius: var(--border-radius);
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s;
-            font-size: 1rem;
-        }
-
-        .read-more:hover {
-            background: var(--primary);
+            border-top: 1px solid var(--border);
+            padding-top: 1.2rem;
+            gap: 1rem;
         }
 
         .github-link {
-            color: var(--accent);
-            text-decoration: none;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
             font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
             display: flex;
             align-items: center;
-            font-size: 1rem;
+            gap: 6px;
+            transition: color 0.2s ease;
+        }
+
+        .github-link:hover {
+            color: var(--text-primary);
         }
 
         .github-link i {
-            margin-right: 5px;
+            font-size: 1rem;
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        .btn-disabled {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: -320px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 20px;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            box-shadow: var(--card-shadow);
+            z-index: 2000;
+            transition: right 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toast.show {
+            right: 24px;
+        }
+
+        .toast i {
+            color: var(--accent);
         }
 
         /* Footer */
         footer {
-            background: var(--primary);
-            color: var(--white);
-            padding: 2.5rem 0 1.5rem 0;
-            margin-top: auto; /* Pushes footer to the bottom */
-            border-radius: 24px 24px 0 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 4rem 0 3rem;
+            margin-top: 5rem;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
         }
 
-        .footer-section h3 {
-            font-size: 1.15rem;
-            margin-bottom: 1.1rem;
-            position: relative;
-            padding-bottom: 0.4rem;
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+        }
+
+        .footer-section h4 {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
             font-weight: 700;
-        }
-
-        .footer-section h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 32px;
-            height: 2px;
-            background-color: var(--accent);
-            border-radius: 2px;
+            margin-bottom: 1.25rem;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
         }
 
         .footer-section p {
-            opacity: 0.8;
-            line-height: 1.7;
-            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         .footer-links {
             list-style: none;
-            padding: 0;
         }
 
         .footer-links li {
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.75rem;
         }
 
         .footer-links a {
-            color: rgba(255,255,255,0.85);
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: color var(--transition);
-            font-size: 1rem;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
         }
 
         .footer-links a:hover {
-            color: var(--accent);
+            color: var(--text-primary);
         }
 
-        .footer-social {
+        .social-links {
             display: flex;
             gap: 0.8rem;
-            margin-top: 0.7rem;
         }
 
-        .footer-social a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+        .social-links a {
             width: 36px;
             height: 36px;
-            background: rgba(255,255,255,0.13);
-            border-radius: 50%;
-            color: var(--white);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 18px;
-            transition: background var(--transition), transform var(--transition);
+            transition: all 0.2s ease;
         }
 
-        .footer-social a:hover {
-            background: var(--accent);
-            transform: translateY(-3px) scale(1.08);
+        .social-links a:hover {
+            border-color: var(--text-muted);
+            color: var(--text-primary);
+            background: var(--bg-hover);
         }
 
         .copyright {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
             text-align: center;
-            padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.13);
-            color: rgba(255,255,255,0.7);
-            font-size: 0.95rem;
-        }
-
-        /* --- RESPONSIVE BREAKPOINTS --- */
-        @media (max-width: 992px) {
-            .tool-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            }
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-            .profile-container {
-                width: 100px;
-                height: 100px;
-            }
-            .blog-title {
-                font-size: 2rem;
-            }
-            .blog-subtitle {
-                font-size: 1rem;
-            }
-            .tools-section {
-                padding: 1.5rem;
-            }
-            .section-title {
-                font-size: 1.5rem;
-            }
-            .tool-category h3 {
-                font-size: 1.3rem;
-            }
-            .tool-card {
-                padding: 1.2rem;
-            }
-            .tool-card h4 {
-                font-size: 1.1rem;
-            }
-            .tool-card p {
-                font-size: 0.9rem;
-            }
-            .footer-content {
-                gap: 1.5rem;
-            }
-            .nav-links { /* Adjust gap for smaller screens */
-                gap: 0.8rem;
-            }
-            .nav-links a { /* Smaller padding for smaller nav items */
-                padding: 0.4rem 0.9rem;
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                font-size: 1rem;
-            }
-            .header-social {
-                top: 10px;
-                right: 10px;
-                gap: 8px;
-            }
-            .blog-title {
-                font-size: 1.8rem;
-            }
-            .intro-text p {
-                font-size: 0.95rem;
-            }
-            .tools-section {
-                padding: 1rem;
-            }
-            .tool-grid {
-                grid-template-columns: 1fr; /* Stack tools on very small screens */
-            }
-            .tool-card-header {
-                flex-direction: column; /* Stack icon and title on very small screens */
-                align-items: flex-start;
-            }
-            .tool-icon {
-                margin-right: 0; /* Remove margin when stacked */
-                margin-bottom: 0.5rem; /* Add some space below icon */
-            }
-            .tool-card h4 {
-                font-size: 1.05rem; /* Slightly smaller font for mobile */
-            }
-            .footer-title {
-                font-size: 1.05rem;
-            }
-            .footer-links a {
-                font-size: 0.93rem;
-            }
-            .copyright {
-                font-size: 0.85rem;
-            }
-            .nav-links { /* Stack nav items vertically if needed or spread them */
-                flex-direction: column;
-                gap: 0.5rem; /* Smaller gap when stacked */
-                align-items: center; /* Center items when stacked */
-            }
-            .nav-links a {
-                width: calc(100% - 2.2rem); /* Make links full width minus padding */
-                text-align: center;
-                padding: 0.6rem 1.1rem; /* Adjust padding for better tap area */
-            }
+            font-size: 0.85rem;
+            color: var(--text-muted);
         }
     </style>
 </head>
-<body>
-    <header>
-        <div class="header-social">
-            <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-        </div>
 
+<body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+        <i class="fas fa-sun" id="themeIcon"></i>
+    </button>
+
+    <header>
         <div class="container">
             <div class="header-content">
                 <div class="profile-container">
-                    <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                    <div class="profile-inner">
+                        <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                    </div>
                 </div>
-
-                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
-                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and More.</p>
-
+                <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
+                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.html">Posts</a></li>
-                        <li><a href="whoami.html">Whoami</a></li>
-                        <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html" class="active">Tools</a></li>
+                        <li><a href="whoami.html">About</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li>
+                        <li><a href="tools.html" class="active">Tools</a></li>
                     </ul>
                 </nav>
             </div>
         </div>
     </header>
 
-    <div class="container">
-        <div class="tools-intro">
-            <h1>Security Tools</h1>
-            <p>Collection of open-source security tools I've developed to help bug bounty hunters, pentesters, and security researchers work more efficiently.</p>
+    <main>
+        <div class="container">
+            <div class="section-intro">
+                <h2>Security Tools</h2>
+                <p>A collection of open-source security tools and utilities developed for security researchers, penetration testers, and developers.</p>
+            </div>
+
+            <div class="tools-grid">
+                <!-- Extract -->
+                <div class="tool-card">
+                    <div>
+                        <div class="tool-header">
+                            <div class="tool-icon">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="tool-title-block">
+                                <h3>Extract</h3>
+                                <div class="tool-meta">Chrome Extension | Released: May 2025</div>
+                            </div>
+                        </div>
+
+                        <div class="tool-description">
+                            <p>A Chrome extension that automates the discovery of API endpoints directly from inline scripts and external JS files during security assessments.</p>
+                        </div>
+
+                        <div class="tool-features">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>Scans all JS files (inline + external)</li>
+                                <li>Removes duplicate URLs for clean results</li>
+                                <li>Export results as TXT, CSV, or JSON</li>
+                                <li>Live filtering with keywords</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-actions">
+                        <a href="https://github.com/L0C4LH057/Extract.git" class="github-link" target="_blank">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="extract.html" class="btn-action btn-primary">View Details</a>
+                    </div>
+                </div>
+
+                <!-- AuthScan -->
+                <div class="tool-card">
+                    <div>
+                        <div class="tool-header">
+                            <div class="tool-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="tool-title-block">
+                                <h3>AuthScan</h3>
+                                <div class="tool-meta">CLI Tool | Coming Soon</div>
+                            </div>
+                        </div>
+
+                        <div class="tool-description">
+                            <p>Automated authentication testing tool that identifies vulnerabilities in login mechanisms, session management, and access controls.</p>
+                        </div>
+
+                        <div class="tool-features">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>Tests for common auth vulnerabilities</li>
+                                <li>Supports multiple authentication protocols</li>
+                                <li>Generates detailed security reports</li>
+                                <li>CI/CD pipeline integration</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-actions">
+                        <a href="#" class="github-link" onclick="event.preventDefault(); showToast('Repository coming soon!');">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <span class="btn-action btn-disabled">Coming Soon</span>
+                    </div>
+                </div>
+
+                <!-- AI-Sec -->
+                <div class="tool-card">
+                    <div>
+                        <div class="tool-header">
+                            <div class="tool-icon">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="tool-title-block">
+                                <h3>AI-Sec</h3>
+                                <div class="tool-meta">Python Package | Coming Soon</div>
+                            </div>
+                        </div>
+
+                        <div class="tool-description">
+                            <p>Security testing framework for AI applications that identifies vulnerabilities in machine learning models and AI-powered systems.</p>
+                        </div>
+
+                        <div class="tool-features">
+                            <h4>Key Features</h4>
+                            <ul>
+                                <li>Prompt injection testing</li>
+                                <li>Model evasion techniques</li>
+                                <li>Training data extraction</li>
+                                <li>API security assessments</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="tool-actions">
+                        <a href="#" class="github-link" onclick="event.preventDefault(); showToast('Repository coming soon!');">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <span class="btn-action btn-disabled">Coming Soon</span>
+                    </div>
+                </div>
+            </div>
         </div>
+    </main>
 
-        <div class="tools-grid">
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <div>
-                        <h2 class="tool-title">Extract</h2>
-                        <div class="tool-meta">Chrome Extension | Released: May 2025</div>
-                    </div>
-                </div>
-
-                <div class="tool-description">
-                    <p>A Chrome extension that automates the discovery of API endpoints directly from inline scripts and external JS files during security assessments.</p>
-                </div>
-
-                <div class="tool-features">
-                    <h4>Key Features:</h4>
-                    <ul>
-                        <li>Scans all JS files (inline + external)</li>
-                        <li>Removes duplicate URLs for clean results</li>
-                        <li>Export results as TXT, CSV, or JSON</li>
-                        <li>Live filtering with keywords</li>
-                    </ul>
-                </div>
-
-                <div class="tool-actions">
-                    <a href="https://github.com/L0C4LH057/Extract.git" class="github-link" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="extract.html" class="read-more">Read More</a>
-                </div>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <div>
-                        <h2 class="tool-title">AuthScan</h2>
-                        <div class="tool-meta">CLI Tool | Coming Soon</div>
-                    </div>
-                </div>
-
-                <div class="tool-description">
-                    <p>Automated authentication testing tool that identifies vulnerabilities in login mechanisms, session management, and access controls.</p>
-                </div>
-
-                <div class="tool-features">
-                    <h4>Key Features:</h4>
-                    <ul>
-                        <li>Tests for common auth vulnerabilities</li>
-                        <li>Supports multiple authentication protocols</li>
-                        <li>Generates detailed security reports</li>
-                        <li>CI/CD pipeline integration</li>
-                    </ul>
-                </div>
-
-                <div class="tool-actions">
-                    <a href="#" class="github-link" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="#" class="read-more">Coming Soon</a>
-                </div>
-            </div>
-
-            <div class="tool-card">
-                <div class="tool-header">
-                    <div class="tool-icon">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div>
-                        <h2 class="tool-title">AI-Sec</h2>
-                        <div class="tool-meta">Python Package | Coming Soon</div>
-                    </div>
-                </div>
-
-                <div class="tool-description">
-                    <p>Security testing framework for AI applications that identifies vulnerabilities in machine learning models and AI-powered systems.</p>
-                </div>
-
-                <div class="tool-features">
-                    <h4>Key Features:</h4>
-                    <ul>
-                        <li>Prompt injection testing</li>
-                        <li>Model evasion techniques</li>
-                        <li>Training data extraction</li>
-                        <li>API security assessments</li>
-                    </ul>
-                </div>
-
-                <div class="tool-actions">
-                    <a href="#" class="github-link" target="_blank">
-                        <i class="fab fa-github"></i> GitHub
-                    </a>
-                    <a href="#" class="read-more">Coming Soon</a>
-                </div>
-            </div>
-        </div>
+    <!-- Notification Toast -->
+    <div id="cyberToast" class="toast">
+        <i class="fas fa-info-circle"></i>
+        <span id="toastMsg">Action complete</span>
     </div>
 
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Bashir Kabir Zarewa</h3>
-                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+                    <h4>Bashir Kabir Zarewa</h4>
+                    <p style="margin-top: 0.5rem;">Cybersecurity researcher and software developer. Focusing on offensive security, AI vulnerabilities, and defensive software engineering.</p>
                 </div>
-
                 <div class="footer-section">
-                    <h3>Navigation</h3>
+                    <h4>Navigation</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="whoami.html">Whoami</a></li>
-                        <li><a href="write-ups.html">Write Ups</a></li> <li><a href="tools.html">Tools</a></li>
-                        <li><a href="#">Categories</a></li>
+                        <li><a href="index.html">Posts</a></li>
+                        <li><a href="whoami.html">About</a></li>
+                        <li><a href="write-ups.html">Write Ups</a></li>
+                        <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-section">
-                    <h3>Connect</h3>
-                    <p>Follow me on social media to get the latest updates and engage with my content.</p>
-                    <div class="footer-social">
-                        <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <h4>Links</h4>
+                    <div class="social-links" style="margin-top: 0.5rem;">
+                        <a href="https://x.com/bashirkabirz" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
-
             <div class="copyright">
-                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved.
             </div>
         </div>
     </footer>
 
     <script>
-        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+        document.addEventListener('DOMContentLoaded', function () {
+            // General setup
+            document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+            // Typed Title Animation
+            const titleText = "Bashir Kabir Zarewa";
+            const typedTitle = document.getElementById('typed-title');
+            const cursor = document.querySelector('.typed-cursor');
+            let typeIdx = 0;
+
+            function typeWriter() {
+                if (typeIdx <= titleText.length) {
+                    typedTitle.textContent = titleText.slice(0, typeIdx);
+                    typeIdx++;
+                    setTimeout(typeWriter, 120);
+                } else {
+                    cursor.style.display = 'none';
+                }
+            }
+            typeWriter();
+
+            // Toast Notifier
+            const toastEl = document.getElementById('cyberToast');
+            const toastMsgEl = document.getElementById('toastMsg');
+            let toastTimer;
+
+            window.showToast = function(msg) {
+                clearTimeout(toastTimer);
+                toastMsgEl.textContent = msg;
+                toastEl.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toastEl.classList.remove('show');
+                }, 3000);
+            }
+
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const savedTheme = localStorage.getItem('blog-theme') || 'dark';
+
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('blog-theme', next);
+                updateThemeIcon(next);
+                showToast(`Theme changed to ${next}`);
+            });
+
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        });
     </script>
 </body>
+
 </html>

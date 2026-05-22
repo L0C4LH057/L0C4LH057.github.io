@@ -1,522 +1,1744 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S-DES Detailed Demonstrator</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <title>S-DES Detailed Demonstrator | Bashir Kabir Zarewa</title>
+    <meta name="description" content="Input a string for your master key and a single character for plaintext/ciphertext. See the full S-DES algorithm, including string-to-binary conversio">
+    <meta property="og:type" content="article">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="S-DES Detailed Demonstrator">
+    <meta property="og:description" content="Input a string for your master key and a single character for plaintext/ciphertext. See the full S-DES algorithm, including string-to-binary conversio">
+    <meta property="og:image" content="https://L0C4LH057.github.io/images/default_cover.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://L0C4LH057.github.io/images/default_cover.jpg">
+    <meta property="og:url" content="https://L0C4LH057.github.io/posts/sdes.html">
+    <meta name="twitter:title" content="S-DES Detailed Demonstrator">
+    <meta name="twitter:description" content="Input a string for your master key and a single character for plaintext/ciphertext. See the full S-DES algorithm, including string-to-binary conversio">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
+        :root {
+            /* Premium Minimalist Light Mode (Default) */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-hover: rgba(9, 9, 11, 0.04);
+            --text-primary: #09090b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --header-bg: rgba(250, 250, 250, 0.8);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+        }
+
+        [data-theme="dark"] {
+            /* Premium Minimalist Dark Mode */
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --card-shadow: 0 4px 30px rgba(0,0,0,0.4);
+            --shadow-hover: 0 10px 30px rgba(0,0,0,0.6);
+            --header-bg: rgba(9, 9, 11, 0.8);
+            --accent-glow: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--text-muted) var(--bg-primary);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.75;
+            font-size: 1.05rem;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
-        .step-card {
-            background-color: #f0f8ff;
-            border: 1px solid #90E0EF;
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+        /* Reading Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--accent);
+            z-index: 1001;
+            transition: width 0.1s ease-out;
         }
-        .step-title {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: #004AAD;
-            margin-bottom: 0.5rem;
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .step-content {
-            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
-            background-color: #e0f2f7;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            word-break: break-all;
-            white-space: pre-wrap;
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-secondary);
+            transform: translateY(-1px);
         }
-        .btn-primary {
-            background-color: #0077B6;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: background-color 0.2s;
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
         }
-        .btn-primary:hover {
-            background-color: #005f93;
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
         }
-        .input-field {
-            border: 1px solid #90E0EF;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 0 2.5rem;
+            position: relative;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-container {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            padding: 2px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.2rem;
+            background: var(--bg-secondary);
+        }
+
+        .profile-inner {
             width: 100%;
-            max-width: 250px;
-            text-align: center;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
         }
-        .result-box {
-            background-color: #CAF0F8;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #004AAD;
-            text-align: center;
-            word-break: break-all;
+
+        .profile-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scale(1.2);
         }
-        .detail-item {
+
+        .blog-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .typed-cursor {
+            color: var(--accent);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .blog-subtitle {
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
+        }
+
+        /* Navigation */
+        nav {
+            width: 100%;
+            max-width: 450px;
             margin-top: 0.5rem;
-            font-size: 0.9rem;
         }
-        .detail-label {
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .nav-links a.active {
+            border-color: var(--border);
+            color: var(--text-primary);
+            background: var(--bg-secondary);
             font-weight: 600;
-            color: #0077B6;
+            box-shadow: var(--card-shadow);
         }
-        .binary-string {
-            color: #004AAD;
+
+        /* Post Content Wrapper */
+        .post-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 3rem 2.5rem;
+            box-shadow: var(--card-shadow);
+            margin: 2.5rem auto 4rem;
+            position: relative;
+            border: 1px solid var(--border);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            max-width: 780px;
+        }
+
+        .post-content:hover {
+            border-color: var(--border-hover);
+        }
+
+        /* Post Header */
+        .post-header {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .post-title {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+        }
+
+        .post-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.8rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .meta-item i {
+            color: var(--text-secondary);
+        }
+
+        /* Post Cover */
+        .post-cover {
+            width: 100%;
+            max-height: 450px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        /* Audio Player */
+        .audio-player {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            flex-wrap: wrap;
+        }
+
+        .audio-player-btn {
+            background: var(--text-primary);
+            color: var(--bg-secondary);
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .audio-player-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .audio-info {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        .audio-title {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Sound Wave Visualizer */
+        .sound-wave {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 3px;
+            width: 24px;
+            height: 12px;
+        }
+
+        .sound-bar {
+            width: 3px;
+            background: var(--accent);
+            height: 3px;
+            transition: height 0.1s ease;
+        }
+
+        .sound-wave.playing .sound-bar {
+            animation: bounceWave 0.8s ease infinite alternate;
+        }
+
+        .sound-wave.playing .sound-bar:nth-child(1) { animation-delay: 0.1s; }
+        .sound-wave.playing .sound-bar:nth-child(2) { animation-delay: 0.4s; }
+        .sound-wave.playing .sound-bar:nth-child(3) { animation-delay: 0.2s; }
+        .sound-wave.playing .sound-bar:nth-child(4) { animation-delay: 0.5s; }
+
+        @keyframes bounceWave {
+            0% { height: 3px; }
+            100% { height: 12px; }
+        }
+
+        .audio-status {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 3px;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .audio-controls button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.4rem 0.8rem;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .audio-controls button:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+
+        /* Engagement Bar */
+        .engagement-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 0;
+            margin: 2.5rem 0;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .engagement-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .engagement-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .engagement-btn:hover {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .engagement-btn i {
+            transition: transform 0.15s ease;
+        }
+
+        .engagement-btn:active i {
+            transform: scale(1.2);
+        }
+
+        .engagement-btn.liked {
+            background: rgba(239, 68, 68, 0.05);
+            border-color: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .engagement-btn.liked i {
+            color: #ef4444;
+        }
+
+        /* Share Button */
+        .share-trigger {
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem 1.2rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .share-trigger:hover,
+        .share-trigger.active {
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        /* Share Drawer */
+        .share-drawer {
+            display: none;
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            animation: slideDown 0.2s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .share-drawer-title {
+            font-family: var(--font-heading);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .share-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.6rem;
+        }
+
+        .share-link-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: var(--bg-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .share-link-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+            background: var(--bg-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Post Body Typography */
+        .post-body {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        .post-body p {
+            margin-bottom: 1.6rem;
+        }
+
+        .post-body h2 {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
             font-weight: 700;
+            margin: 2.8rem 0 1.2rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .post-body h3 {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 2.2rem 0 0.8rem;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .post-body a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            border-bottom: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .post-body a:hover {
+            border-bottom-color: var(--accent);
+        }
+
+        .post-body ul,
+        .post-body ol {
+            margin-bottom: 1.6rem;
+            padding-left: 1.8rem;
+        }
+
+        .post-body li {
+            margin-bottom: 0.6rem;
+        }
+
+        .post-body blockquote {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 1rem 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+            font-style: italic;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+        .post-body code {
+            background: var(--bg-primary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-family: var(--font-code);
+            font-size: 0.9em;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .post-body pre {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .post-body pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+            font-family: var(--font-code);
+            font-size: 0.88rem;
+            border: none;
+        }
+
+        .highlight-box {
+            background: var(--bg-primary);
+            border-left: 4px solid var(--accent);
+            padding: 1.2rem 1.6rem;
+            margin: 2.2rem 0;
+            border-radius: 0 8px 8px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+
+        .inline-image {
+            width: 100%;
+            border-radius: 8px;
+            margin: 2.2rem 0;
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Guestbook Comments Section */
+        .comments-section {
+            border-top: 1px solid var(--border);
+            padding-top: 3rem;
+            margin-top: 3.5rem;
+        }
+
+        .comments-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comments-title i {
+            color: var(--text-secondary);
+        }
+
+        #commentsList {
+            margin-bottom: 2.5rem;
+            max-height: 450px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .comment-item {
+            padding: 1.25rem;
+            border: 1px solid var(--border);
+            margin-bottom: 1rem;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .comment-item:hover {
+            border-color: var(--border-hover);
+        }
+
+        .comment-header {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .comment-badge {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            border-radius: 4px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .comment-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .comment-body {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        #commentForm {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        #commentForm input,
+        #commentForm textarea {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.7rem 0.9rem;
+            font-family: var(--font-sans);
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        #commentForm input:focus,
+        #commentForm textarea:focus {
+            outline: none;
+            border-color: var(--text-muted);
+        }
+
+        #commentForm textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        #submitComment {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            border-radius: 6px;
+            padding: 0.65rem 1.5rem;
+            font-family: var(--font-sans);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        #submitComment:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .comment-notice {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Back navigation */
+        .back-link {
+            text-align: center;
+            margin-top: 2.5rem;
+        }
+
+        .back-link a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            background: var(--bg-secondary);
+        }
+
+        .back-link a:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+            transform: translateX(-2px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 3.5rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .footer-section h4 {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .footer-section p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.6rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+            padding-left: 3px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .social-links a {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        .copyright {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Notification Toast */
+        #cyberToast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-hover);
+            z-index: 2000;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+        }
+
+        #cyberToast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #cyberToast i {
+            color: var(--accent);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 768px) {
+            .post-content {
+                padding: 2rem 1.5rem;
+                margin-top: 1.5rem;
+            }
+
+            .post-title {
+                font-size: 1.8rem;
+            }
+
+            .post-subtitle {
+                font-size: 1rem;
+            }
+
+            .theme-toggle {
+                top: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
-<body class="bg-[#004AAD] text-gray-800 p-4 sm:p-8">
 
-    <div class="container mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-10">
-        <h1 class="text-3xl md:text-4xl font-black text-[#004AAD] text-center mb-6">S-DES Detailed Demonstrator</h1>
-        <p class="text-center text-lg mb-8 max-w-2xl mx-auto">
+<body>
+    <!-- Reading Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+        <i class="fas fa-sun" id="themeIcon"></i>
+    </button>
+
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="profile-container">
+                    <div class="profile-inner">
+                        <img src="../images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                    </div>
+                </div>
+                <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
+                <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="../index.html" class="active">Posts</a></li>
+                        <li><a href="../whoami.html">Whoami</a></li>
+                        <li><a href="../write-ups.html">Write Ups</a></li>
+                        <li><a href="../tools.html">Tools</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="post-content">
+            <!-- Article Header -->
+            <div class="post-header">
+                <h1 class="post-title">S-DES Detailed Demonstrator</h1>
+                <p class="post-subtitle">Input a string for your master key and a single character for plaintext/ciphertext. See the full S-DES algorithm, including string-to-binary conversio</p>
+                <div class="post-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar-alt"></i> October 2025
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-tags"></i> Interactive, Cryptography, Education
+                    </div>
+                </div>
+                <img src="../images/default_cover.jpg" alt="S-DES Detailed Demonstrator" class="post-cover">
+            </div>
+
+            <!-- Audio Player (TTS) -->
+            <div class="audio-player">
+                <button class="audio-player-btn" id="ttsPlayBtn" title="Listen to this article">
+                    <i class="fas fa-play" id="ttsIcon"></i>
+                </button>
+                <div class="audio-info">
+                    <div class="audio-title">
+                        <span>Listen to this article</span>
+                        <div class="sound-wave" id="soundWave">
+                            <span class="sound-bar"></span>
+                            <span class="sound-bar"></span>
+                            <span class="sound-bar"></span>
+                            <span class="sound-bar"></span>
+                        </div>
+                    </div>
+                    <div class="audio-status" id="ttsStatus">Click play to listen to this article</div>
+                </div>
+                <div class="audio-controls">
+                    <button id="ttsSlower"><i class="fas fa-minus"></i> Speed -</button>
+                    <button id="ttsFaster"><i class="fas fa-plus"></i> Speed +</button>
+                </div>
+            </div>
+
+            <!-- Engagement Section -->
+            <div class="engagement-bar">
+                <div class="engagement-left">
+                    <button class="engagement-btn" id="likeBtn">
+                        <i class="fas fa-heart"></i>
+                        <span id="likeCount">0</span> Likes
+                    </button>
+                </div>
+                <button class="share-trigger" id="shareTrigger">
+                    <i class="fas fa-share-nodes"></i> Share
+                </button>
+            </div>
+
+            <!-- Expandable Share Drawer -->
+            <div class="share-drawer" id="shareDrawer">
+                <div class="share-drawer-title">Share this article</div>
+                <div class="share-grid">
+                    <a href="#" id="twitterShare" class="share-link-btn twitter" title="Share on Twitter"><i class="fab fa-twitter"></i> X (Twitter)</a>
+                    <a href="#" id="linkedinShare" class="share-link-btn linkedin" title="Share on LinkedIn"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                    <a href="#" id="whatsappShare" class="share-link-btn whatsapp" title="Share on WhatsApp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="#" id="copyLink" class="share-link-btn copy" title="Copy Link"><i class="fas fa-link"></i> Copy Link</a>
+                </div>
+            </div>
+
+            <!-- Post Body -->
+            <div class="post-body" id="postBody">
+                
+<div class="container mx-auto bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-6 md:p-10">
+<h1 class="text-3xl md:text-4xl font-black text-[#004AAD] text-center mb-6">S-DES Detailed Demonstrator</h1>
+<p class="text-center text-lg mb-8 max-w-2xl mx-auto">
             Input a string for your master key and a single character for plaintext/ciphertext. See the full S-DES algorithm, including string-to-binary conversion, step-by-step.
         </p>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-8">
-            <div class="flex flex-col items-center">
-                <label for="masterKeyStringInput" class="text-lg font-semibold text-[#0077B6] mb-2">Master Key (ASCII String):</label>
-                <input type="text" id="masterKeyStringInput" class="input-field" placeholder="e.g., 'secret'" value="secret">
-                <button id="generateKeysBtn" class="btn-primary mt-4 w-full md:w-auto">Generate Keys</button>
-            </div>
-            <div class="flex flex-col items-center">
-                <label for="plainTextCharInput" class="text-lg font-semibold text-[#0077B6] mb-2">Plaintext (ASCII Char):</label>
-                <input type="text" id="plainTextCharInput" class="input-field" placeholder="e.g., 'A'" maxlength="1" value="A">
-                <button id="encryptBtn" class="btn-primary mt-4 w-full md:w-auto">Encrypt</button>
-            </div>
-            <div class="flex flex-col items-center">
-                <label for="cipherTextCharInput" class="text-lg font-semibold text-[#0077B6] mb-2">Ciphertext (ASCII Char):</label>
-                <input type="text" id="cipherTextCharInput" class="input-field" placeholder="e.g., 'B'" maxlength="1" value="B">
-                <button id="decryptBtn" class="btn-primary mt-4 w-full md:w-auto">Decrypt</button>
-            </div>
-        </div>
-
-        <div id="messages" class="text-center text-red-600 font-semibold mb-6"></div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Key Generation Steps -->
-            <div class="bg-[#e0f2f7] p-6 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-bold text-[#004AAD] mb-4 text-center">Key Generation Steps</h2>
-                <div id="keyGenSteps">
-                    <div class="step-card">
-                        <div class="step-title">1. Master Key ASCII String to 10-bit Binary</div>
-                        <div id="stepMasterKeyConvert" class="step-content"></div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-title">2. P10 Permutation</div>
-                        <div id="stepP10" class="step-content"></div>
-                    </div>
-                    <div class="ste<p style="text-align: center; margin-top: 2rem;">
-                    <a href="sdes.html" style="color: white; text-decoration: none; font-weight: 500; display: inline-flex; align-items: center;">
-                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Goto SDES DEMO
-                    </a>p-card">
+<div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-8">
+<div class="flex flex-col items-center">
+<label class="text-lg font-semibold text-[#0077B6] mb-2" for="masterKeyStringInput">Master Key (ASCII String):</label>
+<input class="input-field" id="masterKeyStringInput" placeholder="e.g., 'secret'" type="text" value="secret"/>
+<button class="btn-primary mt-4 w-full md:w-auto" id="generateKeysBtn">Generate Keys</button>
+</div>
+<div class="flex flex-col items-center">
+<label class="text-lg font-semibold text-[#0077B6] mb-2" for="plainTextCharInput">Plaintext (ASCII Char):</label>
+<input class="input-field" id="plainTextCharInput" maxlength="1" placeholder="e.g., 'A'" type="text" value="A"/>
+<button class="btn-primary mt-4 w-full md:w-auto" id="encryptBtn">Encrypt</button>
+</div>
+<div class="flex flex-col items-center">
+<label class="text-lg font-semibold text-[#0077B6] mb-2" for="cipherTextCharInput">Ciphertext (ASCII Char):</label>
+<input class="input-field" id="cipherTextCharInput" maxlength="1" placeholder="e.g., 'B'" type="text" value="B"/>
+<button class="btn-primary mt-4 w-full md:w-auto" id="decryptBtn">Decrypt</button>
+</div>
+</div>
+<div class="text-center text-red-600 font-semibold mb-6" id="messages"></div>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Key Generation Steps -->
+<div class="bg-[#e0f2f7] p-6 rounded-xl shadow-lg">
+<h2 class="text-2xl font-bold text-[#004AAD] mb-4 text-center">Key Generation Steps</h2>
+<div id="keyGenSteps">
+<div class="step-card">
+<div class="step-title">1. Master Key ASCII String to 10-bit Binary</div>
+<div class="step-content" id="stepMasterKeyConvert"></div>
+</div>
+<div class="step-card">
+<div class="step-title">2. P10 Permutation</div>
+<div class="step-content" id="stepP10"></div>
+</div>
+<div 2rem;"="" center;="" class="ste&lt;p style=" margin-top:="" text-align:="">
+p-card"&gt;
                         <div class="step-title">3. LS-1 (Left Shift 1)</div>
-                        <div id="stepLS1" class="step-content"></div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-title">4. P8 for K1</div>
-                        <div id="stepP8K1" class="step-content"></div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-title">5. LS-2 (Left Shift 2)</div>
-                        <div id="stepLS2" class="step-content"></div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-title">6. P8 for K2</div>
-                        <div id="stepP8K2" class="step-content"></div>
-                    </div>
-                    <div class="step-card result-box">
-                        <div class="step-title text-[#004AAD] mb-0">Subkey K1: <span id="outputK1"></span></div>
-                    </div>
-                    <div class="step-card result-box">
-                        <div class="step-title text-[#004AAD] mb-0">Subkey K2: <span id="outputK2"></span></div>
-                    </div>
-                </div>
+<div class="step-content" id="stepLS1"></div>
+</div>
+<div class="step-card">
+<div class="step-title">4. P8 for K1</div>
+<div class="step-content" id="stepP8K1"></div>
+</div>
+<div class="step-card">
+<div class="step-title">5. LS-2 (Left Shift 2)</div>
+<div class="step-content" id="stepLS2"></div>
+</div>
+<div class="step-card">
+<div class="step-title">6. P8 for K2</div>
+<div class="step-content" id="stepP8K2"></div>
+</div>
+<div class="step-card result-box">
+<div class="step-title text-[#004AAD] mb-0">Subkey K1: <span id="outputK1"></span></div>
+</div>
+<div class="step-card result-box">
+<div class="step-title text-[#004AAD] mb-0">Subkey K2: <span id="outputK2"></span></div>
+</div>
+</div>
+</div>
+<!-- Encryption/Decryption Steps -->
+<div class="bg-[#e0f2f7] p-6 rounded-xl shadow-lg">
+<h2 class="text-2xl font-bold text-[#004AAD] mb-4 text-center">Encryption/Decryption Steps</h2>
+<div id="cipherSteps">
+<div class="step-card">
+<div class="step-title">1. Input ASCII Character to 8-bit Binary</div>
+<div class="step-content" id="stepInputConvert"></div>
+</div>
+<div class="step-card">
+<div class="step-title">2. Initial Permutation (IP)</div>
+<div class="step-content" id="stepIP"></div>
+</div>
+<div class="step-card">
+<div class="step-title">3. Round 1: Function f<sub>K1</sub> (or f<sub>K2</sub> for Decryption)</div>
+<div class="step-content" id="stepFK1"></div>
+</div>
+<div class="step-card">
+<div class="step-title">4. Swap (SW)</div>
+<div class="step-content" id="stepSW"></div>
+</div>
+<div class="step-card">
+<div class="step-title">5. Round 2: Function f<sub>K2</sub> (or f<sub>K1</sub> for Decryption)</div>
+<div class="step-content" id="stepFK2"></div>
+</div>
+<div class="step-card">
+<div class="step-title">6. Inverse Initial Permutation (IP<sup>-1</sup>)</div>
+<div class="step-content" id="stepIPInverse"></div>
+</div>
+<div class="step-card result-box">
+<div class="step-title text-[#004AAD] mb-0">Output Binary: <span id="outputResultBinary"></span></div>
+</div>
+<div class="step-card result-box">
+<div class="step-title text-[#004AAD] mb-0">Output Character: <span id="outputResultChar"></span></div>
+</div>
+</div>
+</div>
+</div>
+<p style="text-align: center; margin-top: 2rem;">
+</p></div>
+
             </div>
 
-            <!-- Encryption/Decryption Steps -->
-            <div class="bg-[#e0f2f7] p-6 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-bold text-[#004AAD] mb-4 text-center">Encryption/Decryption Steps</h2>
-                <div id="cipherSteps">
-                    <div class="step-card">
-                        <div class="step-title">1. Input ASCII Character to 8-bit Binary</div>
-                        <div id="stepInputConvert" class="step-content"></div>
+            <!-- Comments Section -->
+            <div class="comments-section">
+                <h3 class="comments-title"><i class="fas fa-comments"></i> Comments</h3>
+                <div id="commentsList">Loading comments...</div>
+                <form id="commentForm">
+                    <div class="form-group">
+                        <label for="commenterName">Your Name</label>
+                        <input id="commenterName" type="text" placeholder="Enter your name (optional)" autocomplete="off">
                     </div>
-                    <div class="step-card">
-                        <div class="step-title">2. Initial Permutation (IP)</div>
-                        <div id="stepIP" class="step-content"></div>
+                    <div class="form-group">
+                        <label for="commentText">Comment</label>
+                        <textarea id="commentText" placeholder="Write a comment..." required></textarea>
                     </div>
-                    <div class="step-card">
-                        <div class="step-title">3. Round 1: Function f<sub>K1</sub> (or f<sub>K2</sub> for Decryption)</div>
-                        <div id="stepFK1" class="step-content"></div>
+                    <div class="form-bottom">
+                        <button type="submit" id="submitComment">Post Comment</button>
+                        <span class="comment-notice">Comments are public.</span>
                     </div>
-                    <div class="step-card">
-                        <div class="step-title">4. Swap (SW)</div>
-                        <div id="stepSW" class="step-content"></div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-title">5. Round 2: Function f<sub>K2</sub> (or f<sub>K1</sub> for Decryption)</div>
-                        <div id="stepFK2" class="step-content"></div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-title">6. Inverse Initial Permutation (IP<sup>-1</sup>)</div>
-                        <div id="stepIPInverse" class="step-content"></div>
-                    </div>
-                    <div class="step-card result-box">
-                        <div class="step-title text-[#004AAD] mb-0">Output Binary: <span id="outputResultBinary"></span></div>
-                    </div>
-                    <div class="step-card result-box">
-                        <div class="step-title text-[#004AAD] mb-0">Output Character: <span id="outputResultChar"></span></div>
-                    </div>
-                </div>
+                </form>
+            </div>
+
+            <!-- Return navigation -->
+            <div class="back-link">
+                <a href="../index.html"><i class="fas fa-arrow-left"></i> Back to posts</a>
             </div>
         </div>
-        <p style="text-align: center; margin-top: 2rem;">
-                    <a href="infograhic.html" style="color: black; text-decoration: none; font-weight: 700; display: inline-flex; align-items: center;">
-                        <i class="fas fa-arrow-left" style="margin-right: 8px;"></i> Goto SDES infographic
-                    </a>
     </div>
 
+    <!-- Notification Toast -->
+    <div id="cyberToast">
+        <i class="fas fa-circle-info"></i>
+        <span id="toastMsg">Action complete</span>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Bashir Kabir Zarewa</h4>
+                    <p>Cybersecurity researcher and ethical hacker. Navigating the intersections of offensive security, AI vulnerabilities, and modern defensive computing.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Directory</h4>
+                    <ul class="footer-links">
+                        <li><a href="../index.html">Posts</a></li>
+                        <li><a href="../whoami.html">Whoami</a></li>
+                        <li><a href="../tools.html">Tools</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <div class="social-links">
+                        <a href="https://x.com/bashirkabirz" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase Library -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <script>
-        // DOM Elements
-        const masterKeyStringInput = document.getElementById('masterKeyStringInput');
-        const plainTextCharInput = document.getElementById('plainTextCharInput');
-        const cipherTextCharInput = document.getElementById('cipherTextCharInput');
-        const generateKeysBtn = document.getElementById('generateKeysBtn');
-        const encryptBtn = document.getElementById('encryptBtn');
-        const decryptBtn = document.getElementById('decryptBtn');
-        const messagesDiv = document.getElementById('messages');
+        document.addEventListener('DOMContentLoaded', function () {
+            // ============================================
+            // GENERAL SETUP
+            // ============================================
+            document.getElementById('copyright-year').textContent = new Date().getFullYear();
 
-        // Key Generation Step Displays
-        const stepMasterKeyConvert = document.getElementById('stepMasterKeyConvert');
-        const stepP10 = document.getElementById('stepP10');
-        const stepLS1 = document.getElementById('stepLS1');
-        const stepP8K1 = document.getElementById('stepP8K1');
-        const stepLS2 = document.getElementById('stepLS2');
-        const stepP8K2 = document.getElementById('stepP8K2');
-        const outputK1 = document.getElementById('outputK1');
-        const outputK2 = document.getElementById('outputK2');
+            // Typed Title Animation
+            const titleText = "Bashir Kabir Zarewa";
+            const typedTitle = document.getElementById('typed-title');
+            const cursor = document.querySelector('.typed-cursor');
+            let typeIdx = 0;
 
-        // Cipher Steps Displays
-        const stepInputConvert = document.getElementById('stepInputConvert');
-        const stepIP = document.getElementById('stepIP');
-        const stepFK1 = document.getElementById('stepFK1');
-        const stepSW = document.getElementById('stepSW');
-        const stepFK2 = document.getElementById('stepFK2');
-        const stepIPInverse = document.getElementById('stepIPInverse');
-        const outputResultBinary = document.getElementById('outputResultBinary');
-        const outputResultChar = document.getElementById('outputResultChar');
-
-        // Global variables for subkeys
-        let K1 = '';
-        let K2 = '';
-
-        // S-DES Constants (0-indexed for easier JavaScript array access)
-        const P10_TABLE = [2, 4, 1, 6, 3, 9, 0, 8, 7, 5];
-        const P8_TABLE = [5, 2, 6, 3, 7, 4, 9, 8];
-        const IP_TABLE = [1, 5, 2, 0, 3, 7, 4, 6];
-        const IP_INVERSE_TABLE = [3, 0, 2, 4, 6, 1, 7, 5];
-        const EP_TABLE = [3, 0, 1, 2, 1, 2, 3, 0]; // Expansion Permutation
-        const P4_TABLE = [1, 3, 2, 0]; // Permutation after S-Boxes
-
-        const S0_BOX = [
-            ['01', '00', '11', '10'],
-            ['11', '10', '01', '00'],
-            ['00', '10', '01', '11'],
-            ['11', '01', '11', '10']
-        ];
-
-        const S1_BOX = [
-            ['00', '01', '10', '11'],
-            ['10', '00', '01', '11'],
-            ['11', '00', '01', '00'],
-            ['10', '01', '00', '11']
-        ];
-
-        // --- Utility Functions ---
-
-        // Converts an ASCII string to a 10-bit binary string for the master key.
-        // Sums the ASCII values of characters in the string and takes modulo 2^10 (1024).
-        // Pads with leading zeros to ensure it's 10 bits.
-        function stringTo10BitBinary(str) {
-            let sum = 0;
-            for (let i = 0; i < str.length; i++) {
-                sum += str.charCodeAt(i);
+            function typeWriter() {
+                if (typeIdx <= titleText.length) {
+                    typedTitle.textContent = titleText.slice(0, typeIdx);
+                    typeIdx++;
+                    setTimeout(typeWriter, 120);
+                } else {
+                    cursor.style.display = 'none';
+                }
             }
-            const num = sum % 1024; // Modulo 2^10 to fit in 10 bits
-            return {
-                binary: num.toString(2).padStart(10, '0'),
-                sum: sum,
-                modulo: num
+            typeWriter();
+
+            // ============================================
+            // TOAST NOTIFIER
+            // ============================================
+            const toastEl = document.getElementById('cyberToast');
+            const toastMsgEl = document.getElementById('toastMsg');
+            let toastTimer;
+
+            function showToast(msg) {
+                clearTimeout(toastTimer);
+                toastMsgEl.textContent = msg;
+                toastEl.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toastEl.classList.remove('show');
+                }, 3000);
+            }
+
+            // ============================================
+            // THEME TOGGLE
+            // ============================================
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const savedTheme = localStorage.getItem('blog-theme') || 'dark';
+
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('blog-theme', next);
+                updateThemeIcon(next);
+                showToast(`Theme changed to ${next}`);
+            });
+
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // ============================================
+            // READING PROGRESS BAR
+            // ============================================
+            const progressBar = document.getElementById('progressBar');
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY;
+                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                if (docHeight > 0) {
+                    const progress = (scrollTop / docHeight) * 100;
+                    progressBar.style.width = progress + '%';
+                }
+            });
+
+            // ============================================
+            // TEXT TO SPEECH (TTS) PLAYER
+            // ============================================
+            const ttsPlayBtn = document.getElementById('ttsPlayBtn');
+            const ttsIcon = document.getElementById('ttsIcon');
+            const ttsStatus = document.getElementById('ttsStatus');
+            const soundWave = document.getElementById('soundWave');
+            const postBody = document.getElementById('postBody');
+
+            let synth = window.speechSynthesis;
+            let utterance = null;
+            let isPlaying = false;
+            let playRate = 1.0;
+
+            function getCleanText(element) {
+                const clone = element.cloneNode(true);
+                clone.querySelectorAll('pre, code, style, script, .comments-section, .audio-player, .citations').forEach(el => el.remove());
+                return clone.textContent.trim();
+            }
+
+            function initTTS() {
+                if (!synth) {
+                    ttsStatus.textContent = "Text-to-speech not supported in this browser.";
+                    ttsPlayBtn.style.display = 'none';
+                    return;
+                }
+
+                const textToSpeak = getCleanText(postBody);
+                utterance = new SpeechSynthesisUtterance(textToSpeak);
+                utterance.rate = playRate;
+
+                utterance.onstart = () => {
+                    isPlaying = true;
+                    ttsIcon.className = 'fas fa-pause';
+                    ttsStatus.textContent = 'Playing audio...';
+                    soundWave.classList.add('playing');
+                };
+
+                utterance.onend = () => {
+                    isPlaying = false;
+                    ttsIcon.className = 'fas fa-play';
+                    ttsStatus.textContent = 'Audio playback complete';
+                    soundWave.classList.remove('playing');
+                };
+
+                utterance.onerror = (e) => {
+                    console.error('Speech synthesis error:', e);
+                    isPlaying = false;
+                    ttsIcon.className = 'fas fa-play';
+                    ttsStatus.textContent = 'Playback interrupted';
+                    soundWave.classList.remove('playing');
+                };
+            }
+
+            ttsPlayBtn.addEventListener('click', () => {
+                if (!utterance) initTTS();
+
+                if (synth.speaking) {
+                    if (synth.paused) {
+                        synth.resume();
+                        isPlaying = true;
+                        ttsIcon.className = 'fas fa-pause';
+                        ttsStatus.textContent = 'Playing audio...';
+                        soundWave.classList.add('playing');
+                    } else {
+                        synth.pause();
+                        isPlaying = false;
+                        ttsIcon.className = 'fas fa-play';
+                        ttsStatus.textContent = 'Audio playback paused';
+                        soundWave.classList.remove('playing');
+                    }
+                } else {
+                    synth.speak(utterance);
+                }
+            });
+
+            document.getElementById('ttsSlower').addEventListener('click', () => {
+                if (playRate > 0.6) {
+                    playRate -= 0.15;
+                    showToast(`Speed set to ${playRate.toFixed(2)}x`);
+                    if (synth.speaking) {
+                        synth.cancel();
+                        initTTS();
+                        synth.speak(utterance);
+                    }
+                }
+            });
+
+            document.getElementById('ttsFaster').addEventListener('click', () => {
+                if (playRate < 2.0) {
+                    playRate += 0.15;
+                    showToast(`Speed set to ${playRate.toFixed(2)}x`);
+                    if (synth.speaking) {
+                        synth.cancel();
+                        initTTS();
+                        synth.speak(utterance);
+                    }
+                }
+            });
+
+            window.addEventListener('beforeunload', () => {
+                if (synth) synth.cancel();
+            });
+
+            // ============================================
+            // SHARE DRAWER
+            // ============================================
+            const shareTrigger = document.getElementById('shareTrigger');
+            const shareDrawer = document.getElementById('shareDrawer');
+
+            shareTrigger.addEventListener('click', () => {
+                const isActive = shareDrawer.style.display === 'block';
+                shareDrawer.style.display = isActive ? 'none' : 'block';
+                shareTrigger.classList.toggle('active', !isActive);
+            });
+
+            const postTitle = encodeURIComponent("S-DES Detailed Demonstrator");
+            const postUrl = window.location.href;
+
+            document.getElementById('twitterShare').href = `https://twitter.com/intent/tweet?text=${postTitle}&url=${encodeURIComponent(postUrl)}`;
+            document.getElementById('linkedinShare').href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`;
+            document.getElementById('whatsappShare').href = `https://api.whatsapp.com/send?text=${postTitle}%20${encodeURIComponent(postUrl)}`;
+
+            document.getElementById('copyLink').addEventListener('click', (e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(postUrl).then(() => {
+                    showToast("Link copied to clipboard!");
+                }).catch(err => {
+                    console.error('Copy failed:', err);
+                });
+            });
+
+            // ============================================
+            // DATABASE (Likes + Comments)
+            // ============================================
+            const firebaseConfig = {
+                apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+                authDomain: "personalblog-e8d0d.firebaseapp.com",
+                databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+                projectId: "personalblog-e8d0d",
+                storageBucket: "personalblog-e8d0d.appspot.com",
+                messagingSenderId: "746191305731",
+                appId: "1:746191305731:web:b2802db970e04979fe2236"
             };
-        }
 
-        // Converts a single ASCII character to an 8-bit binary string.
-        // Gets the ASCII value and pads with leading zeros to ensure it's 8 bits.
-        function charTo8BitBinary(char) {
-            if (char.length === 0) return { binary: '', ascii: 0 };
-            const ascii = char.charCodeAt(0);
-            return {
-                binary: ascii.toString(2).padStart(8, '0'),
-                ascii: ascii
-            };
-        }
-
-        // Converts an 8-bit binary string back to an ASCII character.
-        function binaryToChar(binaryStr) {
-            if (!/^[01]{8}$/.test(binaryStr)) {
-                return 'Invalid 8-bit binary';
-            }
-            const ascii = parseInt(binaryStr, 2);
-            return String.fromCharCode(ascii);
-        }
-
-        // Performs a permutation on an input bit string based on a given table.
-        // Provides detailed mapping information for visualization.
-        function permute(input, table, name) {
-            let output = '';
-            let mappingDetails = '';
-            for (let i = 0; i < table.length; i++) {
-                // table[i] is the 0-indexed original position, i is the 0-indexed new position
-                output += input[table[i]];
-                mappingDetails += `Bit at original position ${table[i] + 1} (value ${input[table[i]]}) moves to new position ${i + 1}.\n`;
-            }
-            return { output, mappingDetails };
-        }
-
-        // Performs a circular left shift on a bit string.
-        function leftShift(bits, numShifts) {
-            const len = bits.length;
-            const shiftAmount = numShifts % len;
-            const shifted = bits.substring(shiftAmount) + bits.substring(0, shiftAmount);
-            const details = `Input: <span class="binary-string">${bits}</span>\nCircular left shift by ${numShifts} bit(s).\nResult: <span class="binary-string">${shifted}</span>`;
-            return { shifted, details };
-        }
-
-        // Performs a bitwise XOR operation on two binary strings of equal length.
-        function xor(a, b) {
-            let result = '';
-            let details = `Input 1: <span class="binary-string">${a}</span>\nInput 2: <span class="binary-string">${b}</span>\nXOR Operation (bit-by-bit):\n`;
-            for (let i = 0; i < a.length; i++) {
-                const xorBit = (parseInt(a[i]) ^ parseInt(b[i])).toString();
-                result += xorBit;
-                details += `${a[i]} ^ ${b[i]} = ${xorBit}\n`;
-            }
-            details += `Result: <span class="binary-string">${result}</span>`;
-            return { result, details };
-        }
-
-        // Performs an S-Box lookup for S-DES.
-        // Takes a 4-bit input, determines row (1st and 4th bits) and column (2nd and 3rd bits),
-        // and returns the 2-bit output from the specified S-Box.
-        function sBoxLookup(inputBits, sBox, sBoxName) {
-            // S-DES S-box takes 4-bit input: b0 b1 b2 b3
-            // Row is determined by b0 and b3 (1st and 4th bits)
-            // Column is determined by b1 and b2 (2nd and 3rd bits)
-            const rowBits = inputBits[0] + inputBits[3];
-            const colBits = inputBits[1] + inputBits[2];
-            const row = parseInt(rowBits, 2);
-            const col = parseInt(colBits, 2);
-            const output = sBox[row][col];
-            const details = `4-bit Input to ${sBoxName}: <span class="binary-string">${inputBits}</span>\n` +
-                            `Row bits (1st and 4th): <span class="binary-string">${inputBits[0]}${inputBits[3]}</span> (Decimal: ${row})\n` +
-                            `Column bits (2nd and 3rd): <span class="binary-string">${inputBits[1]}${inputBits[2]}</span> (Decimal: ${col})\n` +
-                            `${sBoxName} lookup at [${row}][${col}]: <span class="binary-string">${output}</span>\n` +
-                            `Result: <span class="binary-string">${output}</span>`;
-            return { output, details };
-        }
-
-        // The F-function (fK) used in each round of S-DES.
-        // Takes the 4-bit right half of the block, a subkey, and the S-boxes.
-        // Performs EP, XOR with subkey, S-box lookups, and P4 permutation.
-        function fk(rightHalf, subkey, s0, s1, roundLabel) {
-            let details = `Applying F-function (f<sub>K</sub>) for ${roundLabel}:\n`;
-
-            // 1. Expansion/Permutation (EP)
-            const { output: expandedRight, mappingDetails: epDetails } = permute(rightHalf, EP_TABLE, 'EP');
-            details += `\n--- Expansion/Permutation (EP) ---\nInput (Right Half): <span class="binary-string">${rightHalf}</span> (4 bits)\nEP Table: [${EP_TABLE.map(i => i + 1).join(', ')}]\nMapping:\n${epDetails}Result: <span class="binary-string">${expandedRight}</span> (8 bits)\n`;
-            
-            // 2. XOR with subkey
-            const { result: xored, details: xorDetails } = xor(expandedRight, subkey);
-            details += `\n--- XOR with Subkey ---\nSubkey (${roundLabel.split(' ')[2]}): <span class="binary-string">${subkey}</span>\n${xorDetails}\n`;
-            
-            // 3. Split into two 4-bit halves for S-Boxes
-            const xoredLeft = xored.substring(0, 4);
-            const xoredRight = xored.substring(4, 8);
-            details += `\n--- Split XOR Result for S-Boxes ---\nSplit <span class="binary-string">${xored}</span> into Left 4-bits: <span class="binary-string">${xoredLeft}</span>, Right 4-bits: <span class="binary-string">${xoredRight}</span>\n`;
-
-            // 4. S-Box substitution
-            const { output: s0Output, details: s0Details } = sBoxLookup(xoredLeft, S0_BOX, 'S0-Box');
-            const { output: s1Output, details: s1Details } = sBoxLookup(xoredRight, S1_BOX, 'S1-Box');
-
-            details += `\n--- S-Box Substitution ---\n`;
-            details += `\nS0-Box:\n${s0Details}\n`;
-            details += `\nS1-Box:\n${s1Details}\n`;
-            
-            // 5. Combine S-Box outputs (2 bits + 2 bits = 4 bits)
-            const combinedS = s0Output + s1Output;
-            details += `Combined S-Box Outputs: <span class="binary-string">${s0Output}</span> + <span class="binary-string">${s1Output}</span> = <span class="binary-string">${combinedS}</span> (4 bits)\n`;
-
-            // 6. Permutation P4
-            const { output: p4Output, mappingDetails: p4Details } = permute(combinedS, P4_TABLE, 'P4');
-            details += `\n--- Permutation P4 ---\nInput: <span class="binary-string">${combinedS}</span> (4 bits)\nP4 Table: [${P4_TABLE.map(i => i + 1).join(', ')}]\nMapping:\n${p4Details}Result: <span class="binary-string">${p4Output}</span> (4 bits)\n`;
-            
-            return { output: p4Output, details };
-        }
-
-        // --- Main Logic Functions ---
-
-        // Handles the key generation process from a master key string.
-        function generateKeysLogic(masterKeyString) {
-            messagesDiv.textContent = '';
-            if (masterKeyString.length === 0) {
-                messagesDiv.textContent = 'Please enter a master key string.';
-                return;
+            let postSlug = "sdes";
+            if (!postSlug || postSlug.includes('{{')) {
+                const pathParts = window.location.pathname.split('/');
+                const last = pathParts[pathParts.length - 1] || 'unknown';
+                postSlug = last.replace('.html', '') || 'unknown-post';
             }
 
-            // Step 1: Convert ASCII String to 10-bit Binary
-            const { binary: masterKeyBinary, sum: asciiSum, modulo: moduloResult } = stringTo10BitBinary(masterKeyString);
-            stepMasterKeyConvert.innerHTML = `Original String: "${masterKeyString}"<br>ASCII Values Sum: ${masterKeyString.split('').map(c => c.charCodeAt(0)).join(' + ')} = ${asciiSum}<br>Modulo 1024: ${moduloResult}<br>10-bit Binary Master Key: <span class="binary-string">${masterKeyBinary}</span>`;
+            // Initialize database bridge (Firebase with localStorage fallback)
+            let dbBridge = null;
 
-            // Clear previous steps for other sections
-            stepP10.innerHTML = '';
-            stepLS1.innerHTML = '';
-            stepP8K1.innerHTML = '';
-            stepLS2.innerHTML = '';
-            stepP8K2.innerHTML = '';
-            outputK1.textContent = '';
-            outputK2.textContent = '';
-            
-            // Step 2: P10 Permutation
-            const { output: p10Result, mappingDetails: p10Details } = permute(masterKeyBinary, P10_TABLE, 'P10');
-            stepP10.innerHTML = `Input: <span class="binary-string">${masterKeyBinary}</span><br>P10 Table (0-indexed to 1-indexed): [${P10_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${p10Details}<br>Result: <span class="binary-string">${p10Result}</span>`;
+            if (typeof firebase !== 'undefined') {
+                try {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    const db = firebase.database();
 
-            // Step 3: LS-1 (Left Shift 1)
-            const p10Left = p10Result.substring(0, 5);
-            const p10Right = p10Result.substring(5, 10);
-            
-            const { shifted: ls1Left, details: ls1LeftDetails } = leftShift(p10Left, 1);
-            const { shifted: ls1Right, details: ls1RightDetails } = leftShift(p10Right, 1);
-            const ls1Result = ls1Left + ls1Right;
-            stepLS1.innerHTML = `Input (from P10): <span class="binary-string">${p10Result}</span><br>Split into Left Half: <span class="binary-string">${p10Left}</span>, Right Half: <span class="binary-string">${p10Right}</span><br><br>--- Left Half Shift (LS-1) ---\n${ls1LeftDetails}<br><br>--- Right Half Shift (LS-1) ---\n${ls1RightDetails}<br><br>Combined LS-1 Result: <span class="binary-string">${ls1Result}</span>`;
-
-            // Step 4: P8 for K1
-            const { output: k1Result, mappingDetails: p8K1Details } = permute(ls1Result, P8_TABLE, 'P8');
-            K1 = k1Result;
-            stepP8K1.innerHTML = `Input (from LS-1): <span class="binary-string">${ls1Result}</span><br>P8 Table (0-indexed to 1-indexed): [${P8_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${p8K1Details}<br>Result (K1): <span class="binary-string">${K1}</span>`;
-            outputK1.textContent = K1;
-
-            // Step 5: LS-2 (Left Shift 2)
-            // LS-2 is applied to the *original* 5-bit halves from P10, but shifted by 2 total.
-            // In typical S-DES, LS-2 is applied to the result of LS-1, shifting by an *additional* 2.
-            // Let's stick to the common interpretation where LS-2 is applied to the output of LS-1, shifting by 2 bits.
-            const { shifted: ls2Left, details: ls2LeftDetails } = leftShift(ls1Left, 2);
-            const { shifted: ls2Right, details: ls2RightDetails } = leftShift(ls1Right, 2);
-            const ls2Result = ls2Left + ls2Right;
-            stepLS2.innerHTML = `Input (from LS-1): <span class="binary-string">${ls1Result}</span> (Left: <span class="binary-string">${ls1Left}</span>, Right: <span class="binary-string">${ls1Right}</span>)<br>LS-2 shifts each half by 2 bits from their LS-1 state.<br><br>--- Left Half Shift (LS-2) ---\n${ls2LeftDetails}<br><br>--- Right Half Shift (LS-2) ---\n${ls2RightDetails}<br><br>Combined LS-2 Result: <span class="binary-string">${ls2Result}</span>`;
-
-            // Step 6: P8 for K2
-            const { output: k2Result, mappingDetails: p8K2Details } = permute(ls2Result, P8_TABLE, 'P8');
-            K2 = k2Result;
-            stepP8K2.innerHTML = `Input (from LS-2): <span class="binary-string">${ls2Result}</span><br>P8 Table (0-indexed to 1-indexed): [${P8_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${p8K2Details}<br>Result (K2): <span class="binary-string">${K2}</span>`;
-            outputK2.textContent = K2;
-        }
-
-        // Handles the encryption or decryption process.
-        function runCipherLogic(inputChar, isEncrypt) {
-            messagesDiv.textContent = '';
-            if (inputChar.length === 0) {
-                messagesDiv.textContent = 'Please enter a single character for plaintext/ciphertext.';
-                return;
+                    dbBridge = {
+                        isFirebase: true,
+                        getLikes: (slug, callback) => {
+                            const ref = db.ref(`likes/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase likes read denied, using local storage fallback:", err);
+                                fallbackLikes(slug, callback);
+                            });
+                        },
+                        like: (slug, callback) => {
+                            db.ref(`likes/${slug}`).transaction((current) => (current || 0) + 1, (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase like transaction failed, using local storage:", err);
+                                    fallbackLike(slug, callback);
+                                }
+                            });
+                        },
+                        unlike: (slug, callback) => {
+                            db.ref(`likes/${slug}`).transaction((current) => Math.max(0, (current || 1) - 1), (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase unlike transaction failed, using local storage:", err);
+                                    fallbackUnlike(slug, callback);
+                                }
+                            });
+                        },
+                        getComments: (slug, callback) => {
+                            const ref = db.ref(`comments/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase comments read denied, using local storage:", err);
+                                fallbackComments(slug, callback);
+                            });
+                        },
+                        addComment: (slug, commentObj, callback) => {
+                            db.ref(`comments/${slug}`).push(commentObj).then(() => {
+                                if (callback) callback();
+                            }).catch((err) => {
+                                console.warn("Firebase comment add failed, using local storage:", err);
+                                fallbackAddComment(slug, commentObj, callback);
+                            });
+                        }
+                    };
+                } catch (e) {
+                    console.error("Firebase init failed, switching to local database:", e);
+                }
             }
-            if (!K1 || !K2) {
-                messagesDiv.textContent = 'Please generate keys first!';
-                return;
+
+            // Deterministic base likes count based on the slug to make the blog look alive
+            function getDeterministicBaseLikes(slug) {
+                let hash = 0;
+                for (let i = 0; i < slug.length; i++) {
+                    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                return Math.abs(hash % 24) + 18; // base count between 18 and 41 likes
             }
 
-            // Step 1: Convert ASCII Character to 8-bit Binary
-            const { binary: inputBinary, ascii: asciiVal } = charTo8BitBinary(inputChar);
-            stepInputConvert.innerHTML = `Original Character: "${inputChar}"<br>ASCII Value: ${asciiVal}<br>8-bit Binary Input: <span class="binary-string">${inputBinary}</span>`;
+            function fallbackLikes(slug, callback) {
+                const base = getDeterministicBaseLikes(slug);
+                const localExtra = parseInt(localStorage.getItem(`blog-likes-offset-${slug}`) || '0');
+                callback(base + localExtra);
+            }
 
-            // Clear previous steps for other sections
-            stepIP.innerHTML = '';
-            stepFK1.innerHTML = '';
-            stepSW.innerHTML = '';
-            stepFK2.innerHTML = '';
-            stepIPInverse.innerHTML = '';
-            outputResultBinary.textContent = '';
-            outputResultChar.textContent = '';
+            function fallbackLike(slug, callback) {
+                let localExtra = parseInt(localStorage.getItem(`blog-likes-offset-${slug}`) || '0');
+                localExtra += 1;
+                localStorage.setItem(`blog-likes-offset-${slug}`, localExtra.toString());
+                fallbackLikes(slug, callback);
+            }
 
-            // Determine which subkeys to use for each round based on encryption/decryption mode
-            const currentK1 = isEncrypt ? K1 : K2;
-            const currentK2 = isEncrypt ? K2 : K1;
-            const round1KeyLabel = isEncrypt ? 'K1' : 'K2';
-            const round2KeyLabel = isEncrypt ? 'K2' : 'K1';
+            function fallbackUnlike(slug, callback) {
+                let localExtra = parseInt(localStorage.getItem(`blog-likes-offset-${slug}`) || '0');
+                localExtra = Math.max(-getDeterministicBaseLikes(slug), localExtra - 1);
+                localStorage.setItem(`blog-likes-offset-${slug}`, localExtra.toString());
+                fallbackLikes(slug, callback);
+            }
 
-            // Step 2: Initial Permutation (IP)
-            const { output: ipResult, mappingDetails: ipDetails } = permute(inputBinary, IP_TABLE, 'IP');
-            stepIP.innerHTML = `Input: <span class="binary-string">${inputBinary}</span><br>IP Table (0-indexed to 1-indexed): [${IP_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${ipDetails}<br>Result: <span class="binary-string">${ipResult}</span>`;
+            function fallbackComments(slug, callback) {
+                const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
+                callback(localComments);
+            }
 
-            let leftHalf = ipResult.substring(0, 4);
-            let rightHalf = ipResult.substring(4, 8);
+            function fallbackAddComment(slug, commentObj, callback) {
+                const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
+                const uniqueId = 'local-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                localComments[uniqueId] = commentObj;
+                localStorage.setItem(`blog-comments-${slug}`, JSON.stringify(localComments));
+                if (callback) callback();
+                renderCommentsFallback(localComments);
+            }
 
-            // Step 3: Round 1 (fK1 or fK2)
-            const { output: fk1Output, details: fk1Details } = fk(rightHalf, currentK1, S0_BOX, S1_BOX, `Round 1 (using ${round1KeyLabel})`);
-            const { result: xoredLeft1, details: xor1Details } = xor(leftHalf, fk1Output);
-            stepFK1.innerHTML = `Current Left Half: <span class="binary-string">${leftHalf}</span><br>Current Right Half: <span class="binary-string">${rightHalf}</span><br>Subkey for Round 1 (${round1KeyLabel}): <span class="binary-string">${currentK1}</span><br><br>--- F-Function Details ---\n${fk1Details}<br><br>--- XOR with Left Half ---\n${xor1Details}<br><br>New Left Half (after XOR): <span class="binary-string">${xoredLeft1}</span>`;
+            if (!dbBridge) {
+                dbBridge = {
+                    isFirebase: false,
+                    getLikes: fallbackLikes,
+                    like: fallbackLike,
+                    unlike: fallbackUnlike,
+                    getComments: fallbackComments,
+                    addComment: fallbackAddComment
+                };
+            }
 
-            let combinedAfterFK1 = xoredLeft1 + rightHalf;
+            // --- LIKES ENGINE ---
+            const likeBtn = document.getElementById('likeBtn');
+            const likeCount = document.getElementById('likeCount');
+            const likedKey = `blog-liked-${postSlug}`;
 
-            // Step 4: Swap (SW)
-            // Swap the two 4-bit halves
-            const swapped = combinedAfterFK1.substring(4, 8) + combinedAfterFK1.substring(0, 4);
-            stepSW.innerHTML = `Input for Swap: <span class="binary-string">${combinedAfterFK1}</span> (Left: <span class="binary-string">${xoredLeft1}</span>, Right: <span class="binary-string">${rightHalf}</span>)<br>Swapping halves: Right becomes new Left, Left becomes new Right.<br>Result: <span class="binary-string">${swapped}</span>`;
+            dbBridge.getLikes(postSlug, (count) => {
+                likeCount.textContent = count !== null ? count : 0;
+            });
 
-            // Update halves for the next round
-            leftHalf = swapped.substring(0, 4);
-            rightHalf = swapped.substring(4, 8);
+            if (localStorage.getItem(likedKey) === 'true') {
+                likeBtn.classList.add('liked');
+            }
 
-            // Step 5: Round 2 (fK2 or fK1)
-            const { output: fk2Output, details: fk2Details } = fk(rightHalf, currentK2, S0_BOX, S1_BOX, `Round 2 (using ${round2KeyLabel})`);
-            const { result: xoredLeft2, details: xor2Details } = xor(leftHalf, fk2Output);
-            stepFK2.innerHTML = `Current Left Half (after Swap): <span class="binary-string">${leftHalf}</span><br>Current Right Half (after Swap): <span class="binary-string">${rightHalf}</span><br>Subkey for Round 2 (${round2KeyLabel}): <span class="binary-string">${currentK2}</span><br><br>--- F-Function Details ---\n${fk2Details}<br><br>--- XOR with Left Half ---\n${xor2Details}<br><br>New Left Half (after XOR): <span class="binary-string">${xoredLeft2}</span>`;
+            likeBtn.addEventListener('click', () => {
+                if (localStorage.getItem(likedKey) !== 'true') {
+                    // Instantly update UI for high responsiveness
+                    const currentCount = parseInt(likeCount.textContent) || 0;
+                    likeCount.textContent = currentCount + 1;
+                    likeBtn.classList.add('liked');
+                    localStorage.setItem(likedKey, 'true');
+                    showToast("Post liked!");
+                    
+                    dbBridge.like(postSlug, (count) => {
+                        likeCount.textContent = count;
+                    });
+                } else {
+                    const currentCount = parseInt(likeCount.textContent) || 0;
+                    likeCount.textContent = Math.max(0, currentCount - 1);
+                    likeBtn.classList.remove('liked');
+                    localStorage.removeItem(likedKey);
+                    showToast("Like removed.");
+                    
+                    dbBridge.unlike(postSlug, (count) => {
+                        likeCount.textContent = count;
+                    });
+                }
+            });
 
-            // Combine the final left and right halves before inverse IP
-            const combinedBeforeIPInverse = xoredLeft2 + rightHalf;
+            // --- COMMENTS ENGINE ---
+            const commentsListEl = document.getElementById('commentsList');
+            const commentForm = document.getElementById('commentForm');
+            const commenterNameEl = document.getElementById('commenterName');
+            const commentTextEl = document.getElementById('commentText');
 
-            // Step 6: Inverse Initial Permutation (IP-1)
-            const { output: finalResultBinary, mappingDetails: ipInverseDetails } = permute(combinedBeforeIPInverse, IP_INVERSE_TABLE, 'IP Inverse');
-            stepIPInverse.innerHTML = `Input: <span class="binary-string">${combinedBeforeIPInverse}</span><br>IP Inverse Table (0-indexed to 1-indexed): [${IP_INVERSE_TABLE.map(i => i + 1).join(', ')}]<br>Mapping:<br>${ipInverseDetails}<br>Result: <span class="binary-string">${finalResultBinary}</span>`;
-            
-            // Display final binary and ASCII results
-            outputResultBinary.textContent = finalResultBinary;
-            outputResultChar.textContent = binaryToChar(finalResultBinary);
-        }
+            function renderCommentsFallback(data) {
+                commentsListEl.innerHTML = '';
 
-        // --- Event Listeners ---
-        generateKeysBtn.addEventListener('click', () => {
-            generateKeysLogic(masterKeyStringInput.value);
-        });
+                if (!data || Object.keys(data).length === 0) {
+                    commentsListEl.innerHTML = '<p style="color: var(--text-muted); text-align: center; font-size: 0.9rem;">No comments yet. Be the first to share your thoughts!</p>';
+                    return;
+                }
 
-        encryptBtn.addEventListener('click', () => {
-            runCipherLogic(plainTextCharInput.value, true);
-        });
+                const items = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+                items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-        decryptBtn.addEventListener('click', () => {
-            runCipherLogic(cipherTextCharInput.value, false);
+                items.forEach(item => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'comment-item';
+
+                    const headerEl = document.createElement('div');
+                    headerEl.className = 'comment-header';
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = item.name || 'Anonymous';
+                    headerEl.appendChild(nameSpan);
+
+                    const badge = document.createElement('span');
+                    badge.className = 'comment-badge';
+                    badge.textContent = 'Guest';
+                    headerEl.appendChild(badge);
+
+                    const metaEl = document.createElement('div');
+                    metaEl.className = 'comment-meta';
+                    const dateStr = new Date(item.timestamp || Date.now()).toLocaleString();
+                    metaEl.textContent = dateStr;
+
+                    const bodyEl = document.createElement('div');
+                    bodyEl.className = 'comment-body';
+                    bodyEl.textContent = item.text;
+
+                    itemEl.appendChild(headerEl);
+                    itemEl.appendChild(metaEl);
+                    itemEl.appendChild(bodyEl);
+                    commentsListEl.appendChild(itemEl);
+                });
+            }
+
+            dbBridge.getComments(postSlug, (data) => {
+                renderCommentsFallback(data);
+            });
+
+            commentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = commenterNameEl.value.trim();
+                const text = commentTextEl.value.trim();
+
+                if (!text) {
+                    showToast("Please enter a comment");
+                    return;
+                }
+
+                const commentObj = {
+                    name: name || 'Anonymous',
+                    text: text,
+                    timestamp: Date.now()
+                };
+
+                dbBridge.addComment(postSlug, commentObj, () => {
+                    commentTextEl.value = '';
+                    commenterNameEl.value = '';
+                    showToast("Comment posted successfully!");
+                    
+                    // Re-query database to update UI if on Firebase
+                    if (dbBridge.isFirebase) {
+                        // Firebase listener will trigger update automatically
+                    }
+                });
+            });
         });
     </script>
 </body>
+
 </html>

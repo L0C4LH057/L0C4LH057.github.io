@@ -3,146 +3,91 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="index, follow">
     <meta name="google-site-verification" content="Aa898AoeMuuW_26uHHnabiR59gVv8-o8eO3or1BmKuk" />
     <meta name="msvalidate.01" content="63582FFA42AECA34B358CAB48DCC83C3" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bashir Kabir Zarewa | Hacking, AI, CTFs and More</title>
-    <meta name="description"
-        content="Cybersecurity researcher exploring ethical hacking, AI security, and modern defensive strategies.">
+    <meta name="description" content="Cybersecurity researcher exploring ethical hacking, AI security, and modern defensive strategies.">
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* ============================================
-           PROFESSIONAL PREMIUM BLOG INDEX
-           Dark Theme with Gradient Mesh & Glow Effects
-           ============================================ */
-
         :root {
-            /* Dark Theme - Rich & Premium */
-            --bg-primary: #0a0f1a;
-            --bg-secondary: #111827;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --bg-hover: rgba(20, 184, 166, 0.05);
-
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-
-            --accent: #14b8a6;
-            --accent-light: #2dd4bf;
-            --accent-glow: rgba(20, 184, 166, 0.25);
-            --accent-gradient: linear-gradient(135deg, #14b8a6, #06b6d4);
-
-            --border: rgba(255, 255, 255, 0.08);
-            --border-glow: rgba(20, 184, 166, 0.3);
-            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
-            --shadow-glow: 0 0 30px rgba(20, 184, 166, 0.15);
-
-            --header-bg: linear-gradient(135deg, #0a0f1a 0%, #1e293b 100%);
-            --mesh-gradient:
-                radial-gradient(ellipse at 20% 0%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-                radial-gradient(ellipse at 40% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
+            /* Premium Minimalist Light Mode */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-hover: rgba(9, 9, 11, 0.04);
+            --text-primary: #09090b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --header-bg: rgba(250, 250, 250, 0.8);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
         }
 
-        [data-theme="light"] {
-            --bg-primary: #f8fafc;
-            --bg-secondary: #ffffff;
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --bg-hover: rgba(13, 148, 136, 0.05);
-
-            --text-primary: #0f172a;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-
-            --accent: #0d9488;
-            --accent-light: #14b8a6;
-            --accent-glow: rgba(13, 148, 136, 0.15);
-
-            --border: rgba(0, 0, 0, 0.08);
-            --border-glow: rgba(13, 148, 136, 0.3);
-            --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.08);
-            --shadow-glow: 0 0 30px rgba(13, 148, 136, 0.1);
-
-            --header-bg: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --mesh-gradient: none;
+        [data-theme="dark"] {
+            /* Premium Minimalist Dark Mode */
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --card-shadow: 0 4px 30px rgba(0,0,0,0.4);
+            --shadow-hover: 0 10px 30px rgba(0,0,0,0.6);
+            --header-bg: rgba(9, 9, 11, 0.8);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--text-muted) var(--bg-primary);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: var(--font-sans);
             background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.7;
-            font-size: 1rem;
+            line-height: 1.75;
+            font-size: 1.05rem;
+            transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
             position: relative;
-        }
-
-        /* Gradient Mesh Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: var(--mesh-gradient);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* Animated Particles */
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .particle {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: var(--accent);
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 15s infinite ease-in-out;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 0.3;
-            }
-
-            90% {
-                opacity: 0.3;
-            }
-
-            100% {
-                transform: translateY(-100vh) rotate(720deg);
-                opacity: 0;
-            }
+            overflow-x: hidden;
         }
 
         /* Theme Toggle */
@@ -151,63 +96,52 @@
             top: 20px;
             right: 20px;
             z-index: 999;
-            background: var(--bg-card);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 50px;
-            padding: 12px 16px;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
             cursor: pointer;
-            backdrop-filter: blur(20px);
-            box-shadow: var(--shadow-soft);
-            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
         }
 
         .theme-toggle:hover {
-            border-color: var(--accent);
-            box-shadow: var(--shadow-glow);
-            transform: translateY(-2px);
+            background: var(--bg-hover);
+            border-color: var(--text-secondary);
+            transform: translateY(-1px);
         }
 
         .theme-toggle i {
             font-size: 1.1rem;
-            color: var(--accent);
+            color: var(--text-secondary);
         }
 
         /* Container */
         .container {
-            max-width: 1100px;
+            max-width: 1000px;
             margin: 0 auto;
             padding: 0 1.5rem;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         /* Header */
         header {
             background: var(--header-bg);
-            color: #fff;
-            padding: 4rem 0 3rem;
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 0 2.5rem;
             position: relative;
-            overflow: hidden;
-        }
-
-        header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background:
-                radial-gradient(circle at 20% 80%, rgba(20, 184, 166, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .header-content {
-            position: relative;
-            z-index: 2;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -215,13 +149,13 @@
         }
 
         .profile-container {
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            padding: 3px;
-            background: var(--accent-gradient);
-            margin-bottom: 1.5rem;
-            box-shadow: 0 0 40px rgba(20, 184, 166, 0.3);
+            padding: 2px;
+            border: 1px solid var(--border);
+            margin-bottom: 1.2rem;
+            background: var(--bg-secondary);
         }
 
         .profile-inner {
@@ -229,52 +163,48 @@
             height: 100%;
             border-radius: 50%;
             overflow: hidden;
-            border: 3px solid var(--bg-primary);
         }
 
         .profile-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transform: scale(1.2);
         }
 
         .blog-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
         }
 
         .typed-cursor {
+            color: var(--accent);
             animation: blink 1s infinite;
-            -webkit-text-fill-color: var(--accent);
         }
 
         @keyframes blink {
-
-            0%,
-            50% {
-                opacity: 1;
-            }
-
-            51%,
-            100% {
-                opacity: 0;
-            }
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         .blog-subtitle {
-            font-size: 1rem;
-            font-weight: 400;
-            margin-bottom: 2rem;
-            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--text-secondary);
         }
 
         /* Navigation */
+        nav {
+            width: 100%;
+            max-width: 450px;
+            margin-top: 0.5rem;
+        }
+
         .nav-links {
             display: flex;
             justify-content: center;
@@ -284,133 +214,98 @@
         }
 
         .nav-links a {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
             font-weight: 500;
-            padding: 0.6rem 1.2rem;
-            border-radius: 25px;
-            transition: all 0.3s ease;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
             border: 1px solid transparent;
+            transition: all 0.2s ease;
         }
 
-        .nav-links a:hover,
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
         .nav-links a.active {
-            background: rgba(20, 184, 166, 0.15);
-            border-color: rgba(20, 184, 166, 0.3);
-            color: var(--accent-light);
+            border-color: var(--border);
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            font-weight: 600;
+            box-shadow: var(--card-shadow);
         }
 
-        /* Header Social */
-        .header-social {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            display: flex;
-            gap: 10px;
-            z-index: 3;
-        }
-
-        .header-social a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .header-social a:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(20, 184, 166, 0.4);
-        }
-
-        /* Main Content */
         main {
             padding: 3rem 0;
         }
 
-        /* Section Title */
-        .section-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 24px;
-            background: var(--accent-gradient);
-            border-radius: 2px;
-        }
-
         /* Featured Hero */
         .featured-hero {
-            background: var(--bg-card);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 24px;
+            border-radius: 12px;
             overflow: hidden;
-            margin-bottom: 3rem;
-            backdrop-filter: blur(20px);
-            position: relative;
+            margin-bottom: 3.5rem;
+            box-shadow: var(--card-shadow);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .featured-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: var(--accent-gradient);
+        .featured-hero:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
         }
 
         .featured-hero-inner {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 2rem;
-            padding: 2rem;
+            display: flex;
+            flex-direction: row;
+        }
+
+        @media (max-width: 768px) {
+            .featured-hero-inner {
+                flex-direction: column;
+            }
         }
 
         .featured-image-container {
+            flex: 1.2;
             position: relative;
-            border-radius: 16px;
-            overflow: hidden;
+            min-height: 280px;
         }
 
         .featured-image {
             width: 100%;
-            height: 280px;
+            height: 100%;
             object-fit: cover;
+            display: block;
         }
 
         .featured-badge {
             position: absolute;
-            top: 12px;
-            left: 12px;
-            background: var(--accent-gradient);
-            color: #fff;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
+            top: 16px;
+            left: 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 4px 10px;
             font-size: 0.75rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .featured-badge i {
+            color: #eab308;
         }
 
         .featured-content {
+            flex: 1;
+            padding: 2.5rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -419,33 +314,30 @@
         .featured-meta {
             display: flex;
             gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
             margin-bottom: 1rem;
-            flex-wrap: wrap;
         }
 
         .featured-meta-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .featured-meta-item i {
-            color: var(--accent);
+            gap: 4px;
         }
 
         .featured-content h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 0.8rem;
+            font-family: var(--font-heading);
+            font-size: 1.75rem;
+            font-weight: 800;
             line-height: 1.3;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
         }
 
         .featured-content h2 a {
             color: var(--text-primary);
             text-decoration: none;
-            transition: color 0.2s;
+            transition: color 0.2s ease;
         }
 
         .featured-content h2 a:hover {
@@ -454,288 +346,254 @@
 
         .featured-excerpt {
             color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
             margin-bottom: 1.5rem;
-            line-height: 1.7;
         }
 
         .read-more-btn {
+            align-self: flex-start;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: var(--accent-gradient);
-            color: #fff;
-            padding: 0.8rem 1.5rem;
-            border-radius: 30px;
+            color: var(--text-primary);
             text-decoration: none;
+            font-size: 0.875rem;
             font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
         .read-more-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+            color: var(--accent);
+            transform: translateX(2px);
+        }
+
+        /* Section Title */
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
         }
 
         /* Posts Grid */
         .posts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
         }
 
-        /* Post Card with Animated Border */
         .post-card {
-            background: var(--bg-card);
-            border-radius: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             overflow: hidden;
-            position: relative;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-        }
-
-        .post-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(135deg, var(--border), transparent, var(--border));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--card-shadow);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .post-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .post-card:hover::before {
-            background: linear-gradient(135deg, var(--accent), transparent, var(--accent-light));
-            animation: borderGlow 3s linear infinite;
-        }
-
-        @keyframes borderGlow {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.5;
-            }
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
         }
 
         .post-thumb-container {
-            position: relative;
             height: 180px;
             overflow: hidden;
+            border-bottom: 1px solid var(--border);
         }
 
         .post-thumb {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.3s ease;
         }
 
         .post-card:hover .post-thumb {
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
         .post-card-content {
             padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
         }
 
         .post-date {
             font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 6px;
         }
 
-        .post-date i {
-            color: var(--accent);
-            font-size: 0.75rem;
-        }
-
-        .post-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.6rem;
+        .post-card-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
             line-height: 1.4;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
         }
 
-        .post-title a {
+        .post-card-title a {
             color: var(--text-primary);
             text-decoration: none;
-            transition: color 0.2s;
+            transition: color 0.2s ease;
         }
 
-        .post-title a:hover {
+        .post-card-title a:hover {
             color: var(--accent);
         }
 
         .post-excerpt {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            line-height: 1.55;
+            margin-bottom: 1.25rem;
+            flex: 1;
         }
 
         .post-tags {
             display: flex;
+            gap: 0.5rem;
             flex-wrap: wrap;
-            gap: 0.4rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.25rem;
         }
 
         .post-tag {
-            background: var(--accent-glow);
-            color: var(--accent);
-            padding: 0.25rem 0.7rem;
-            border-radius: 20px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 2px 8px;
             font-size: 0.75rem;
+            border-radius: 4px;
             font-weight: 500;
-            border: 1px solid rgba(20, 184, 166, 0.2);
         }
 
-        .read-more {
+        .post-card .read-more {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            color: var(--accent);
-            font-weight: 600;
-            font-size: 0.9rem;
+            color: var(--text-primary);
             text-decoration: none;
-            transition: gap 0.2s ease;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
-        .read-more:hover {
-            gap: 10px;
+        .post-card .read-more:hover {
+            color: var(--accent);
+            transform: translateX(2px);
         }
 
         /* Newsletter Section */
         .newsletter-section {
-            background: var(--bg-card);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 3rem;
-            margin-top: 3rem;
+            border-radius: 12px;
+            padding: 3rem 2rem;
             text-align: center;
-            backdrop-filter: blur(20px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .newsletter-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 3px;
-            background: var(--accent-gradient);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
         }
 
         .newsletter-section h3 {
+            font-family: var(--font-heading);
             font-size: 1.5rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
         }
 
         .newsletter-section p {
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+            max-width: 500px;
+            margin: 0 auto 1.75rem;
+            line-height: 1.6;
         }
 
         .newsletter-form {
             display: flex;
-            gap: 0.8rem;
-            max-width: 500px;
-            margin: 0 auto;
-            flex-wrap: wrap;
             justify-content: center;
+            gap: 0.75rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 576px) {
+            .newsletter-form {
+                flex-direction: column;
+            }
         }
 
         .newsletter-input {
             flex: 1;
-            min-width: 250px;
-            padding: 0.9rem 1.2rem;
-            border: 1px solid var(--border);
-            border-radius: 30px;
             background: var(--bg-primary);
-            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            font-family: var(--font-sans);
             font-size: 0.95rem;
-            transition: border-color 0.2s;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
         }
 
         .newsletter-input:focus {
             outline: none;
-            border-color: var(--accent);
+            border-color: var(--text-muted);
         }
 
         .newsletter-btn {
-            background: var(--accent-gradient);
-            color: #fff;
-            padding: 0.9rem 2rem;
+            background: var(--text-primary);
+            color: var(--bg-secondary);
             border: none;
-            border-radius: 30px;
+            border-radius: 6px;
+            padding: 0.75rem 1.75rem;
+            font-family: var(--font-sans);
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .newsletter-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(20, 184, 166, 0.4);
+            opacity: 0.9;
         }
 
         /* Footer */
         footer {
             background: var(--bg-secondary);
             border-top: 1px solid var(--border);
-            padding: 3rem 0 1.5rem;
+            padding: 3.5rem 0 2rem;
             margin-top: 4rem;
-            position: relative;
-            z-index: 1;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
         }
 
         .footer-section h4 {
-            font-size: 1rem;
-            font-weight: 600;
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
+            font-weight: 700;
             margin-bottom: 1rem;
             color: var(--text-primary);
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .footer-section h4::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 30px;
-            height: 2px;
-            background: var(--accent);
-            border-radius: 2px;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         .footer-section p {
@@ -749,18 +607,19 @@
         }
 
         .footer-links li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.6rem;
         }
 
         .footer-links a {
             color: var(--text-secondary);
             text-decoration: none;
             font-size: 0.9rem;
-            transition: color 0.2s;
+            transition: all 0.2s ease;
         }
 
         .footer-links a:hover {
-            color: var(--accent);
+            color: var(--text-primary);
+            padding-left: 3px;
         }
 
         .social-links {
@@ -769,105 +628,73 @@
         }
 
         .social-links a {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--bg-hover);
+            background: var(--bg-primary);
             border: 1px solid var(--border);
             color: var(--text-secondary);
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .social-links a:hover {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 20px rgba(20, 184, 166, 0.4);
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
         }
 
         .copyright {
-            text-align: center;
-            padding-top: 1.5rem;
             border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
+            text-align: center;
+            font-size: 0.8rem;
             color: var(--text-muted);
+        }
+
+        /* Notification Toast */
+        #cyberToast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
             font-size: 0.85rem;
+            box-shadow: var(--shadow-hover);
+            z-index: 2000;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
         }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .featured-hero-inner {
-                grid-template-columns: 1fr;
-            }
-
-            .featured-image {
-                height: 220px;
-            }
+        #cyberToast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
 
-        @media (max-width: 768px) {
-            .posts-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .theme-toggle {
-                top: 10px;
-                right: 10px;
-            }
-
-            header {
-                padding: 3rem 0 2rem;
-            }
-
-            .blog-title {
-                font-size: 1.8rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .header-social {
-                position: static;
-                justify-content: center;
-                margin-bottom: 1.5rem;
-            }
-
-            .profile-container {
-                width: 100px;
-                height: 100px;
-            }
-
-            .newsletter-form {
-                flex-direction: column;
-            }
-
-            .newsletter-input {
-                width: 100%;
-            }
+        #cyberToast i {
+            color: var(--accent);
         }
     </style>
 </head>
 
 <body>
-    <!-- Animated Particles -->
-    <div class="particles" id="particles"></div>
-
     <!-- Theme Toggle -->
-    <button class="theme-toggle" id="themeToggle" title="Toggle theme">
+    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
         <i class="fas fa-sun" id="themeIcon"></i>
     </button>
 
+    <!-- Header -->
     <header>
-        <div class="header-social">
-            <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-            <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i
-                    class="fab fa-linkedin-in"></i></a>
-        </div>
-
         <div class="container">
             <div class="header-content">
                 <div class="profile-container">
@@ -880,7 +707,7 @@
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.html" class="active">Posts</a></li>
-                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="whoami.html">About</a></li>
                         <li><a href="write-ups.html">Write Ups</a></li>
                         <li><a href="tools.html">Tools</a></li>
                     </ul>
@@ -903,292 +730,301 @@
                             <span class="featured-meta-item"><i class="fas fa-calendar-alt"></i> Oct 18, 2025</span>
                             <span class="featured-meta-item"><i class="fas fa-clock"></i> 12 min read</span>
                         </div>
-                        <h2><a
-                                href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html">The
-                                Desync Endgame: Bypassing Modern Defenses</a></h2>
-                        <p class="featured-excerpt">After six years of warnings, the fundamental flaw in HTTP/1.1
-                            continues to expose web applications to devastating Desync Attacks and Request Smuggling.
-                        </p>
-                        <a href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html"
-                            class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
+                        <h2><a href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html">The Desync Endgame: Bypassing Modern Defenses</a></h2>
+                        <p class="featured-excerpt">After six years of warnings, the fundamental flaw in HTTP/1.1 continues to expose web applications to devastating Desync Attacks and Request Smuggling.</p>
+                        <a href="posts/http11-must-die-navigating-the-desync-endgame-and-the-horror-of-request-smuggling.html" class="read-more-btn">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </div>
             </div>
 
             <!-- Posts Section -->
-            <h2 class="section-title">Latest Posts</h2>
+            <h2 class="section-title">Latest Articles</h2>
 
             <div class="posts-grid" id="postsGrid">
+                <!-- Post Card: Created on Purpose -->
+                <article class="post-card">
+                    <div class="post-thumb-container">
+                        <img src="images/intentional_life_cover.png" alt="Created on Purpose" class="post-thumb">
+                    </div>
+                    <div class="post-card-content">
+                        <div class="post-date"><i class="fas fa-calendar-alt"></i> May 22, 2026</div>
+                        <h3 class="post-card-title"><a href="posts/created-on-purpose-living-with-intention.html">Created on Purpose, Living with Intention</a></h3>
+                        <p class="post-excerpt">Three Questions. Six Goals. One Deliberate Life. Knowing yourself, naming your direction, and pursuing it with clarity.</p>
+                        <div class="post-tags">
+                            <span class="post-tag">Intentionality</span>
+                            <span class="post-tag">Self-Development</span>
+                            <span class="post-tag">Faith</span>
+                        </div>
+                        <a href="posts/created-on-purpose-living-with-intention.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </article>
+
+                <!-- Post Card: Atom of Thought -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/aot_hero.png" alt="Atom of Thought" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> January 26, 2026</div>
-                        <h3 class="post-title"><a
-                                href="posts/atom-of-thought-the-token-efficiency-revolution-in-llm-reasoning.html">Atom
-                                of Thought: The Token Efficiency Revolution</a></h3>
-                        <p class="post-excerpt">How a new reasoning paradigm is reducing LLM costs by 70-90% while
-                            improving accuracy.</p>
+                        <h3 class="post-card-title"><a href="posts/atom-of-thought-the-token-efficiency-revolution-in-llm-reasoning.html">Atom of Thought: The Token Efficiency Revolution</a></h3>
+                        <p class="post-excerpt">How a new reasoning paradigm is reducing LLM costs by 70-90% while improving accuracy.</p>
                         <div class="post-tags">
                             <span class="post-tag">AI</span>
                             <span class="post-tag">LLM</span>
                             <span class="post-tag">Efficiency</span>
                         </div>
-                        <a href="posts/atom-of-thought-the-token-efficiency-revolution-in-llm-reasoning.html"
-                            class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                        <a href="posts/atom-of-thought-the-token-efficiency-revolution-in-llm-reasoning.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: Beyond Prompts -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/contex_eng_cover.png" alt="Context Engineering" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> October 5, 2025</div>
-                        <h3 class="post-title"><a
-                                href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html">Beyond
-                                Prompts: Mastering Context Engineering</a></h3>
-                        <p class="post-excerpt">Discover how shaping the contextual landscape empowers AI agents to
-                            deliver intelligent responses.</p>
+                        <h3 class="post-card-title"><a href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html">Beyond Prompts: Mastering Context Engineering</a></h3>
+                        <p class="post-excerpt">Discover how shaping the contextual landscape empowers AI agents to deliver intelligent responses.</p>
                         <div class="post-tags">
                             <span class="post-tag">AI</span>
                             <span class="post-tag">Context Engineering</span>
                         </div>
-                        <a href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html"
-                            class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                        <a href="posts/beyond-prompts-mastering-context-engineering-for-smarter-ai-agents.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: Can AI Make Kids Forget How to Think -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/ai-kids_cover.png" alt="AI and Kids" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> September 18, 2025</div>
-                        <h3 class="post-title"><a
-                                href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html">Can
-                                AI Make Kids Forget How to Think?</a></h3>
-                        <p class="post-excerpt">Exploring the impact of AI on children's cognitive skills and
-                            problem-solving abilities.</p>
+                        <h3 class="post-card-title"><a href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html">Can AI Make Kids Forget How to Think?</a></h3>
+                        <p class="post-excerpt">Exploring the impact of AI on children's cognitive skills and problem-solving abilities.</p>
                         <div class="post-tags">
                             <span class="post-tag">AI</span>
                             <span class="post-tag">Education</span>
                         </div>
-                        <a href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html"
-                            class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                        <a href="posts/can-ai-make-kids-forget-how-to-think-memory-and-problem-solving-in-the-digital-age.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: The future of AI -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/ai-and-future.png" alt="Future of AI" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> July 27, 2025</div>
-                        <h3 class="post-title"><a
-                                href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html">The Future of AI:
-                                How Daniel Miessler Changed My Mind</a></h3>
-                        <p class="post-excerpt">A tribute to a visionary and a deep dive into the AI-augmented future.
-                        </p>
+                        <h3 class="post-card-title"><a href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html">The Future of AI: Daniel Miessler Changed My Mind</a></h3>
+                        <p class="post-excerpt">A tribute to a visionary and a deep dive into the AI-augmented future.</p>
                         <div class="post-tags">
                             <span class="post-tag">AI</span>
                             <span class="post-tag">Future</span>
                         </div>
-                        <a href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html" class="read-more">Read
-                            more <i class="fas fa-arrow-right"></i></a>
+                        <a href="posts/The-future-of-ai-how-daniel-miesler-change-my-mind.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: AI and Your Job -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/ai_yourJob.png" alt="AI and Your Job" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> July 16, 2025</div>
-                        <h3 class="post-title"><a href="posts/ai-and-your-job.html">AI & Your Job: Transformation, Not
-                                Just Loss</a></h3>
+                        <h3 class="post-card-title"><a href="posts/ai-and-your-job.html">AI & Your Job: Transformation, Not Just Loss</a></h3>
                         <p class="post-excerpt">Unpacking myths and truths about AI's impact on your career.</p>
                         <div class="post-tags">
                             <span class="post-tag">AI</span>
                             <span class="post-tag">Career</span>
                         </div>
-                        <a href="posts/ai-and-your-job.html" class="read-more">Read more <i
-                                class="fas fa-arrow-right"></i></a>
+                        <a href="posts/ai-and-your-job.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: Rewire Your Brain -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/glowing_brain.png" alt="Brain Rewiring" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> June 25, 2025</div>
-                        <h3 class="post-title"><a
-                                href="posts/rewire-your-brain-effortless-learning-perfect-recall.html">Rewire Your
-                                Brain: Effortless Learning & Perfect Recall</a></h3>
-                        <p class="post-excerpt">Unlock your brain's true potential with neuroscience-backed strategies.
-                        </p>
+                        <h3 class="post-card-title"><a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html">Rewire Your Brain: Learning & Perfect Recall</a></h3>
+                        <p class="post-excerpt">Unlock your brain's true potential with neuroscience-backed strategies.</p>
                         <div class="post-tags">
                             <span class="post-tag">Productivity</span>
                             <span class="post-tag">Learning</span>
                         </div>
-                        <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read
-                            more <i class="fas fa-arrow-right"></i></a>
+                        <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: Active Directory attacks -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/adversary.png" alt="Active Directory" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> June 17, 2025</div>
-                        <h3 class="post-title"><a href="posts/active-directory-attack-techniques.html">Unmasking the
-                                Adversary: Active Directory Attacks</a></h3>
-                        <p class="post-excerpt">Understanding how Active Directory operates and how it can be exploited.
-                        </p>
+                        <h3 class="post-card-title"><a href="posts/active-directory-attack-techniques.html">Unmasking Active Directory Attacks</a></h3>
+                        <p class="post-excerpt">Understanding how Active Directory operates and how it can be exploited.</p>
                         <div class="post-tags">
                             <span class="post-tag">Red Team</span>
                             <span class="post-tag">Active Directory</span>
                         </div>
-                        <a href="posts/active-directory-attack-techniques.html" class="read-more">Read more <i
-                                class="fas fa-arrow-right"></i></a>
+                        <a href="posts/active-directory-attack-techniques.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: Prompt Wars -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/prompt_war.png" alt="Prompt Wars" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> June 9, 2025</div>
-                        <h3 class="post-title"><a href="posts/AI-security-and-vulnerability.html">Prompt Wars:
-                                Navigating AI Security</a></h3>
+                        <h3 class="post-card-title"><a href="posts/AI-security-and-vulnerability.html">Prompt Wars: Navigating AI Security</a></h3>
                         <p class="post-excerpt">A new battlefield in cybersecurity has emerged with LLM integration.</p>
                         <div class="post-tags">
                             <span class="post-tag">AI Security</span>
                             <span class="post-tag">LLM</span>
                         </div>
-                        <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read more <i
-                                class="fas fa-arrow-right"></i></a>
+                        <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: The Power of Genuine Support -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/support.png" alt="Community Support" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> June 1, 2025</div>
-                        <h3 class="post-title"><a href="posts/support.html">The Power of Genuine Support</a></h3>
+                        <h3 class="post-card-title"><a href="posts/support.html">The Power of Genuine Support</a></h3>
                         <p class="post-excerpt">The practice of wholeheartedly rooting for the people around you.</p>
                         <div class="post-tags">
                             <span class="post-tag">Community</span>
                             <span class="post-tag">Growth</span>
                         </div>
-                        <a href="posts/support.html" class="read-more">Read more <i class="fas fa-arrow-right"></i></a>
+                        <a href="posts/support.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
 
+                <!-- Post Card: Africa at Crossroads -->
                 <article class="post-card">
                     <div class="post-thumb-container">
                         <img src="images/africa_at_crossroad.png" alt="Africa 4IR" class="post-thumb">
                     </div>
                     <div class="post-card-content">
                         <div class="post-date"><i class="fas fa-calendar-alt"></i> November 27, 2022</div>
-                        <h3 class="post-title"><a href="posts/fourth-industrial-revolution-in-africa.html">Africa at the
-                                Crossroads: Will the 4IR Be Different?</a></h3>
+                        <h3 class="post-card-title"><a href="posts/fourth-industrial-revolution-in-africa.html">Africa & 4IR: Will It Be Different?</a></h3>
                         <p class="post-excerpt">The Fourth Industrial Revolution is reshaping economies worldwide.</p>
                         <div class="post-tags">
                             <span class="post-tag">Africa</span>
                             <span class="post-tag">4IR</span>
                         </div>
-                        <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">Read more <i
-                                class="fas fa-arrow-right"></i></a>
+                        <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">Read Article <i class="fas fa-arrow-right"></i></a>
                     </div>
                 </article>
             </div>
 
             <!-- Newsletter Section -->
             <div class="newsletter-section">
-                <h3>📬 Stay Updated</h3>
-                <p>Get notified when I publish new articles about hacking, AI, and security.</p>
-                <form class="newsletter-form" onsubmit="return false;">
-                    <input type="email" class="newsletter-input" placeholder="Enter your email">
+                <h3>Subscribe to my newsletter</h3>
+                <p>Subscribe to get my latest articles on security, AI, and technology delivered to your inbox.</p>
+                <form class="newsletter-form" onsubmit="handleSubscribe(event)">
+                    <input type="email" id="emailInput" class="newsletter-input" placeholder="Your email address" required>
                     <button type="submit" class="newsletter-btn">Subscribe</button>
                 </form>
             </div>
         </div>
     </main>
 
+    <!-- Notification Toast -->
+    <div id="cyberToast">
+        <i class="fas fa-circle-info"></i>
+        <span id="toastMsg">Action complete</span>
+    </div>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>Bashir Kabir Zarewa</h4>
-                    <p>Cybersecurity researcher exploring ethical hacking, AI security, and modern defense strategies.
-                    </p>
+                    <p>Cybersecurity researcher and ethical hacker. Navigating the intersections of offensive security, AI vulnerabilities, and modern defensive computing.</p>
                 </div>
                 <div class="footer-section">
-                    <h4>Navigation</h4>
+                    <h4>Directory</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="index.html">Posts</a></li>
+                        <li><a href="whoami.html">About</a></li>
                         <li><a href="write-ups.html">Write Ups</a></li>
                         <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>Connect</h4>
+                    <h4>Links</h4>
                     <div class="social-links">
-                        <a href="https://x.com/bashirkabirz" target="_blank" title="Twitter"><i
-                                class="fab fa-twitter"></i></a>
-                        <a href="https://github.com/L0C4LH057" target="_blank" title="GitHub"><i
-                                class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank"
-                            title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="https://x.com/bashirkabirz" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
             <div class="copyright">
-                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All Rights Reserved.
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved.
             </div>
         </div>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Copyright Year
+            // General setup
             document.getElementById('copyright-year').textContent = new Date().getFullYear();
-
-            // Create Particles
-            const particlesContainer = document.getElementById('particles');
-            for (let i = 0; i < 15; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 15 + 's';
-                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
-                particlesContainer.appendChild(particle);
-            }
 
             // Typed Title Animation
             const titleText = "Bashir Kabir Zarewa";
             const typedTitle = document.getElementById('typed-title');
             const cursor = document.querySelector('.typed-cursor');
-            let i = 0;
+            let typeIdx = 0;
 
             function typeWriter() {
-                if (i <= titleText.length) {
-                    typedTitle.textContent = titleText.slice(0, i);
-                    i++;
-                    setTimeout(typeWriter, 80);
+                if (typeIdx <= titleText.length) {
+                    typedTitle.textContent = titleText.slice(0, typeIdx);
+                    typeIdx++;
+                    setTimeout(typeWriter, 120);
                 } else {
                     cursor.style.display = 'none';
                 }
             }
             typeWriter();
+
+            // Toast Notifier
+            const toastEl = document.getElementById('cyberToast');
+            const toastMsgEl = document.getElementById('toastMsg');
+            let toastTimer;
+
+            window.showToast = function(msg) {
+                clearTimeout(toastTimer);
+                toastMsgEl.textContent = msg;
+                toastEl.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toastEl.classList.remove('show');
+                }, 3000);
+            }
+
+            window.handleSubscribe = function(e) {
+                e.preventDefault();
+                const email = document.getElementById('emailInput').value;
+                if(email) {
+                    showToast("Subscription successful!");
+                    document.getElementById('emailInput').value = "";
+                }
+            }
 
             // Theme Toggle
             const themeToggle = document.getElementById('themeToggle');
@@ -1204,6 +1040,7 @@
                 document.documentElement.setAttribute('data-theme', next);
                 localStorage.setItem('blog-theme', next);
                 updateThemeIcon(next);
+                showToast(`Theme changed to ${next}`);
             });
 
             function updateThemeIcon(theme) {

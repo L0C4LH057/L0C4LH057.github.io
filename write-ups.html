@@ -1,54 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bashir Kabir Zarewa | Write Ups</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="Detailed cybersecurity write-ups, CTF walkthroughs, and offensive security research by Bashir Kabir Zarewa.">
+    <title>Write Ups | Bashir Kabir Zarewa</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #3498db;
-            --light-gray: #f5f7fa;
-            --medium-gray: #e1e5eb;
-            --dark-gray: #7f8c8d;
-            --text: #2c3e50;
-            --text-light: #95a5a6;
-            --white: #ffffff;
-            --shadow: 0 4px 16px rgba(44, 62, 80, 0.10);
-            --border-radius: 14px;
-            --transition: 0.3s cubic-bezier(.4,2,.6,1);
-            --font-main: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Premium Minimalist Light Mode */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-hover: rgba(9, 9, 11, 0.04);
+            --text-primary: #09090b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --header-bg: rgba(250, 250, 250, 0.8);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        [data-theme="dark"] {
+            /* Premium Minimalist Dark Mode */
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --card-shadow: 0 4px 30px rgba(0,0,0,0.4);
+            --shadow-hover: 0 10px 30px rgba(0,0,0,0.6);
+            --header-bg: rgba(9, 9, 11, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--text-muted) var(--bg-primary);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
         }
 
         body {
-            font-family: var(--font-main);
-            background: linear-gradient(120deg, var(--light-gray) 60%, #eaf1fb 100%);
-            color: var(--text);
-            line-height: 1.7;
-            font-size: 1.08rem;
-            margin: 0;
-            padding: 0;
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.75;
+            font-size: 1.05rem;
+            transition: background 0.3s ease, color 0.3s ease;
             min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.2rem;
-        }
-
-        /* --- Header --- */
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: var(--white);
-            padding: 2.5rem 0 2rem 0;
-            margin-bottom: 2.5rem;
-            box-shadow: var(--shadow);
             position: relative;
-            border-radius: 0 0 24px 24px;
+            overflow-x: hidden;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-secondary);
+            transform: translateY(-1px);
+        }
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        header {
+            background: var(--header-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 3rem 0 2.5rem;
+            position: relative;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
         }
 
         .header-content {
@@ -56,45 +144,62 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            position: relative;
-            z-index: 2;
         }
 
         .profile-container {
-            width: 120px;
-            height: 120px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
-            border: 4px solid var(--white);
-            overflow: hidden;
+            padding: 2px;
+            border: 1px solid var(--border);
             margin-bottom: 1.2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.13);
+            background: var(--bg-secondary);
+        }
+
+        .profile-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            overflow: hidden;
         }
 
         .profile-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transform: scale(1.2);
         }
 
         .blog-title {
-            font-size: 2.2rem;
+            font-family: var(--font-heading);
+            font-size: 2rem;
             font-weight: 800;
-            margin-bottom: 0.3rem;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 8px rgba(44,62,80,0.08);
+            margin-bottom: 0.4rem;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .typed-cursor {
+            color: var(--accent);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         .blog-subtitle {
-            font-size: 1.1rem;
-            font-weight: 400;
-            opacity: 0.92;
+            font-size: 0.95rem;
+            font-weight: 500;
             margin-bottom: 1.5rem;
-            color: #e1e5eb;
+            color: var(--text-secondary);
         }
 
+        /* Navigation */
         nav {
             width: 100%;
-            max-width: 600px;
+            max-width: 450px;
             margin-top: 0.5rem;
         }
 
@@ -102,387 +207,435 @@
             display: flex;
             justify-content: center;
             list-style: none;
-            gap: 1.2rem;
-            padding: 0;
-            flex-wrap: wrap; /* Added for responsiveness */
-        }
-
-        .nav-links a {
-            color: var(--white);
-            text-decoration: none;
-            font-size: 1.08rem;
-            font-weight: 600;
-            padding: 0.5rem 1.1rem;
-            border-radius: var(--border-radius);
-            transition: background var(--transition), color var(--transition);
-            letter-spacing: 0.02em;
-        }
-
-        .nav-links a:hover,
-        .nav-links a.active {
-            background-color: rgba(255,255,255,0.18);
-            color: #fff;
-        }
-
-        .header-social {
-            position: absolute;
-            top: 22px;
-            right: 22px;
-            display: flex;
-            gap: 10px;
-            z-index: 3;
-        }
-
-        .header-social a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.13);
-            border-radius: 50%;
-            color: var(--white);
-            text-decoration: none;
-            font-size: 18px;
-            transition: background var(--transition), transform var(--transition);
-        }
-
-        .header-social a:hover {
-            background: var(--accent);
-            transform: translateY(-3px) scale(1.08);
-        }
-
-        /* --- Main Content --- */
-        .main-content {
-            margin-bottom: 3rem;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.2rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--medium-gray);
-            position: relative;
-            letter-spacing: -0.5px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 48px;
-            height: 2px;
-            background-color: var(--accent);
-            border-radius: 2px;
-        }
-
-        /* --- Write-up Entry Styling --- */
-        .write-up-entry {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 2.2rem 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            position: relative; /* Needed for absolute positioning of the badge */
-            overflow: hidden; /* Ensures badge corners are clipped if they go outside */
-        }
-
-        /* Image Styling and Hover Effects */
-        .post-cover-wrapper { /* New wrapper for image and overlay */
-            position: relative;
-            border-radius: var(--border-radius);
-            margin-bottom: 1.5rem;
-            overflow: hidden; /* Crucial for clipping the image on zoom */
-            box-shadow: var(--shadow);
-        }
-
-        .post-cover {
-            width: 70%; /* Responsive width */
-            height: auto; /* Maintain aspect ratio */
-            border-radius: var(--border-radius);
-            display: block;
-            max-height: 600px;
-            object-fit: cover;
-            transition: transform var(--transition); /* Smooth zoom transition */
-        }
-
-        .post-cover-wrapper:hover .post-cover {
-            transform: scale(1.03); /* Slight zoom on hover */
-        }
-
-        .post-cover-overlay { /* Overlay for hover effect */
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0); /* Start transparent */
-            transition: background var(--transition);
-            border-radius: var(--border-radius);
-        }
-
-        .post-cover-wrapper:hover .post-cover-overlay {
-            background: rgba(0, 0, 0, 0.1); /* Darken on hover */
-        }
-
-        .post-meta {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1.2rem;
-            color: var(--dark-gray);
-            font-size: 0.97rem;
-            gap: 1.2rem;
+            gap: 0.5rem;
             flex-wrap: wrap;
         }
 
-        .post-meta-item {
-            background: var(--light-gray);
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-family: var(--font-sans);
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .nav-links a.active {
+            border-color: var(--border);
+            color: var(--text-primary);
+            background: var(--bg-secondary);
+            font-weight: 600;
+            box-shadow: var(--card-shadow);
+        }
+
+        /* Header Social */
+        .header-social {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            gap: 8px;
+            z-index: 99;
+        }
+
+        .header-social a {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .header-social a:hover {
+            transform: translateY(-1px);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
+        }
+
+        main {
+            padding: 3rem 0;
+        }
+
+        .section-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        /* Intro Deck */
+        .intro-deck {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 3rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .intro-deck p {
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .intro-deck strong {
+            color: var(--text-primary);
+        }
+
+        /* Category Filter Buttons */
+        .filter-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.4rem 1.1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+            background: var(--bg-hover);
+        }
+
+        .filter-btn.active {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border-color: var(--text-primary);
+        }
+
+        /* Write-up Cards List */
+        .writeups-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .write-up-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            box-shadow: var(--card-shadow);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .write-up-card:hover {
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .card-image-container {
+            position: relative;
+            min-height: 250px;
+            border-right: 1px solid var(--border);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .write-up-card:hover .card-image {
+            transform: scale(1.02);
+        }
+
+        .card-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .card-content h3 {
+            font-family: var(--font-heading);
+            font-size: 1.4rem;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 0.8rem;
+            letter-spacing: -0.02em;
+        }
+
+        .card-content h3 a {
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .card-content h3 a:hover {
+            color: var(--accent);
+        }
+
+        .card-excerpt {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-tag {
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            border-radius: 4px;
             font-weight: 500;
         }
 
-        .write-up-content p {
-            margin-bottom: 1.1rem;
-        }
-
-        .read-more {
-            display: inline-block;
-            color: var(--accent);
-            font-weight: 600;
+        .read-btn {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
             text-decoration: none;
-            font-size: 0.98rem;
-            transition: color var(--transition);
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: color 0.2s ease, transform 0.2s ease;
         }
 
-        .read-more i {
-            margin-left: 5px;
-            transition: transform 0.2s;
+        .read-btn:hover {
+            color: var(--accent);
+            transform: translateX(2px);
         }
 
-        .read-more:hover i {
-            transform: translateX(4px);
+        .empty-message {
+            text-align: center;
+            padding: 3rem;
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: none;
         }
 
-        /* Introduction text for the write-ups page */
-        .intro-text {
-            background: var(--white);
-            border-radius: var(--border-radius);
-            padding: 1.5rem 2rem;
-            box-shadow: var(--shadow);
-            margin-bottom: 2rem;
-            color: var(--dark-gray);
-            line-height: 1.8;
-            font-size: 1rem;
-        }
-        .intro-text strong {
-            color: var(--primary);
-        }
-
-        /* "New" Badge Styling */
-        .new-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background-color: var(--accent);
-            color: var(--white);
-            padding: 0.3em 0.8em;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            z-index: 10;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-            animation: pulse 1.5s infinite ease-in-out;
+        /* Notification Toast */
+        #cyberToast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-hover);
+            z-index: 2000;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
+        #cyberToast.show {
+            transform: translateY(0);
+            opacity: 1;
         }
 
+        #cyberToast i {
+            color: var(--accent);
+        }
 
-        /* --- Footer --- */
+        /* Footer */
         footer {
-            background: var(--primary);
-            color: var(--white);
-            padding: 2.5rem 0 1.5rem 0;
-            margin-top: 3rem;
-            border-radius: 24px 24px 0 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 3.5rem 0 2rem;
+            margin-top: 4rem;
         }
 
         .footer-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 2.5rem;
+            margin-bottom: 2.5rem;
         }
 
-        .footer-section h3 {
-            font-size: 1.15rem;
-            margin-bottom: 1.1rem;
-            position: relative;
-            padding-bottom: 0.4rem;
+        .footer-section h4 {
+            font-family: var(--font-heading);
+            font-size: 0.9rem;
             font-weight: 700;
-        }
-
-        .footer-section h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 32px;
-            height: 2px;
-            background-color: var(--accent);
-            border-radius: 2px;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
 
         .footer-section p {
-            opacity: 0.8;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
             line-height: 1.7;
-            margin-bottom: 1rem;
         }
 
         .footer-links {
             list-style: none;
-            padding: 0;
         }
 
         .footer-links li {
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.6rem;
         }
 
         .footer-links a {
-            color: rgba(255,255,255,0.85);
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: color var(--transition);
-            font-size: 1rem;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
 
         .footer-links a:hover {
-            color: var(--accent);
+            color: var(--text-primary);
+            padding-left: 3px;
         }
 
-        .footer-social {
+        .social-links {
             display: flex;
             gap: 0.8rem;
-            margin-top: 0.7rem;
         }
 
-        .footer-social a {
-            display: inline-flex;
+        .social-links a {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: rgba(255,255,255,0.13);
-            border-radius: 50%;
-            color: var(--white);
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
             text-decoration: none;
-            font-size: 18px;
-            transition: background var(--transition), transform var(--transition);
+            transition: all 0.2s ease;
         }
 
-        .footer-social a:hover {
-            background: var(--accent);
-            transform: translateY(-3px) scale(1.08);
+        .social-links a:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-hover);
+            color: var(--text-primary);
         }
 
         .copyright {
+            border-top: 1px solid var(--border);
+            padding-top: 1.5rem;
             text-align: center;
-            padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.13);
-            color: rgba(255,255,255,0.7);
-            font-size: 0.95rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
-        /* --- RESPONSIVE BREAKPOINTS --- */
-        @media (max-width: 992px) {
-            /* No specific changes for this breakpoint for write-ups page */
-        }
-
+        /* Responsive Breakpoints */
         @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-            .profile-container {
-                width: 100px;
-                height: 100px;
-            }
-            .blog-title {
-                font-size: 2rem;
-            }
-            .blog-subtitle {
-                font-size: 1rem;
-            }
-            .write-up-entry {
-                padding: 1.5rem;
-            }
-            .section-title {
-                font-size: 1.3rem;
-            }
-            .footer-content {
-                gap: 1.5rem;
-            }
-            .post-cover-wrapper { /* Adjust for smaller screens */
-                max-height: 300px;
-            }
-            .nav-links { /* Adjust gap for smaller screens */
-                gap: 0.8rem;
-            }
-            .nav-links a { /* Smaller padding for smaller nav items */
-                padding: 0.4rem 0.9rem;
-                font-size: 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                font-size: 1rem;
-            }
-            .header-social {
+            .theme-toggle {
                 top: 10px;
                 right: 10px;
-                gap: 8px;
+            }
+            header {
+                padding: 3rem 0 2rem;
             }
             .blog-title {
                 font-size: 1.8rem;
             }
-            .post-meta {
-                font-size: 0.95rem;
+            .intro-deck {
+                padding: 1.5rem;
             }
-            .footer-content {
+            .write-up-card {
                 grid-template-columns: 1fr;
             }
-            .intro-text {
-                padding: 1rem 1.5rem;
+            .card-image-container {
+                min-height: 200px;
+                border-right: none;
+                border-bottom: 1px solid var(--border);
             }
-            .post-cover-wrapper {
-                max-height: 200px; /* Further adjust for very small screens */
+            .card-content {
+                padding: 1.5rem;
             }
-            .new-badge {
-                font-size: 0.7rem;
-                padding: 0.2em 0.6em;
-                top: 10px;
-                right: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .header-social {
+                position: static;
+                justify-content: center;
+                margin-bottom: 1.5rem;
             }
-            .nav-links { /* Stack nav items vertically if needed or spread them */
-                flex-direction: column;
-                gap: 0.5rem; /* Smaller gap when stacked */
-                align-items: center; /* Center items when stacked */
+            .profile-container {
+                width: 80px;
+                height: 80px;
+            }
+            .nav-links {
+                gap: 0.4rem;
             }
             .nav-links a {
-                width: calc(100% - 2.2rem); /* Make links full width minus padding */
-                text-align: center;
-                padding: 0.6rem 1.1rem; /* Adjust padding for better tap area */
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
             }
         }
     </style>
 </head>
+
 <body>
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+        <i class="fas fa-sun" id="themeIcon"></i>
+    </button>
+
+    <!-- Header -->
     <header>
         <div class="header-social">
             <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
@@ -493,15 +646,16 @@
         <div class="container">
             <div class="header-content">
                 <div class="profile-container">
-                    <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                    <div class="profile-inner">
+                        <img src="images/profile.jpg" alt="Bashir Kabir Zarewa" class="profile-image">
+                    </div>
                 </div>
-                <h1 class="blog-title">Bashir Kabir Zarewa</h1>
+                <h1 class="blog-title"><span id="typed-title"></span><span class="typed-cursor">|</span></h1>
                 <p class="blog-subtitle">My thoughts on Hacking, AI, Security, and more.</p>
-
                 <nav>
                     <ul class="nav-links">
                         <li><a href="index.html">Posts</a></li>
-                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="whoami.html">About</a></li>
                         <li><a href="write-ups.html" class="active">Write Ups</a></li>
                         <li><a href="tools.html">Tools</a></li>
                     </ul>
@@ -510,148 +664,236 @@
         </div>
     </header>
 
-    <div class="container">
-        <div class="intro-text">
-            <p>Welcome to my **Write Ups** section! Here you'll find detailed analyses, solutions, and methodologies for various cybersecurity challenges, including Capture The Flag (CTF) challenges, exploit development, and in-depth security research. Each write-up aims to provide clear, actionable insights into complex topics.</p>
+    <main>
+        <div class="container">
+            <div class="intro-deck">
+                <p>Welcome to my <strong>Write Ups</strong> section. Here you will find walkthroughs of challenging security machines, deep dives into Active Directory, and reports on offensive security techniques.</p>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="filter-container">
+                <button class="filter-btn active" data-filter="all">All Write-ups</button>
+                <button class="filter-btn" data-filter="active-directory">Active Directory</button>
+                <button class="filter-btn" data-filter="offensive-security">Offensive Security</button>
+                <button class="filter-btn" data-filter="ai-security">AI Security</button>
+            </div>
+
+            <div class="writeups-list" id="writeupsList">
+                <!-- Haze Walkthrough -->
+                <div class="write-up-card" data-category="active-directory offensive-security">
+                    <div class="card-image-container">
+                        <img src="images/Haze.png" alt="Haze Machine Walkthrough" class="card-image">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="meta-item"><i class="fas fa-calendar-alt"></i> July 3, 2025</span>
+                            <span class="meta-item"><i class="fas fa-clock"></i> HTB Walkthrough</span>
+                        </div>
+                        <h3><a href="writeups/haze-htb-write-up.html">Haze Machine Walkthrough</a></h3>
+                        <p class="card-excerpt">A comprehensive walkthrough of the Haze machine on HackTheBox, demonstrating Active Directory exploitation and offensive security techniques.</p>
+                        <div class="card-tags">
+                            <span class="card-tag">HTB</span>
+                            <span class="card-tag">Active Directory</span>
+                            <span class="card-tag">Offensive Security</span>
+                        </div>
+                        <a href="writeups/haze-htb-write-up.html" class="read-btn">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Commented out entries kept for integrity and visual mapping if uncommented -->
+                <!-- 
+                <div class="write-up-card" data-category="productivity">
+                    <div class="card-image-container">
+                        <img src="images/glowing_brain.png" alt="Rewire Your Brain" class="card-image">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="meta-item"><i class="fas fa-calendar-alt"></i> June 25, 2025</span>
+                        </div>
+                        <h3><a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html">Rewire Your Brain: Effortless Learning & Perfect Recall</a></h3>
+                        <p class="card-excerpt">Unlock your brain's true potential with these neuroscience-backed strategies for superior learning and memory.</p>
+                        <div class="card-tags">
+                            <span class="card-tag">Productivity</span>
+                            <span class="card-tag">Learning</span>
+                        </div>
+                        <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-btn">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="write-up-card" data-category="active-directory offensive-security">
+                    <div class="card-image-container">
+                        <img src="images/adversary.png" alt="Active Directory Security" class="card-image">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="meta-item"><i class="fas fa-calendar-alt"></i> June 17, 2025</span>
+                        </div>
+                        <h3><a href="posts/active-directory-attack-techniques.html">Deep Dive into Active Directory Attack Techniques</a></h3>
+                        <p class="card-excerpt">A comprehensive look at common attack vectors and defense auditing strategies in Active Directory environments.</p>
+                        <div class="card-tags">
+                            <span class="card-tag">Red Team</span>
+                            <span class="card-tag">Active Directory</span>
+                        </div>
+                        <a href="posts/active-directory-attack-techniques.html" class="read-btn">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <div class="write-up-card" data-category="ai-security">
+                    <div class="card-image-container">
+                        <img src="images/prompt_war.png" alt="AI Security" class="card-image">
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="meta-item"><i class="fas fa-calendar-alt"></i> June 9, 2025</span>
+                        </div>
+                        <h3><a href="posts/AI-security-and-vulnerability.html">Prompt Wars: Navigating the AI Security Landscape</a></h3>
+                        <p class="card-excerpt">Exploring prompt injection and adversarial thinking in Large Language Model (LLM) integrations.</p>
+                        <div class="card-tags">
+                            <span class="card-tag">AI Security</span>
+                        </div>
+                        <a href="posts/AI-security-and-vulnerability.html" class="read-btn">Read Writeup <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                -->
+            </div>
+
+            <!-- Empty State Message -->
+            <div class="empty-message" id="emptyMessage">
+                <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 1rem; display: block;"></i>
+                No write-ups found for this category yet. Check back soon!
+            </div>
         </div>
+    </main>
 
-        <div class="write-up-entry">
-            <h2 class="section-title">Latest Write Ups</h2>
-            <img src="images/Haze.png" alt="Haze Machine Walkthrough" class="post-cover">
-            <div class="post-meta">
-                <span class="post-meta-item">3rd July 2025</span>
-                <span class="post-meta-item"><i class="fas fa-tags"></i> HTB, Active Directory, Offensive Security</span>
-            </div>
-            <div class="write-up-content">
-                <h3>Haze Machine Walkthrough HackTheBox</h3>
-                <p>Detailed walkthrough of Haze Machine, a challenging Active Directory machine that served as an exceptional learning experience. Dive into the steps, tools, and insights gained during this capture the flag challenge.</p>
-                <a href="writeups/haze-htb-write-up.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
-            </div>
-            <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-
-            <!-- <div class="write-up-entry">
-                 <div class="post-cover-wrapper">
-                    <img src="images/glowing_brain.png" alt="Rewire Your Brain" class="post-cover">
-                    <div class="post-cover-overlay"></div>
-                </div>
-                <div class="post-meta">
-                    <span class="post-meta-item">25th Jun 2025</span>
-                    <span class="post-meta-item"><i class="fas fa-tags"></i> Productivity, Learning</span>
-                </div>
-                <div class="write-up-content">
-                    <h3>Rewire Your Brain: The Ultimate Guide to Effortless Learning & Perfect Recall</h3>
-                    <p>Unlock your brain's true potential with these neuroscience-backed strategies for superior learning and memory. This write-up delves into practical techniques and concepts that can help you learn faster and retain information more effectively.</p>
-                    <a href="posts/rewire-your-brain-effortless-learning-perfect-recall.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            </div>
-
-            <div class="write-up-entry">
-                <div class="post-cover-wrapper">
-                    <img src="images/adversary.png" alt="Active Directory Security" class="post-cover">
-                    <div class="post-cover-overlay"></div>
-                </div>
-                <div class="post-meta">
-                    <span class="post-meta-item">17th Jun 2025</span>
-                    <span class="post-meta-item"><i class="fas fa-tags"></i> Red Team, Active Directory</span>
-                </div>
-                <div class="write-up-content">
-                    <h3>Unmasking the Adversary: A Deep Dive into Active Directory Attack Techniques</h3>
-                    <p>For cybersecurity professionals, whether they are **blue team** members focused on defence or **red team** members conducting audits, understanding how Active Directory operates and how it can be exploited is paramount. This write-up provides a comprehensive look at common attack vectors.</p>
-                    <a href="posts/active-directory-attack-techniques.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            </div>
-
-            <div class="write-up-entry">
-                <div class="post-cover-wrapper">
-                    <img src="images/prompt_war.png" alt="AI Security" class="post-cover">
-                    <div class="post-cover-overlay"></div>
-                </div>
-                <div class="post-meta">
-                    <span class="post-meta-item">9th Jun 2025</span>
-                    <span class="post-meta-item"><i class="fas fa-tags"></i> AI Security</span>
-                </div>
-                <div class="write-up-content">
-                    <h3>Prompt Wars: Navigating the New Landscape of AI Security</h3>
-                    <p>As Large Language Models (LLMs) like ChatGPT, Gemini, and Claude integrate into applications, a new battlefield in cybersecurity has emerged. This write-up explores the threats posed by prompt injection and adversarial thinking in AI systems.</p>
-                    <a href="posts/AI-security-and-vulnerability.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            </div>
-
-            <div class="write-up-entry">
-                <div class="post-cover-wrapper">
-                    <img src="images/africa_at_crossroad.png" alt="Africa at the Crossroads" class="post-cover">
-                    <div class="post-cover-overlay"></div>
-                </div>
-                <div class="post-meta">
-                    <span class="post-meta-item">27th Nov 2022</span>
-                    <span class="post-meta-item"><i class="fas fa-tags"></i> Africa, 4IR, AI, Technology</span>
-                </div>
-                <div class="write-up-content">
-                    <h3>Africa at the Crossroads: Will the 4IR Be Different?</h3>
-                    <p>The Fourth Industrial Revolution (4IR) marked by breakthroughs in AI, cloud computing, robotics, IoT, and blockchain is reshaping economies worldwide. This write-up examines Africa's position and potential in this transformative era.</p>
-                    <a href="posts/fourth-industrial-revolution-in-africa.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
-                </div>
-                <hr style="border: 1px solid var(--medium-gray); margin: 2rem 0;">
-            </div>
-
-            <div class="write-up-entry">
-                <div class="post-cover-wrapper">
-                    <img src="images/support.png" alt="Community Support" class="post-cover">
-                    <div class="post-cover-overlay"></div>
-                </div>
-                <div class="post-meta">
-                    <span class="post-meta-item">1st Jun 2025</span>
-                    <span class="post-meta-item"><i class="fas fa-tags"></i> Community</span>
-                </div>
-                <div class="write-up-content">
-                    <h3>The Power of Genuine Support</h3>
-                    <p>In cybersecurity, it’s easy to measure our worth against others. But one of the most transformative habits you can cultivate isn’t a technical skill: it’s the practice of wholeheartedly rooting for the people around you.</p>
-                    <a href="posts/support.html" class="read-more">Read Full Write Up <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div> -->
-        </div>
+    <!-- Notification Toast -->
+    <div id="cyberToast">
+        <i class="fas fa-circle-info"></i>
+        <span id="toastMsg">Action complete</span>
     </div>
 
+    <!-- Footer -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3>Bashir Kabir Zarewa</h3>
-                    <p>Cybersecurity researcher and enthusiast. Exploring the depths of ethical hacking, AI security, and modern defensive strategies. Sharing insights from the digital front lines.</p>
+                    <h4>Bashir Kabir Zarewa</h4>
+                    <p>Cybersecurity researcher and ethical hacker. Navigating the intersections of offensive security, AI vulnerabilities, and modern defensive computing.</p>
                 </div>
-
                 <div class="footer-section">
-                    <h3>Navigation</h3>
+                    <h4>Directory</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Home</a></li>
-                        <li><a href="whoami.html">Whoami</a></li>
+                        <li><a href="index.html">Posts</a></li>
+                        <li><a href="whoami.html">About</a></li>
                         <li><a href="write-ups.html">Write Ups</a></li>
                         <li><a href="tools.html">Tools</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-section">
-                    <h3>Connect</h3>
-                    <p>Follow me on social media to get the latest updates and engage with my content.</p>
-                    <div class="footer-social">
-                        <a href="https://x.com/bashirkabirz" title="Twitter" target="_blank"><i class="fab fa-twitter"></i></a>
-                        <a href="https://github.com/L0C4LH057" title="GitHub" target="_blank"><i class="fab fa-github"></i></a>
-                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" title="LinkedIn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                    <h4>Links</h4>
+                    <div class="social-links">
+                        <a href="https://x.com/bashirkabirz" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="https://github.com/L0C4LH057" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/bashir-kabir-zarewa-18b67718a" target="_blank" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
             </div>
-
             <div class="copyright">
-                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved. Opinions are my own.
+                &copy; <span id="copyright-year"></span> Bashir Kabir Zarewa. All rights reserved.
             </div>
         </div>
     </footer>
 
     <script>
-        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+        document.addEventListener('DOMContentLoaded', function () {
+            // General setup
+            document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+            // Typed Title Animation
+            const titleText = "Bashir Kabir Zarewa";
+            const typedTitle = document.getElementById('typed-title');
+            const cursor = document.querySelector('.typed-cursor');
+            let typeIdx = 0;
+
+            function typeWriter() {
+                if (typeIdx <= titleText.length) {
+                    typedTitle.textContent = titleText.slice(0, typeIdx);
+                    typeIdx++;
+                    setTimeout(typeWriter, 120);
+                } else {
+                    cursor.style.display = 'none';
+                }
+            }
+            typeWriter();
+
+            // Toast Notifier
+            const toastEl = document.getElementById('cyberToast');
+            const toastMsgEl = document.getElementById('toastMsg');
+            let toastTimer;
+
+            window.showToast = function(msg) {
+                clearTimeout(toastTimer);
+                toastMsgEl.textContent = msg;
+                toastEl.classList.add('show');
+                toastTimer = setTimeout(() => {
+                    toastEl.classList.remove('show');
+                }, 3000);
+            }
+
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const savedTheme = localStorage.getItem('blog-theme') || 'dark';
+
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('blog-theme', next);
+                updateThemeIcon(next);
+                showToast(`Theme changed to ${next}`);
+            });
+
+            function updateThemeIcon(theme) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+
+            // Category Filter Logic
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const cards = document.querySelectorAll('.write-up-card');
+            const emptyMessage = document.getElementById('emptyMessage');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Toggle active class on buttons
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const filterValue = btn.getAttribute('data-filter');
+                    let visibleCount = 0;
+
+                    cards.forEach(card => {
+                        const categories = card.getAttribute('data-category').split(' ');
+                        if (filterValue === 'all' || categories.includes(filterValue)) {
+                            card.style.display = 'grid';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+
+                    // Display empty message if no writeups match
+                    if (visibleCount === 0) {
+                        emptyMessage.style.display = 'block';
+                    } else {
+                        emptyMessage.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
 </body>
+
 </html>
