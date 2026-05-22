@@ -1128,7 +1128,7 @@
 </ul>
 <p>But to realize this potential, Africa must first <strong>overcome key barriers</strong> starting with <strong>AI and cloud computing adoption</strong>, the backbone of the 4IR.</p>
 <h2>Africa's AI &amp; Cloud Computing Landscape: A 2022 Kaggle Survey Deep Dive</h2>
-<img alt="Digital Africa" class="post-cover" src="../images/cloup_plot.png">
+<img alt="Digital Africa" class="post-cover" src="../images/cloup_plot.png"/>
 <p>To assess Africa's readiness, I analyzed <strong>Kaggle's 2022 Data Science &amp; Machine Learning Survey</strong>, focusing on responses from African professionals. Here's what the data reveals:</p>
 <h3>1. Industry Adoption: Leaders vs. Laggards</h3>
 <table class="comparison-table">
@@ -1205,7 +1205,7 @@
 <p><strong>Solution:</strong> Stronger AI governance frameworks at national and continental levels.</p>
 </div>
 <h2>Country Spotlight: Who's Leading, Who's Lagging?</h2>
-<img alt="Digital Africa" class="post-cover" src="../images/4irplot.png">
+<img alt="Digital Africa" class="post-cover" src="../images/4irplot.png"/>
 <div class="country-grid">
 <div class="country-card">
 <h4>South Africa</h4>
@@ -1271,7 +1271,7 @@
 <p style="text-align: center; margin-top: 2rem;">
 <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
 </p>
-</img></img>
+
             </div>
 
             <!-- Comments Section -->
@@ -1431,6 +1431,7 @@
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
+            let isPaused = false;
             let playRate = 1.0;
             let voices = [];
             
@@ -1593,6 +1594,9 @@
             });
 
             audioPlayer.addEventListener('error', (e) => {
+                // If we are not actively playing a cloud chunk, ignore errors (e.g. caused by setting src = '')
+                if (!isCloudPlaying) return;
+
                 console.error('Cloud audio player error, falling back to browser synthesis...', e);
                 isCloudPlaying = false;
                 audioChunks = [];
@@ -1622,14 +1626,16 @@
             }
 
             function stopAllPlayback() {
+                isCloudPlaying = false; // Set this first to prevent error listener from firing
                 audioPlayer.pause();
                 audioPlayer.src = '';
-                isCloudPlaying = false;
                 
                 if (synth) {
+                    synth.resume(); // Workaround: resume first to unstick paused state before cancel
                     synth.cancel();
                 }
                 isPlaying = false;
+                isPaused = false;
                 ttsIcon.className = 'fas fa-play';
                 soundWave.classList.remove('playing');
             }
@@ -1659,14 +1665,22 @@
             }
 
             ttsVoice.addEventListener('change', () => {
+                // Capture current playing state before stopAllPlayback clears it
+                const wasPlaying = isCloudPlaying || isPlaying || (synth && synth.speaking && !synth.paused);
+                
                 localStorage.setItem('selectedTtsVoice', ttsVoice.value);
-                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
                 
                 stopAllPlayback();
+                
+                // Clear state on voice change
+                audioChunks = [];
+                currentChunkIndex = 0;
                 utterance = null; // force recreation if they switch back to browser
                 
-                if (wasSpeaking) {
-                    startPlayback();
+                if (wasPlaying) {
+                    setTimeout(() => {
+                        startPlayback();
+                    }, 250); // 250ms delay for browser to process cancel
                 }
             });
 
@@ -1691,6 +1705,7 @@
 
                 utterance.onstart = () => {
                     isPlaying = true;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-pause';
                     ttsStatus.textContent = 'Playing audio...';
                     soundWave.classList.add('playing');
@@ -1698,6 +1713,7 @@
 
                 utterance.onend = () => {
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Audio playback complete';
                     soundWave.classList.remove('playing');
@@ -1706,6 +1722,7 @@
                 utterance.onerror = (e) => {
                     console.error('Speech synthesis error:', e);
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Playback interrupted';
                     soundWave.classList.remove('playing');
@@ -1729,24 +1746,32 @@
                         }
                     }
                 } else {
-                    if (!utterance) initTTS();
-
-                    if (synth.speaking) {
-                        if (synth.paused) {
+                    if (isPlaying) {
+                        if (isPaused) {
                             synth.resume();
-                            isPlaying = true;
+                            isPaused = false;
                             ttsIcon.className = 'fas fa-pause';
                             ttsStatus.textContent = 'Playing audio...';
                             soundWave.classList.add('playing');
                         } else {
                             synth.pause();
-                            isPlaying = false;
+                            isPaused = true;
                             ttsIcon.className = 'fas fa-play';
                             ttsStatus.textContent = 'Audio playback paused';
                             soundWave.classList.remove('playing');
                         }
                     } else {
-                        synth.speak(utterance);
+                        // Ensure a clean slate before speaking
+                        if (synth) {
+                            synth.resume();
+                            synth.cancel();
+                        }
+                        setTimeout(() => {
+                            if (!utterance) initTTS();
+                            if (synth) {
+                                synth.speak(utterance);
+                            }
+                        }, 50);
                     }
                 }
             });
@@ -1758,10 +1783,15 @@
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }
@@ -1774,10 +1804,15 @@
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }

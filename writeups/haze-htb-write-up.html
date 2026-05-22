@@ -1599,7 +1599,7 @@ WINRM       10.10.11.61     5985   DC01             [+] haze.htb\mark.adams:Ld@p
 <section>
 <h2 id="privilege-escalation"><i class="fas fa-arrow-up"></i> 6. Deep Dive into Privilege Escalation (Mark.Adams &amp; gMSA)</h2>
 <p>The BloodHound data, combined with <span class="highlight">mark.adams</span>'s successful authentication, provided the perfect blueprint for our next phase: privilege escalation. The key was the <span class="highlight">gMSA_Managers</span> group.</p>
-<img alt="BloodHound visualization of Mark.Adams permissions" class="inline-image" src="../images/bloodhound_vis1.png"> <!-- Replace with your BloodHound Mark.Adams screenshot -->
+<img alt="BloodHound visualization of Mark.Adams permissions" class="inline-image" src="../images/bloodhound_vis1.png"/> <!-- Replace with your BloodHound Mark.Adams screenshot -->
 <h3 id="mark-adams-permissions">BloodHound Visualization: Mark.Adams Permissions</h3>
 <p>The BloodHound visualization after the <span class="highlight">mark.adams</span> compromise immediately highlighted crucial group memberships and potential lateral movement paths:</p>
 <ul>
@@ -1673,12 +1673,12 @@ LDAPS       10.10.11.61     636    DC01             Account: Haze-IT-Backup$    
 <pre class="output">SMB         10.10.11.61     445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:False)
 SMB         10.10.11.61     445    DC01             [+] haze.htb\Haze-IT-Backup$:4de830d1d58c14e241aff55f82ecdba1 </pre>
 </div>
-</img></section>
+</section>
 <section>
 <h2 id="escalating-edward-martin"><i class="fas fa-user-shield"></i> 7. Escalating Privileges to edward.martin</h2>
 <p>Our BloodHound analysis became even more crucial here. The <span class="highlight">Haze-IT-Backup$</span> account, now compromised, revealed a clear path to further privilege escalation, targeting the <span class="highlight">edward.martin</span> user.</p>
-<img alt="BloodHound visualization of Haze-IT-Backup$ permissions" class="inline-image" src="../images/bloodhound-vis2.png">
-<img alt="BloodHound visualization of Haze-IT-Backup$ permissions" class="inline-image" src="../images/bloodhound-vis3.png"/>
+<img alt="BloodHound visualization of Haze-IT-Backup$ permissions" class="inline-image" src="../images/bloodhound-vis2.png"/>
+<img alt="BloodHound visualization of Haze-IT-Backup$ permissions" class="inline-image" src="../images/bloodhound-vis3.png">
 <p>The BloodHound screenshot visualized the critical relationships from the already compromised <span class="highlight">HAZE-IT-BACKUP$</span> account within the <span class="highlight">haze.htb</span> domain:</p>
 <p>It showed <span class="highlight">HAZE-IT-BACKUP$</span> has <span class="highlight">WriteOwner</span> rights over the <span class="highlight">SUPPORT_SERVICES</span> group. This is a powerful permission, allowing <span class="highlight">HAZE-IT-BACKUP$</span> to effectively seize control of that group.</p>
 <p>Crucially, the <span class="highlight">SUPPORT_SERVICES</span> group possessed the <span class="highlight">AddKeyCredentialLink</span> and <span class="highlight">ForceChangePassword</span> permissions over the <span class="highlight">edward.martin</span> user account. This was the ultimate target.</p>
@@ -1877,8 +1877,8 @@ Mode                 LastWriteTime         Length Name
                 </dir></dir></pre>
 </div>
 <p>After successfully escalating privileges to <span class="highlight">NT AUTHORITY\SYSTEM</span> and receiving a new reverse shell, we navigated to the <code class="highlight">C:\Users\Administrator\Desktop</code> directory. We then listed its contents using the <code class="highlight">dir</code> command, which revealed the presence of the <code class="highlight">root.txt</code> file. This confirmed successful full system compromise and allowed for the final objective of reading the root flag.</p>
-<img alt="Screenshot of Splunk path traversal exploit command and output" class="inline-image" src="../images/pwn1.png"/>
-</section>
+<img alt="Screenshot of Splunk path traversal exploit command and output" class="inline-image" src="../images/pwn1.png">
+</img></section>
 <section>
 <h2 id="conclusion"><i class="fas fa-check-circle"></i> 10. Conclusion</h2>
 <p>The <span class="highlight">Haze Machine</span> engagement was a comprehensive Active Directory penetration test, demonstrating a full chain of compromise from initial reconnaissance and information gathering to full domain administrator access. This machine highlighted several common Active Directory vulnerabilities and misconfigurations, including:</p>
@@ -2085,6 +2085,7 @@ Mode                 LastWriteTime         Length Name
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
+            let isPaused = false;
             let playRate = 1.0;
             let voices = [];
             
@@ -2247,6 +2248,9 @@ Mode                 LastWriteTime         Length Name
             });
 
             audioPlayer.addEventListener('error', (e) => {
+                // If we are not actively playing a cloud chunk, ignore errors (e.g. caused by setting src = '')
+                if (!isCloudPlaying) return;
+
                 console.error('Cloud audio player error, falling back to browser synthesis...', e);
                 isCloudPlaying = false;
                 audioChunks = [];
@@ -2276,14 +2280,16 @@ Mode                 LastWriteTime         Length Name
             }
 
             function stopAllPlayback() {
+                isCloudPlaying = false; // Set this first to prevent error listener from firing
                 audioPlayer.pause();
                 audioPlayer.src = '';
-                isCloudPlaying = false;
                 
                 if (synth) {
+                    synth.resume(); // Workaround: resume first to unstick paused state before cancel
                     synth.cancel();
                 }
                 isPlaying = false;
+                isPaused = false;
                 ttsIcon.className = 'fas fa-play';
                 soundWave.classList.remove('playing');
             }
@@ -2313,14 +2319,22 @@ Mode                 LastWriteTime         Length Name
             }
 
             ttsVoice.addEventListener('change', () => {
+                // Capture current playing state before stopAllPlayback clears it
+                const wasPlaying = isCloudPlaying || isPlaying || (synth && synth.speaking && !synth.paused);
+                
                 localStorage.setItem('selectedTtsVoice', ttsVoice.value);
-                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
                 
                 stopAllPlayback();
+                
+                // Clear state on voice change
+                audioChunks = [];
+                currentChunkIndex = 0;
                 utterance = null; // force recreation if they switch back to browser
                 
-                if (wasSpeaking) {
-                    startPlayback();
+                if (wasPlaying) {
+                    setTimeout(() => {
+                        startPlayback();
+                    }, 250); // 250ms delay for browser to process cancel
                 }
             });
 
@@ -2345,6 +2359,7 @@ Mode                 LastWriteTime         Length Name
 
                 utterance.onstart = () => {
                     isPlaying = true;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-pause';
                     ttsStatus.textContent = 'Playing audio...';
                     soundWave.classList.add('playing');
@@ -2352,6 +2367,7 @@ Mode                 LastWriteTime         Length Name
 
                 utterance.onend = () => {
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Audio playback complete';
                     soundWave.classList.remove('playing');
@@ -2360,6 +2376,7 @@ Mode                 LastWriteTime         Length Name
                 utterance.onerror = (e) => {
                     console.error('Speech synthesis error:', e);
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Playback interrupted';
                     soundWave.classList.remove('playing');
@@ -2383,24 +2400,32 @@ Mode                 LastWriteTime         Length Name
                         }
                     }
                 } else {
-                    if (!utterance) initTTS();
-
-                    if (synth.speaking) {
-                        if (synth.paused) {
+                    if (isPlaying) {
+                        if (isPaused) {
                             synth.resume();
-                            isPlaying = true;
+                            isPaused = false;
                             ttsIcon.className = 'fas fa-pause';
                             ttsStatus.textContent = 'Playing audio...';
                             soundWave.classList.add('playing');
                         } else {
                             synth.pause();
-                            isPlaying = false;
+                            isPaused = true;
                             ttsIcon.className = 'fas fa-play';
                             ttsStatus.textContent = 'Audio playback paused';
                             soundWave.classList.remove('playing');
                         }
                     } else {
-                        synth.speak(utterance);
+                        // Ensure a clean slate before speaking
+                        if (synth) {
+                            synth.resume();
+                            synth.cancel();
+                        }
+                        setTimeout(() => {
+                            if (!utterance) initTTS();
+                            if (synth) {
+                                synth.speak(utterance);
+                            }
+                        }, 50);
                     }
                 }
             });
@@ -2412,10 +2437,15 @@ Mode                 LastWriteTime         Length Name
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }
@@ -2428,10 +2458,15 @@ Mode                 LastWriteTime         Length Name
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }

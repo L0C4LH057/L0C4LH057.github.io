@@ -1152,7 +1152,7 @@
 <strong>The core innovation:</strong> Effective reasoning doesn't require longer traces, but better
                     state management.
                 </div>
-<img alt="Chain of Thought vs Atom of Thought Comparison" class="inline-image" src="../images/cot_vs_aot_comparison.png">
+<img alt="Chain of Thought vs Atom of Thought Comparison" class="inline-image" src="../images/cot_vs_aot_comparison.png"/>
 <h2>Part 2: The Efficiency Breakthrough</h2>
 <h3>Quantitative Comparison</h3>
 <table class="comparison-table">
@@ -1197,7 +1197,7 @@
 </tr>
 </tbody>
 </table>
-<img alt="Token Efficiency Comparison Chart" class="inline-image" src="../images/token_efficiency_chart.png">
+<img alt="Token Efficiency Comparison Chart" class="inline-image" src="../images/token_efficiency_chart.png"/>
 <h3>Performance Benchmarks</h3>
 <p>Recent research reveals staggering efficiency gains:</p>
 <ol>
@@ -1216,7 +1216,7 @@
 <p>The AoT framework implements several key innovations:</p>
 <h3>1. Markovian Reasoning Process</h3>
 <pre><code>Current Question → Decompose → Atomic Subquestions → Solve Independently → Synthesize</code></pre>
-<img alt="Atom of Thought Workflow Diagram" class="inline-image" src="../images/aot_workflow_diagram.png"/>
+<img alt="Atom of Thought Workflow Diagram" class="inline-image" src="../images/aot_workflow_diagram.png">
 <h3>2. Atomic State Representation</h3>
 <ul>
 <li>Questions are decomposed into <strong>dependency-based subquestions</strong></li>
@@ -1358,7 +1358,7 @@ def atom_of_thought(problem):
 <li><strong>MCP Server Implementation</strong>: Available for system integration</li>
 <li><strong>Demo Applications</strong>: Sample implementations and case studies</li>
 </ol>
-</img></img>
+</img>
             </div>
 
             <!-- Comments Section -->
@@ -1518,6 +1518,7 @@ def atom_of_thought(problem):
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
+            let isPaused = false;
             let playRate = 1.0;
             let voices = [];
             
@@ -1680,6 +1681,9 @@ def atom_of_thought(problem):
             });
 
             audioPlayer.addEventListener('error', (e) => {
+                // If we are not actively playing a cloud chunk, ignore errors (e.g. caused by setting src = '')
+                if (!isCloudPlaying) return;
+
                 console.error('Cloud audio player error, falling back to browser synthesis...', e);
                 isCloudPlaying = false;
                 audioChunks = [];
@@ -1709,14 +1713,16 @@ def atom_of_thought(problem):
             }
 
             function stopAllPlayback() {
+                isCloudPlaying = false; // Set this first to prevent error listener from firing
                 audioPlayer.pause();
                 audioPlayer.src = '';
-                isCloudPlaying = false;
                 
                 if (synth) {
+                    synth.resume(); // Workaround: resume first to unstick paused state before cancel
                     synth.cancel();
                 }
                 isPlaying = false;
+                isPaused = false;
                 ttsIcon.className = 'fas fa-play';
                 soundWave.classList.remove('playing');
             }
@@ -1746,14 +1752,22 @@ def atom_of_thought(problem):
             }
 
             ttsVoice.addEventListener('change', () => {
+                // Capture current playing state before stopAllPlayback clears it
+                const wasPlaying = isCloudPlaying || isPlaying || (synth && synth.speaking && !synth.paused);
+                
                 localStorage.setItem('selectedTtsVoice', ttsVoice.value);
-                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
                 
                 stopAllPlayback();
+                
+                // Clear state on voice change
+                audioChunks = [];
+                currentChunkIndex = 0;
                 utterance = null; // force recreation if they switch back to browser
                 
-                if (wasSpeaking) {
-                    startPlayback();
+                if (wasPlaying) {
+                    setTimeout(() => {
+                        startPlayback();
+                    }, 250); // 250ms delay for browser to process cancel
                 }
             });
 
@@ -1778,6 +1792,7 @@ def atom_of_thought(problem):
 
                 utterance.onstart = () => {
                     isPlaying = true;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-pause';
                     ttsStatus.textContent = 'Playing audio...';
                     soundWave.classList.add('playing');
@@ -1785,6 +1800,7 @@ def atom_of_thought(problem):
 
                 utterance.onend = () => {
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Audio playback complete';
                     soundWave.classList.remove('playing');
@@ -1793,6 +1809,7 @@ def atom_of_thought(problem):
                 utterance.onerror = (e) => {
                     console.error('Speech synthesis error:', e);
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Playback interrupted';
                     soundWave.classList.remove('playing');
@@ -1816,24 +1833,32 @@ def atom_of_thought(problem):
                         }
                     }
                 } else {
-                    if (!utterance) initTTS();
-
-                    if (synth.speaking) {
-                        if (synth.paused) {
+                    if (isPlaying) {
+                        if (isPaused) {
                             synth.resume();
-                            isPlaying = true;
+                            isPaused = false;
                             ttsIcon.className = 'fas fa-pause';
                             ttsStatus.textContent = 'Playing audio...';
                             soundWave.classList.add('playing');
                         } else {
                             synth.pause();
-                            isPlaying = false;
+                            isPaused = true;
                             ttsIcon.className = 'fas fa-play';
                             ttsStatus.textContent = 'Audio playback paused';
                             soundWave.classList.remove('playing');
                         }
                     } else {
-                        synth.speak(utterance);
+                        // Ensure a clean slate before speaking
+                        if (synth) {
+                            synth.resume();
+                            synth.cancel();
+                        }
+                        setTimeout(() => {
+                            if (!utterance) initTTS();
+                            if (synth) {
+                                synth.speak(utterance);
+                            }
+                        }, 50);
                     }
                 }
             });
@@ -1845,10 +1870,15 @@ def atom_of_thought(problem):
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }
@@ -1861,10 +1891,15 @@ def atom_of_thought(problem):
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }

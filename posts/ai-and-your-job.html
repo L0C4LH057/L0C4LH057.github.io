@@ -1126,7 +1126,7 @@
 <li><strong>Tech Support Specialists:</strong> AI chatbots can handle routine queries about software updates, but human specialists step in for complex troubleshooting, building trust with frustrated users, and offering tailored solutions.</li>
 </ul>
 <p>AI takes the load off repetitive duties, allowing you to focus on what makes your role special creativity, strategy, and human connection.</p>
-<img alt="Epic sci-fi scene of AI managing data streams and humans designing futuristic systems" class="inline-image" src="../images/ai_and_humans_concept.png">
+<img alt="Epic sci-fi scene of AI managing data streams and humans designing futuristic systems" class="inline-image" src="../images/ai_and_humans_concept.png"/>
 <h2><i class="fas fa-road-barricade"></i> The Slow Lane: AI’s Limitations</h2>
 <p>AI isn’t a superhero that can instantly conquer every job. Its progress resembles a cautious driver confident on open roads but hesitant in chaotic city streets. Several factors slow its takeover, especially in critical roles.</p>
 <h3>The Trust Challenge</h3>
@@ -1135,7 +1135,7 @@
 <p>Certain tasks demand the human touch empathy, intuition, and quick decision-making. A teacher inspiring a student, a counselor supporting someone in crisis, or a project manager navigating team dynamics are roles AI can’t fully replicate. These skills anchor human value in the workplace.</p>
 <h3>Learning Curve</h3>
 <p>AI learns from data, not experience. It lacks the adaptability humans gain through life’s ups and downs, making it less equipped for unpredictable scenarios where judgment trumps algorithms.</p>
-<img alt="Realistic sci-fi scene of a self-driving car struggling in city traffic with human oversight" class="inline-image" src="../images/self_driving_cars.png">
+<img alt="Realistic sci-fi scene of a self-driving car struggling in city traffic with human oversight" class="inline-image" src="../images/self_driving_cars.png"/>
 <h2><i class="fas fa-rocket"></i> The Fast Lane: AI’s Quick Wins</h2>
 <p>While full automation lags, AI is already transforming specific tasks at breakneck speed, particularly where processes are clear-cut.</p>
 <ul>
@@ -1143,7 +1143,7 @@
 <li><strong>Tech Optimization:</strong> Tools like XBOW scan code for vulnerabilities, and AI-driven analytics predict system failures, empowering tech professionals to focus on innovation.</li>
 </ul>
 <p>These advancements don’t replace jobs they amplify efficiency, letting you tackle higher-level challenges with confidence.</p>
-<img alt="Sci-fi depiction of a rocket symbolizing AI’s rapid task automation" class="inline-image" src="../images/quick_wins.png"/>
+<img alt="Sci-fi depiction of a rocket symbolizing AI’s rapid task automation" class="inline-image" src="../images/quick_wins.png">
 <h2><i class="fas fa-user-astronaut"></i> Your Superpower: Essential Skills</h2>
 <p>As AI handles the routine, your uniquely human skills become your superpower. The Future of Jobs Report 2025 identifies these as critical:</p>
 <ul>
@@ -1154,7 +1154,7 @@
 <li><strong>AI Literacy:</strong> Mastering AI tools to enhance your work, turning them into powerful allies.</li>
 </ul>
 <p>A McKinsey study suggests AI could free up 60-70% of your time from routine tasks by 2030, letting you focus on these high-value skills.</p>
-<img alt="Icons representing critical thinking, creativity, and emotional intelligence in a futuristic setting" class="inline-image" src="../images/essential_skills.png"/>
+<img alt="Icons representing critical thinking, creativity, and emotional intelligence in a futuristic setting" class="inline-image" src="../images/essential_skills.png">
 <div class="highlight-box">
 <p><strong>Key Insight:</strong> AI isn’t your enemy, it’s your partner. Embrace it to unlock a future where your skills shine brighter than ever.</p>
 </div>
@@ -1194,6 +1194,8 @@
 <ul>
 <h3>References</h3>
 <ul>
+<h3>References</h3>
+<ul>
 <li><a href="https://www.weforum.org/publications/the-future-of-jobs-report-2023/" rel="noopener" target="_blank">World Economic Forum: Future of Jobs Report 2023</a></li>
 <li><a href="https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier" rel="noopener" target="_blank">McKinsey: The Economic Potential of Generative AI</a></li>
 <li><a href="https://www.aisecuritynotes.com/" rel="noopener" target="_blank">Joshua Saxe: AI Security Notes</a></li>
@@ -1201,6 +1203,7 @@
 <p style="text-align: center; margin-top: 2rem;">
 <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
 </p>
+</ul>
 </ul>
 </ul>
 </ul>
@@ -1374,6 +1377,7 @@
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
+            let isPaused = false;
             let playRate = 1.0;
             let voices = [];
             
@@ -1536,6 +1540,9 @@
             });
 
             audioPlayer.addEventListener('error', (e) => {
+                // If we are not actively playing a cloud chunk, ignore errors (e.g. caused by setting src = '')
+                if (!isCloudPlaying) return;
+
                 console.error('Cloud audio player error, falling back to browser synthesis...', e);
                 isCloudPlaying = false;
                 audioChunks = [];
@@ -1565,14 +1572,16 @@
             }
 
             function stopAllPlayback() {
+                isCloudPlaying = false; // Set this first to prevent error listener from firing
                 audioPlayer.pause();
                 audioPlayer.src = '';
-                isCloudPlaying = false;
                 
                 if (synth) {
+                    synth.resume(); // Workaround: resume first to unstick paused state before cancel
                     synth.cancel();
                 }
                 isPlaying = false;
+                isPaused = false;
                 ttsIcon.className = 'fas fa-play';
                 soundWave.classList.remove('playing');
             }
@@ -1602,14 +1611,22 @@
             }
 
             ttsVoice.addEventListener('change', () => {
+                // Capture current playing state before stopAllPlayback clears it
+                const wasPlaying = isCloudPlaying || isPlaying || (synth && synth.speaking && !synth.paused);
+                
                 localStorage.setItem('selectedTtsVoice', ttsVoice.value);
-                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
                 
                 stopAllPlayback();
+                
+                // Clear state on voice change
+                audioChunks = [];
+                currentChunkIndex = 0;
                 utterance = null; // force recreation if they switch back to browser
                 
-                if (wasSpeaking) {
-                    startPlayback();
+                if (wasPlaying) {
+                    setTimeout(() => {
+                        startPlayback();
+                    }, 250); // 250ms delay for browser to process cancel
                 }
             });
 
@@ -1634,6 +1651,7 @@
 
                 utterance.onstart = () => {
                     isPlaying = true;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-pause';
                     ttsStatus.textContent = 'Playing audio...';
                     soundWave.classList.add('playing');
@@ -1641,6 +1659,7 @@
 
                 utterance.onend = () => {
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Audio playback complete';
                     soundWave.classList.remove('playing');
@@ -1649,6 +1668,7 @@
                 utterance.onerror = (e) => {
                     console.error('Speech synthesis error:', e);
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Playback interrupted';
                     soundWave.classList.remove('playing');
@@ -1672,24 +1692,32 @@
                         }
                     }
                 } else {
-                    if (!utterance) initTTS();
-
-                    if (synth.speaking) {
-                        if (synth.paused) {
+                    if (isPlaying) {
+                        if (isPaused) {
                             synth.resume();
-                            isPlaying = true;
+                            isPaused = false;
                             ttsIcon.className = 'fas fa-pause';
                             ttsStatus.textContent = 'Playing audio...';
                             soundWave.classList.add('playing');
                         } else {
                             synth.pause();
-                            isPlaying = false;
+                            isPaused = true;
                             ttsIcon.className = 'fas fa-play';
                             ttsStatus.textContent = 'Audio playback paused';
                             soundWave.classList.remove('playing');
                         }
                     } else {
-                        synth.speak(utterance);
+                        // Ensure a clean slate before speaking
+                        if (synth) {
+                            synth.resume();
+                            synth.cancel();
+                        }
+                        setTimeout(() => {
+                            if (!utterance) initTTS();
+                            if (synth) {
+                                synth.speak(utterance);
+                            }
+                        }, 50);
                     }
                 }
             });
@@ -1701,10 +1729,15 @@
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }
@@ -1717,10 +1750,15 @@
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }

@@ -1122,7 +1122,7 @@
 <p>Most people answer this question with labels   a profession, a distinction, a role. But labels are not identity. They are costumes. Who you are is closer to something living: the values you hold under pressure, the patterns you repeat in private, the way you respond when everything falls apart.</p>
 <p>Here is the harder truth: the person who never seriously asks this question will spend their life living someone else's answer   their parent's definition, their culture's template, their fear's blueprint. Identity must be chosen, not just inherited. And it must be revisited, because you are not the same person at 35 that you were at 22.</p>
 <p>If you believe you were made by God, this question becomes even richer. It asks: <em>"Who did God originally design me to be   before the wounds, the performance, the people-pleasing?"</em> That is not a psychological question alone. It is a spiritual homecoming.</p>
-<img alt="Three distinct stones placed across calm reflecting water, representing identity, direction, and accomplishment" class="screenshot" src="../images/three_questions.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;">
+<img alt="Three distinct stones placed across calm reflecting water, representing identity, direction, and accomplishment" class="screenshot" src="../images/three_questions.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;"/>
 <h3>2. Where Am I Going?</h3>
 <p>Direction without self-knowledge is just ambition wearing a blindfold. Many people chase destinations based on what looks impressive, what their peers are doing, or what will finally earn them the approval they never received. The question is not just where you are going   it is why.</p>
 <p>Consider this: life is not primarily a destination to arrive at. It is a direction to walk in. The most fulfilled people are not those who reached a finish line   they are those who were deeply aligned with the path they were on. They moved with a sense of meaning even through difficulty, because their direction was rooted in something real.</p>
@@ -1132,7 +1132,7 @@
 <p>When asked at the right time and in the right order, however, this question becomes powerful. It forces you to separate what you want to accumulate from what you want to leave behind   and those are never the same thing. Meaningful accomplishment almost always has a dimension that outlasts the person who built it. Not as legacy in the ego sense, but as stewardship: something was placed in your hands, and you were faithful with it.</p>
 <h2>PART TWO: The Six Goal Domains</h2>
 <p>Once you have wrestled with the three questions, goals become the practical expression of your answers. There are six domains that, when pursued together, form a whole and integrated life.</p>
-<img alt="A circular aperture looking out over mountains at sunrise, representing the six goal domains in harmony" class="screenshot" src="../images/six_domains.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;">
+<img alt="A circular aperture looking out over mountains at sunrise, representing the six goal domains in harmony" class="screenshot" src="../images/six_domains.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;"/>
 <h3>Domain 1: Personal &amp; Family Goals</h3>
 <p>This is the most underrated domain in modern ambition culture   and the one that causes the most quiet devastation when ignored. Society applauds professional achievement. It rarely grades you on whether you were truly present for the people who needed you most.</p>
 <p>A vague wish like "I want a happy family" is not a goal   it is a hope. Real personal goals ask harder questions: What kind of partner do you want to be when you are tired, broke, and under pressure? What values do you want your children to absorb from watching how you live? What does your relationship with your own health, peace, and inner life look like in ten years? The private sphere demands the most intentionality, precisely because no one is grading you there.</p>
@@ -1161,7 +1161,7 @@
 <p>Reviewing these questions is not a lack of faith in God's plan. It is one of the most faithful things you can do   because it says: "I take seriously the life I have been given. I will not waste it. I will understand it, steward it, and show up fully for what is coming."</p>
 <p>That posture   prepared, self-aware, faith-rooted, intentional   is the foundation of a life well lived.</p>
 <p style="margin-top: 2rem; font-weight: 600;">So   which of the three questions do you find hardest to answer honestly? Start there. That is where your growth is waiting.</p>
-</img></img>
+
             </div>
 
             <!-- Comments Section -->
@@ -1321,6 +1321,7 @@
             let synth = window.speechSynthesis;
             let utterance = null;
             let isPlaying = false;
+            let isPaused = false;
             let playRate = 1.0;
             let voices = [];
             
@@ -1483,6 +1484,9 @@
             });
 
             audioPlayer.addEventListener('error', (e) => {
+                // If we are not actively playing a cloud chunk, ignore errors (e.g. caused by setting src = '')
+                if (!isCloudPlaying) return;
+
                 console.error('Cloud audio player error, falling back to browser synthesis...', e);
                 isCloudPlaying = false;
                 audioChunks = [];
@@ -1512,14 +1516,16 @@
             }
 
             function stopAllPlayback() {
+                isCloudPlaying = false; // Set this first to prevent error listener from firing
                 audioPlayer.pause();
                 audioPlayer.src = '';
-                isCloudPlaying = false;
                 
                 if (synth) {
+                    synth.resume(); // Workaround: resume first to unstick paused state before cancel
                     synth.cancel();
                 }
                 isPlaying = false;
+                isPaused = false;
                 ttsIcon.className = 'fas fa-play';
                 soundWave.classList.remove('playing');
             }
@@ -1549,14 +1555,22 @@
             }
 
             ttsVoice.addEventListener('change', () => {
+                // Capture current playing state before stopAllPlayback clears it
+                const wasPlaying = isCloudPlaying || isPlaying || (synth && synth.speaking && !synth.paused);
+                
                 localStorage.setItem('selectedTtsVoice', ttsVoice.value);
-                const wasSpeaking = (ttsVoice.value === 'cloud-natural') ? isCloudPlaying : (synth && synth.speaking && !synth.paused);
                 
                 stopAllPlayback();
+                
+                // Clear state on voice change
+                audioChunks = [];
+                currentChunkIndex = 0;
                 utterance = null; // force recreation if they switch back to browser
                 
-                if (wasSpeaking) {
-                    startPlayback();
+                if (wasPlaying) {
+                    setTimeout(() => {
+                        startPlayback();
+                    }, 250); // 250ms delay for browser to process cancel
                 }
             });
 
@@ -1581,6 +1595,7 @@
 
                 utterance.onstart = () => {
                     isPlaying = true;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-pause';
                     ttsStatus.textContent = 'Playing audio...';
                     soundWave.classList.add('playing');
@@ -1588,6 +1603,7 @@
 
                 utterance.onend = () => {
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Audio playback complete';
                     soundWave.classList.remove('playing');
@@ -1596,6 +1612,7 @@
                 utterance.onerror = (e) => {
                     console.error('Speech synthesis error:', e);
                     isPlaying = false;
+                    isPaused = false;
                     ttsIcon.className = 'fas fa-play';
                     ttsStatus.textContent = 'Playback interrupted';
                     soundWave.classList.remove('playing');
@@ -1619,24 +1636,32 @@
                         }
                     }
                 } else {
-                    if (!utterance) initTTS();
-
-                    if (synth.speaking) {
-                        if (synth.paused) {
+                    if (isPlaying) {
+                        if (isPaused) {
                             synth.resume();
-                            isPlaying = true;
+                            isPaused = false;
                             ttsIcon.className = 'fas fa-pause';
                             ttsStatus.textContent = 'Playing audio...';
                             soundWave.classList.add('playing');
                         } else {
                             synth.pause();
-                            isPlaying = false;
+                            isPaused = true;
                             ttsIcon.className = 'fas fa-play';
                             ttsStatus.textContent = 'Audio playback paused';
                             soundWave.classList.remove('playing');
                         }
                     } else {
-                        synth.speak(utterance);
+                        // Ensure a clean slate before speaking
+                        if (synth) {
+                            synth.resume();
+                            synth.cancel();
+                        }
+                        setTimeout(() => {
+                            if (!utterance) initTTS();
+                            if (synth) {
+                                synth.speak(utterance);
+                            }
+                        }, 50);
                     }
                 }
             });
@@ -1648,10 +1673,15 @@
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }
@@ -1664,10 +1694,15 @@
                     if (ttsVoice.value === 'cloud-natural') {
                         audioPlayer.playbackRate = playRate;
                     } else {
-                        if (synth && synth.speaking) {
-                            synth.cancel();
-                            initTTS();
-                            synth.speak(utterance);
+                        if (synth && isPlaying) {
+                            const wasSpeaking = !isPaused;
+                            stopAllPlayback();
+                            utterance = null;
+                            if (wasSpeaking) {
+                                setTimeout(() => {
+                                    startPlayback();
+                                }, 250);
+                            }
                         }
                     }
                 }
