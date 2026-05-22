@@ -39,3 +39,14 @@ Track progress of implementing the secure self-hosted Admin & Analytics Dashboar
 - [x] Compile blog posts and write-ups using `update_posts.py`
 - [x] Verify functionality via automated and manual check
 
+## Step 8: Remove Distorted Browser-Native TTS Voices [x]
+- [x] Investigate why browser voices are distorted and whether they can be fixed
+- [x] Modify `template.html` to hide the selector dropdown and replace it with a premium static "Cloud Voice" badge
+- [x] Simplify `populateVoices` to only use 'cloud-natural'
+- [x] Remove local browser-synthesis fallbacks from the audio playback logic and show direct errors instead
+- [x] Recompile all 26 blog posts and write-ups using `update_posts.py`
+- [x] Verify pages render and play cloud audio correctly, and verify the dropdown is replaced by the static "Cloud Voice" badge
+- [x] Commit all changes to Git
+
+
+

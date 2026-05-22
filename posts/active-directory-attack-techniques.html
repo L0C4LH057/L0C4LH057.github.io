@@ -1075,12 +1075,12 @@
                     <div class="audio-status" id="ttsStatus">Click play to listen to this article</div>
                 </div>
                 <div class="audio-controls">
-                    <div class="voice-selector-wrapper" style="position: relative; display: flex; align-items: center; margin-right: 0.5rem;">
-                        <i class="fas fa-headset" style="position: absolute; left: 10px; font-size: 0.75rem; color: var(--text-secondary);"></i>
-                        <select id="ttsVoice" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 1.8rem 0.4rem 2rem; cursor: pointer; font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); outline: none; appearance: none; -webkit-appearance: none; max-width: 150px; text-overflow: ellipsis; white-space: nowrap; transition: all 0.2s ease;">
+                    <div class="voice-selector-wrapper" style="display: flex; align-items: center; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.75rem; font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); margin-right: 0.5rem; gap: 0.4rem;">
+                        <i class="fas fa-headset" style="font-size: 0.75rem; color: var(--text-secondary);"></i>
+                        <span>Cloud Voice</span>
+                        <select id="ttsVoice" style="display: none;">
                             <option value="cloud-natural">Cloud Voice (Natural)</option>
                         </select>
-                        <i class="fas fa-chevron-down" style="position: absolute; right: 10px; font-size: 0.7rem; color: var(--text-secondary); pointer-events: none;"></i>
                     </div>
                     <button id="ttsSlower"><i class="fas fa-minus"></i> Speed -</button>
                     <button id="ttsFaster"><i class="fas fa-plus"></i> Speed +</button>
@@ -1509,43 +1509,13 @@
             }
 
             function populateVoices() {
-                // Clear dropdown
+                // Keep only the premium Cloud Voice option
                 ttsVoice.innerHTML = '';
-                
-                // Add Cloud Voice (Natural) option as default
                 const cloudOption = document.createElement('option');
                 cloudOption.value = 'cloud-natural';
                 cloudOption.textContent = 'Cloud Voice (Natural)';
                 ttsVoice.appendChild(cloudOption);
-                
-                if (synth) {
-                    voices = synth.getVoices();
-                    const englishVoices = voices.filter(v => v.lang.startsWith('en'));
-                    const listToUse = englishVoices.length > 0 ? englishVoices : voices;
-                    listToUse.forEach(voice => {
-                        const option = document.createElement('option');
-                        option.value = voice.name;
-                        let cleanName = voice.name
-                            .replace(/Microsoft|Google|Apple/gi, '')
-                            .replace(/Desktop|Natural/gi, '')
-                            .replace(/ - /g, ' ')
-                            .trim();
-                        if (!cleanName) cleanName = voice.name;
-                        option.textContent = `${cleanName} (${voice.lang})`;
-                        ttsVoice.appendChild(option);
-                    });
-                }
-                
-                // Set/restore voice selection
-                const savedVoice = localStorage.getItem('selectedTtsVoice') || 'cloud-natural';
-                let hasSaved = false;
-                for (let i = 0; i < ttsVoice.options.length; i++) {
-                    if (ttsVoice.options[i].value === savedVoice) {
-                        hasSaved = true;
-                        break;
-                    }
-                }
-                ttsVoice.value = hasSaved ? savedVoice : 'cloud-natural';
+                ttsVoice.value = 'cloud-natural';
             }
 
             if (synth) {
@@ -1593,18 +1563,12 @@
                 // If we are not actively playing a cloud chunk, ignore errors (e.g. caused by setting src = '')
                 if (!isCloudPlaying) return;
 
-                console.error('Cloud audio player error, falling back to browser synthesis...', e);
+                console.error('Cloud audio player error:', e);
                 isCloudPlaying = false;
                 audioChunks = [];
                 currentChunkIndex = 0;
-                // Auto transition to first browser voice if one is available
-                if (ttsVoice.options.length > 1) {
-                    ttsVoice.value = ttsVoice.options[1].value;
-                    showToast('Cloud audio failed, using browser synthesis.');
-                    startPlayback();
-                } else {
-                    ttsStatus.textContent = 'Playback error occurred.';
-                }
+                ttsStatus.textContent = 'Failed to load audio. Please check your internet connection.';
+                showToast('Failed to load cloud audio.');
             });
 
             function playCloudChunk(index) {
@@ -1613,10 +1577,7 @@
                     audioPlayer.playbackRate = playRate;
                     audioPlayer.play().catch(err => {
                         console.error('Playback failed for chunk:', err);
-                        if (ttsVoice.options.length > 1) {
-                            ttsVoice.value = ttsVoice.options[1].value;
-                            startPlayback();
-                        }
+                        ttsStatus.textContent = 'Playback failed. Please try again.';
                     });
                 }
             }
