@@ -1120,7 +1120,7 @@
 </ul>
 <p>But to realize this potential, Africa must first <strong>overcome key barriers</strong> starting with <strong>AI and cloud computing adoption</strong>, the backbone of the 4IR.</p>
 <h2>Africa's AI &amp; Cloud Computing Landscape: A 2022 Kaggle Survey Deep Dive</h2>
-<img alt="Digital Africa" class="post-cover" src="../images/cloup_plot.png">
+<img alt="Digital Africa" class="post-cover" src="../images/cloup_plot.png"/>
 <p>To assess Africa's readiness, I analyzed <strong>Kaggle's 2022 Data Science &amp; Machine Learning Survey</strong>, focusing on responses from African professionals. Here's what the data reveals:</p>
 <h3>1. Industry Adoption: Leaders vs. Laggards</h3>
 <table class="comparison-table">
@@ -1197,7 +1197,7 @@
 <p><strong>Solution:</strong> Stronger AI governance frameworks at national and continental levels.</p>
 </div>
 <h2>Country Spotlight: Who's Leading, Who's Lagging?</h2>
-<img alt="Digital Africa" class="post-cover" src="../images/4irplot.png">
+<img alt="Digital Africa" class="post-cover" src="../images/4irplot.png"/>
 <div class="country-grid">
 <div class="country-card">
 <h4>South Africa</h4>
@@ -1263,7 +1263,7 @@
 <p style="text-align: center; margin-top: 2rem;">
 <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
 </p>
-</img></img>
+
             </div>
 
             <!-- Comments Section -->
@@ -1599,6 +1599,23 @@
                                 }
                             });
                         },
+                        getViews: (slug, callback) => {
+                            const ref = db.ref(`views/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase views read denied, using local storage fallback:", err);
+                                fallbackViews(slug, callback);
+                            });
+                        },
+                        trackView: (slug) => {
+                            db.ref(`views/${slug}`).transaction((current) => (current || 0) + 1, (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase trackView transaction failed, using local storage:", err);
+                                    fallbackTrackView(slug);
+                                }
+                            });
+                        },
                         getComments: (slug, callback) => {
                             const ref = db.ref(`comments/${slug}`);
                             ref.on('value', (snapshot) => {
@@ -1622,13 +1639,14 @@
                 }
             }
 
-            // Deterministic base likes count based on the slug to make the blog look alive
+            // Deterministic base likes count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
             function getDeterministicBaseLikes(slug) {
-                let hash = 0;
-                for (let i = 0; i < slug.length; i++) {
-                    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
-                }
-                return Math.abs(hash % 24) + 18; // base count between 18 and 41 likes
+                return 0;
+            }
+
+            // Deterministic base views count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
+            function getDeterministicBaseViews(slug) {
+                return 0;
             }
 
             function fallbackLikes(slug, callback) {
@@ -1651,6 +1669,18 @@
                 fallbackLikes(slug, callback);
             }
 
+            function fallbackViews(slug, callback) {
+                const base = getDeterministicBaseViews(slug);
+                const localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                callback(base + localExtra);
+            }
+
+            function fallbackTrackView(slug) {
+                let localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                localExtra += 1;
+                localStorage.setItem(`blog-views-offset-${slug}`, localExtra.toString());
+            }
+
             function fallbackComments(slug, callback) {
                 const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
                 callback(localComments);
@@ -1671,9 +1701,20 @@
                     getLikes: fallbackLikes,
                     like: fallbackLike,
                     unlike: fallbackUnlike,
+                    getViews: fallbackViews,
+                    trackView: fallbackTrackView,
                     getComments: fallbackComments,
                     addComment: fallbackAddComment
                 };
+            }
+
+            // Page view tracking (throttled by 15 minutes in localStorage)
+            const viewedKey = `blog-viewed-time-${postSlug}`;
+            const lastViewed = localStorage.getItem(viewedKey);
+            const now = Date.now();
+            if (!lastViewed || (now - parseInt(lastViewed) > 900000)) {
+                dbBridge.trackView(postSlug);
+                localStorage.setItem(viewedKey, now.toString());
             }
 
             // --- LIKES ENGINE ---

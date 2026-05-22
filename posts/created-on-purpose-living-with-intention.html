@@ -1114,7 +1114,7 @@
 <p>Most people answer this question with labels   a profession, a distinction, a role. But labels are not identity. They are costumes. Who you are is closer to something living: the values you hold under pressure, the patterns you repeat in private, the way you respond when everything falls apart.</p>
 <p>Here is the harder truth: the person who never seriously asks this question will spend their life living someone else's answer   their parent's definition, their culture's template, their fear's blueprint. Identity must be chosen, not just inherited. And it must be revisited, because you are not the same person at 35 that you were at 22.</p>
 <p>If you believe you were made by God, this question becomes even richer. It asks: <em>"Who did God originally design me to be   before the wounds, the performance, the people-pleasing?"</em> That is not a psychological question alone. It is a spiritual homecoming.</p>
-<img alt="Three distinct stones placed across calm reflecting water, representing identity, direction, and accomplishment" class="screenshot" src="../images/three_questions.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;">
+<img alt="Three distinct stones placed across calm reflecting water, representing identity, direction, and accomplishment" class="screenshot" src="../images/three_questions.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;"/>
 <h3>2. Where Am I Going?</h3>
 <p>Direction without self-knowledge is just ambition wearing a blindfold. Many people chase destinations based on what looks impressive, what their peers are doing, or what will finally earn them the approval they never received. The question is not just where you are going   it is why.</p>
 <p>Consider this: life is not primarily a destination to arrive at. It is a direction to walk in. The most fulfilled people are not those who reached a finish line   they are those who were deeply aligned with the path they were on. They moved with a sense of meaning even through difficulty, because their direction was rooted in something real.</p>
@@ -1124,7 +1124,7 @@
 <p>When asked at the right time and in the right order, however, this question becomes powerful. It forces you to separate what you want to accumulate from what you want to leave behind   and those are never the same thing. Meaningful accomplishment almost always has a dimension that outlasts the person who built it. Not as legacy in the ego sense, but as stewardship: something was placed in your hands, and you were faithful with it.</p>
 <h2>PART TWO: The Six Goal Domains</h2>
 <p>Once you have wrestled with the three questions, goals become the practical expression of your answers. There are six domains that, when pursued together, form a whole and integrated life.</p>
-<img alt="A circular aperture looking out over mountains at sunrise, representing the six goal domains in harmony" class="screenshot" src="../images/six_domains.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;">
+<img alt="A circular aperture looking out over mountains at sunrise, representing the six goal domains in harmony" class="screenshot" src="../images/six_domains.png" style="width: 100%; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--card-shadow); margin: 2rem 0; display: block;"/>
 <h3>Domain 1: Personal &amp; Family Goals</h3>
 <p>This is the most underrated domain in modern ambition culture   and the one that causes the most quiet devastation when ignored. Society applauds professional achievement. It rarely grades you on whether you were truly present for the people who needed you most.</p>
 <p>A vague wish like "I want a happy family" is not a goal   it is a hope. Real personal goals ask harder questions: What kind of partner do you want to be when you are tired, broke, and under pressure? What values do you want your children to absorb from watching how you live? What does your relationship with your own health, peace, and inner life look like in ten years? The private sphere demands the most intentionality, precisely because no one is grading you there.</p>
@@ -1153,7 +1153,7 @@
 <p>Reviewing these questions is not a lack of faith in God's plan. It is one of the most faithful things you can do   because it says: "I take seriously the life I have been given. I will not waste it. I will understand it, steward it, and show up fully for what is coming."</p>
 <p>That posture   prepared, self-aware, faith-rooted, intentional   is the foundation of a life well lived.</p>
 <p style="margin-top: 2rem; font-weight: 600;">So   which of the three questions do you find hardest to answer honestly? Start there. That is where your growth is waiting.</p>
-</img></img>
+
             </div>
 
             <!-- Comments Section -->
@@ -1489,6 +1489,23 @@
                                 }
                             });
                         },
+                        getViews: (slug, callback) => {
+                            const ref = db.ref(`views/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase views read denied, using local storage fallback:", err);
+                                fallbackViews(slug, callback);
+                            });
+                        },
+                        trackView: (slug) => {
+                            db.ref(`views/${slug}`).transaction((current) => (current || 0) + 1, (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase trackView transaction failed, using local storage:", err);
+                                    fallbackTrackView(slug);
+                                }
+                            });
+                        },
                         getComments: (slug, callback) => {
                             const ref = db.ref(`comments/${slug}`);
                             ref.on('value', (snapshot) => {
@@ -1512,13 +1529,14 @@
                 }
             }
 
-            // Deterministic base likes count based on the slug to make the blog look alive
+            // Deterministic base likes count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
             function getDeterministicBaseLikes(slug) {
-                let hash = 0;
-                for (let i = 0; i < slug.length; i++) {
-                    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
-                }
-                return Math.abs(hash % 24) + 18; // base count between 18 and 41 likes
+                return 0;
+            }
+
+            // Deterministic base views count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
+            function getDeterministicBaseViews(slug) {
+                return 0;
             }
 
             function fallbackLikes(slug, callback) {
@@ -1541,6 +1559,18 @@
                 fallbackLikes(slug, callback);
             }
 
+            function fallbackViews(slug, callback) {
+                const base = getDeterministicBaseViews(slug);
+                const localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                callback(base + localExtra);
+            }
+
+            function fallbackTrackView(slug) {
+                let localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                localExtra += 1;
+                localStorage.setItem(`blog-views-offset-${slug}`, localExtra.toString());
+            }
+
             function fallbackComments(slug, callback) {
                 const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
                 callback(localComments);
@@ -1561,9 +1591,20 @@
                     getLikes: fallbackLikes,
                     like: fallbackLike,
                     unlike: fallbackUnlike,
+                    getViews: fallbackViews,
+                    trackView: fallbackTrackView,
                     getComments: fallbackComments,
                     addComment: fallbackAddComment
                 };
+            }
+
+            // Page view tracking (throttled by 15 minutes in localStorage)
+            const viewedKey = `blog-viewed-time-${postSlug}`;
+            const lastViewed = localStorage.getItem(viewedKey);
+            const now = Date.now();
+            if (!lastViewed || (now - parseInt(lastViewed) > 900000)) {
+                dbBridge.trackView(postSlug);
+                localStorage.setItem(viewedKey, now.toString());
             }
 
             // --- LIKES ENGINE ---

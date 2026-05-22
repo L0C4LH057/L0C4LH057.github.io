@@ -1118,7 +1118,7 @@
 <li><strong>Tech Support Specialists:</strong> AI chatbots can handle routine queries about software updates, but human specialists step in for complex troubleshooting, building trust with frustrated users, and offering tailored solutions.</li>
 </ul>
 <p>AI takes the load off repetitive duties, allowing you to focus on what makes your role special creativity, strategy, and human connection.</p>
-<img alt="Epic sci-fi scene of AI managing data streams and humans designing futuristic systems" class="inline-image" src="../images/ai_and_humans_concept.png">
+<img alt="Epic sci-fi scene of AI managing data streams and humans designing futuristic systems" class="inline-image" src="../images/ai_and_humans_concept.png"/>
 <h2><i class="fas fa-road-barricade"></i> The Slow Lane: AI’s Limitations</h2>
 <p>AI isn’t a superhero that can instantly conquer every job. Its progress resembles a cautious driver confident on open roads but hesitant in chaotic city streets. Several factors slow its takeover, especially in critical roles.</p>
 <h3>The Trust Challenge</h3>
@@ -1127,7 +1127,7 @@
 <p>Certain tasks demand the human touch empathy, intuition, and quick decision-making. A teacher inspiring a student, a counselor supporting someone in crisis, or a project manager navigating team dynamics are roles AI can’t fully replicate. These skills anchor human value in the workplace.</p>
 <h3>Learning Curve</h3>
 <p>AI learns from data, not experience. It lacks the adaptability humans gain through life’s ups and downs, making it less equipped for unpredictable scenarios where judgment trumps algorithms.</p>
-<img alt="Realistic sci-fi scene of a self-driving car struggling in city traffic with human oversight" class="inline-image" src="../images/self_driving_cars.png">
+<img alt="Realistic sci-fi scene of a self-driving car struggling in city traffic with human oversight" class="inline-image" src="../images/self_driving_cars.png"/>
 <h2><i class="fas fa-rocket"></i> The Fast Lane: AI’s Quick Wins</h2>
 <p>While full automation lags, AI is already transforming specific tasks at breakneck speed, particularly where processes are clear-cut.</p>
 <ul>
@@ -1135,7 +1135,7 @@
 <li><strong>Tech Optimization:</strong> Tools like XBOW scan code for vulnerabilities, and AI-driven analytics predict system failures, empowering tech professionals to focus on innovation.</li>
 </ul>
 <p>These advancements don’t replace jobs they amplify efficiency, letting you tackle higher-level challenges with confidence.</p>
-<img alt="Sci-fi depiction of a rocket symbolizing AI’s rapid task automation" class="inline-image" src="../images/quick_wins.png"/>
+<img alt="Sci-fi depiction of a rocket symbolizing AI’s rapid task automation" class="inline-image" src="../images/quick_wins.png">
 <h2><i class="fas fa-user-astronaut"></i> Your Superpower: Essential Skills</h2>
 <p>As AI handles the routine, your uniquely human skills become your superpower. The Future of Jobs Report 2025 identifies these as critical:</p>
 <ul>
@@ -1146,7 +1146,7 @@
 <li><strong>AI Literacy:</strong> Mastering AI tools to enhance your work, turning them into powerful allies.</li>
 </ul>
 <p>A McKinsey study suggests AI could free up 60-70% of your time from routine tasks by 2030, letting you focus on these high-value skills.</p>
-<img alt="Icons representing critical thinking, creativity, and emotional intelligence in a futuristic setting" class="inline-image" src="../images/essential_skills.png"/>
+<img alt="Icons representing critical thinking, creativity, and emotional intelligence in a futuristic setting" class="inline-image" src="../images/essential_skills.png">
 <div class="highlight-box">
 <p><strong>Key Insight:</strong> AI isn’t your enemy, it’s your partner. Embrace it to unlock a future where your skills shine brighter than ever.</p>
 </div>
@@ -1174,6 +1174,12 @@
 <ul>
 <h3>References</h3>
 <ul>
+<h3>References</h3>
+<ul>
+<h3>References</h3>
+<ul>
+<h3>References</h3>
+<ul>
 <li><a href="https://www.weforum.org/publications/the-future-of-jobs-report-2023/" rel="noopener" target="_blank">World Economic Forum: Future of Jobs Report 2023</a></li>
 <li><a href="https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier" rel="noopener" target="_blank">McKinsey: The Economic Potential of Generative AI</a></li>
 <li><a href="https://www.aisecuritynotes.com/" rel="noopener" target="_blank">Joshua Saxe: AI Security Notes</a></li>
@@ -1181,6 +1187,9 @@
 <p style="text-align: center; margin-top: 2rem;">
 <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
 </p>
+</ul>
+</ul>
+</ul>
 </ul>
 </ul>
 </ul>
@@ -1524,6 +1533,23 @@
                                 }
                             });
                         },
+                        getViews: (slug, callback) => {
+                            const ref = db.ref(`views/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase views read denied, using local storage fallback:", err);
+                                fallbackViews(slug, callback);
+                            });
+                        },
+                        trackView: (slug) => {
+                            db.ref(`views/${slug}`).transaction((current) => (current || 0) + 1, (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase trackView transaction failed, using local storage:", err);
+                                    fallbackTrackView(slug);
+                                }
+                            });
+                        },
                         getComments: (slug, callback) => {
                             const ref = db.ref(`comments/${slug}`);
                             ref.on('value', (snapshot) => {
@@ -1547,13 +1573,14 @@
                 }
             }
 
-            // Deterministic base likes count based on the slug to make the blog look alive
+            // Deterministic base likes count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
             function getDeterministicBaseLikes(slug) {
-                let hash = 0;
-                for (let i = 0; i < slug.length; i++) {
-                    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
-                }
-                return Math.abs(hash % 24) + 18; // base count between 18 and 41 likes
+                return 0;
+            }
+
+            // Deterministic base views count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
+            function getDeterministicBaseViews(slug) {
+                return 0;
             }
 
             function fallbackLikes(slug, callback) {
@@ -1576,6 +1603,18 @@
                 fallbackLikes(slug, callback);
             }
 
+            function fallbackViews(slug, callback) {
+                const base = getDeterministicBaseViews(slug);
+                const localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                callback(base + localExtra);
+            }
+
+            function fallbackTrackView(slug) {
+                let localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                localExtra += 1;
+                localStorage.setItem(`blog-views-offset-${slug}`, localExtra.toString());
+            }
+
             function fallbackComments(slug, callback) {
                 const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
                 callback(localComments);
@@ -1596,9 +1635,20 @@
                     getLikes: fallbackLikes,
                     like: fallbackLike,
                     unlike: fallbackUnlike,
+                    getViews: fallbackViews,
+                    trackView: fallbackTrackView,
                     getComments: fallbackComments,
                     addComment: fallbackAddComment
                 };
+            }
+
+            // Page view tracking (throttled by 15 minutes in localStorage)
+            const viewedKey = `blog-viewed-time-${postSlug}`;
+            const lastViewed = localStorage.getItem(viewedKey);
+            const now = Date.now();
+            if (!lastViewed || (now - parseInt(lastViewed) > 900000)) {
+                dbBridge.trackView(postSlug);
+                localStorage.setItem(viewedKey, now.toString());
             }
 
             // --- LIKES ENGINE ---

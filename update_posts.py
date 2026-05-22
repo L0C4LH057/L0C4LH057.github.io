@@ -26,7 +26,7 @@ def process_file(file_path, template_content):
         
     if not html_content.strip():
         print(f"  -> Skipping empty file.")
-        return False
+        return None
         
     soup = BeautifulSoup(html_content, 'html.parser')
     folder_name = os.path.basename(os.path.dirname(file_path))
@@ -228,7 +228,12 @@ def process_file(file_path, template_content):
         f.write(output_html)
         
     print(f"  -> Successfully updated: {file_path} ({'Standard' if is_standard else 'Interactive'})")
-    return True
+    return {
+        'slug': slug,
+        'title': title,
+        'folder': folder_name,
+        'date': date
+    }
 
 def main():
     print("Starting Blog Posts Refactoring Script...")
@@ -259,6 +264,7 @@ def main():
         return
         
     processed_count = 0
+    post_metadata_list = []
     
     # Process files in posts/
     if os.path.exists(POSTS_DIR):
@@ -268,16 +274,26 @@ def main():
                 if filename == 'template.html' or filename == 'new_thinker.html':
                     continue
                 file_path = os.path.join(POSTS_DIR, filename)
-                if process_file(file_path, template_content):
+                meta = process_file(file_path, template_content)
+                if meta:
                     processed_count += 1
+                    post_metadata_list.append(meta)
                     
     # Process files in writeups/
     if os.path.exists(WRITEUPS_DIR):
         for filename in os.listdir(WRITEUPS_DIR):
             if filename.endswith('.html'):
                 file_path = os.path.join(WRITEUPS_DIR, filename)
-                if process_file(file_path, template_content):
+                meta = process_file(file_path, template_content)
+                if meta:
                     processed_count += 1
+                    post_metadata_list.append(meta)
+                    
+    # Write metadata index for the dashboard
+    import json
+    with open('posts-index.json', 'w', encoding='utf-8') as f:
+        json.dump(post_metadata_list, f, indent=2)
+    print(f"Generated posts-index.json with {len(post_metadata_list)} items.")
                     
     print(f"\nCompleted! Successfully refactored {processed_count} blog post / write-up pages.")
 

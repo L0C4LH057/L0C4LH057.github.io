@@ -1144,7 +1144,7 @@
 <strong>The core innovation:</strong> Effective reasoning doesn't require longer traces, but better
                     state management.
                 </div>
-<img alt="Chain of Thought vs Atom of Thought Comparison" class="inline-image" src="../images/cot_vs_aot_comparison.png">
+<img alt="Chain of Thought vs Atom of Thought Comparison" class="inline-image" src="../images/cot_vs_aot_comparison.png"/>
 <h2>Part 2: The Efficiency Breakthrough</h2>
 <h3>Quantitative Comparison</h3>
 <table class="comparison-table">
@@ -1189,7 +1189,7 @@
 </tr>
 </tbody>
 </table>
-<img alt="Token Efficiency Comparison Chart" class="inline-image" src="../images/token_efficiency_chart.png">
+<img alt="Token Efficiency Comparison Chart" class="inline-image" src="../images/token_efficiency_chart.png"/>
 <h3>Performance Benchmarks</h3>
 <p>Recent research reveals staggering efficiency gains:</p>
 <ol>
@@ -1208,7 +1208,7 @@
 <p>The AoT framework implements several key innovations:</p>
 <h3>1. Markovian Reasoning Process</h3>
 <pre><code>Current Question → Decompose → Atomic Subquestions → Solve Independently → Synthesize</code></pre>
-<img alt="Atom of Thought Workflow Diagram" class="inline-image" src="../images/aot_workflow_diagram.png"/>
+<img alt="Atom of Thought Workflow Diagram" class="inline-image" src="../images/aot_workflow_diagram.png">
 <h3>2. Atomic State Representation</h3>
 <ul>
 <li>Questions are decomposed into <strong>dependency-based subquestions</strong></li>
@@ -1350,7 +1350,7 @@ def atom_of_thought(problem):
 <li><strong>MCP Server Implementation</strong>: Available for system integration</li>
 <li><strong>Demo Applications</strong>: Sample implementations and case studies</li>
 </ol>
-</img></img>
+</img>
             </div>
 
             <!-- Comments Section -->
@@ -1686,6 +1686,23 @@ def atom_of_thought(problem):
                                 }
                             });
                         },
+                        getViews: (slug, callback) => {
+                            const ref = db.ref(`views/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase views read denied, using local storage fallback:", err);
+                                fallbackViews(slug, callback);
+                            });
+                        },
+                        trackView: (slug) => {
+                            db.ref(`views/${slug}`).transaction((current) => (current || 0) + 1, (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase trackView transaction failed, using local storage:", err);
+                                    fallbackTrackView(slug);
+                                }
+                            });
+                        },
                         getComments: (slug, callback) => {
                             const ref = db.ref(`comments/${slug}`);
                             ref.on('value', (snapshot) => {
@@ -1709,13 +1726,14 @@ def atom_of_thought(problem):
                 }
             }
 
-            // Deterministic base likes count based on the slug to make the blog look alive
+            // Deterministic base likes count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
             function getDeterministicBaseLikes(slug) {
-                let hash = 0;
-                for (let i = 0; i < slug.length; i++) {
-                    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
-                }
-                return Math.abs(hash % 24) + 18; // base count between 18 and 41 likes
+                return 0;
+            }
+
+            // Deterministic base views count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
+            function getDeterministicBaseViews(slug) {
+                return 0;
             }
 
             function fallbackLikes(slug, callback) {
@@ -1738,6 +1756,18 @@ def atom_of_thought(problem):
                 fallbackLikes(slug, callback);
             }
 
+            function fallbackViews(slug, callback) {
+                const base = getDeterministicBaseViews(slug);
+                const localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                callback(base + localExtra);
+            }
+
+            function fallbackTrackView(slug) {
+                let localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                localExtra += 1;
+                localStorage.setItem(`blog-views-offset-${slug}`, localExtra.toString());
+            }
+
             function fallbackComments(slug, callback) {
                 const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
                 callback(localComments);
@@ -1758,9 +1788,20 @@ def atom_of_thought(problem):
                     getLikes: fallbackLikes,
                     like: fallbackLike,
                     unlike: fallbackUnlike,
+                    getViews: fallbackViews,
+                    trackView: fallbackTrackView,
                     getComments: fallbackComments,
                     addComment: fallbackAddComment
                 };
+            }
+
+            // Page view tracking (throttled by 15 minutes in localStorage)
+            const viewedKey = `blog-viewed-time-${postSlug}`;
+            const lastViewed = localStorage.getItem(viewedKey);
+            const now = Date.now();
+            if (!lastViewed || (now - parseInt(lastViewed) > 900000)) {
+                dbBridge.trackView(postSlug);
+                localStorage.setItem(viewedKey, now.toString());
             }
 
             // --- LIKES ENGINE ---

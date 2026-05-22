@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics & Admin Dashboard | Bashir Kabir Zarewa</title>
+    <!-- Fonts and Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        :root {
+            /* Premium Minimalist Light Mode */
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-hover: rgba(9, 9, 11, 0.04);
+            --text-primary: #09090b;
+            --text-secondary: #52525b;
+            --text-muted: #71717a;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --border: #e4e4e7;
+            --border-hover: #d4d4d8;
+            --card-shadow: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.1);
+            --shadow-hover: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --header-bg: rgba(250, 250, 250, 0.8);
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-code: 'Fira Code', monospace;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+        }
+
+        [data-theme="dark"] {
+            /* Premium Minimalist Dark Mode */
+            --bg-primary: #09090b;
+            --bg-secondary: #18181b;
+            --bg-hover: rgba(255, 255, 255, 0.04);
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent: #3b82f6;
+            --accent-hover: #60a5fa;
+            --border: #27272a;
+            --border-hover: #3f3f46;
+            --card-shadow: 0 4px 30px rgba(0,0,0,0.4);
+            --shadow-hover: 0 10px 30px rgba(0,0,0,0.6);
+            --header-bg: rgba(9, 9, 11, 0.8);
+            --accent-glow: rgba(59, 130, 246, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scrollbar-width: thin;
+            scrollbar-color: var(--text-muted) var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            box-shadow: var(--card-shadow);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-secondary);
+            transform: translateY(-1px);
+        }
+
+        .theme-toggle i {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        /* Glassmorphic Login Container */
+        .login-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+        }
+
+        .login-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: var(--card-shadow);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .login-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .login-card i.lock-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 15px var(--accent-glow);
+        }
+
+        .login-card h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            padding-right: 2.5rem;
+            border-radius: 8px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-primary);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            font-family: var(--font-sans);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Dashboard Title & Actions */
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1.5rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .dash-title h1 {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.3rem;
+            color: var(--text-primary);
+        }
+
+        .dash-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .dash-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-hover);
+            border-color: var(--text-secondary);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--border-hover);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-info h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-info .stat-value {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: var(--accent-glow);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 992px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .chart-card h2 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .chart-container {
+            position: relative;
+            width: 100%;
+            min-height: 340px;
+        }
+
+        /* Moderation Feed */
+        .feed-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 2rem;
+        }
+
+        .feed-card h2 {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.75rem;
+        }
+
+        .comments-table-wrapper {
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        .comments-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .comments-table th {
+            padding: 0.85rem 1rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 2px solid var(--border);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .comments-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .comment-post-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .comment-post-title:hover {
+            color: var(--accent);
+        }
+
+        .comment-meta-info {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .comment-author-badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .comment-text-content {
+            white-space: pre-wrap;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        .btn-danger-sm {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            white-space: nowrap;
+        }
+
+        .btn-danger-sm:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+        }
+
+        /* Database Banner */
+        .db-banner {
+            border-radius: 8px;
+            padding: 0.75rem 1.2rem;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+        }
+
+        .db-banner.firebase {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .db-banner.local {
+            background: rgba(245, 158, 11, 0.1);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        /* Notification Toast */
+        #cyberToast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            box-shadow: var(--shadow-hover);
+            z-index: 2000;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #cyberToast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #cyberToast i {
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeToggle" title="Toggle color scheme">
+        <i class="fas fa-sun" id="themeIcon"></i>
+    </button>
+
+    <div class="container">
+        
+        <!-- LOGIN INTERFACE -->
+        <div id="login-container" class="login-wrap">
+            <div class="login-card">
+                <i class="fas fa-shield-halved lock-icon"></i>
+                <h2>Admin Access</h2>
+                <p>Verify identity to access analytics & moderation tools.</p>
+                
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="password">Security Password</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="password" class="form-input" placeholder="••••••••" required autofocus>
+                            <button type="button" class="toggle-password" id="togglePasswordBtn" onclick="togglePasswordVisibility()">
+                                <i class="fas fa-eye" id="togglePasswordIcon"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn">Authenticate</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- MAIN DASHBOARD CONTENT -->
+        <div id="dashboard-container" style="display: none;">
+            
+            <!-- Dashboard Header -->
+            <div class="dash-header">
+                <div class="dash-title">
+                    <h1>Developer Analytics</h1>
+                    <p>Monitor reader traffic, post engagement, and comments feed</p>
+                </div>
+                <div class="dash-actions">
+                    <button class="btn-outline" onclick="refreshDashboard()"><i class="fas fa-arrows-rotate"></i> Refresh</button>
+                    <a href="index.html" class="btn-outline"><i class="fas fa-arrow-left"></i> View Blog</a>
+                    <button class="btn-outline" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+            </div>
+
+            <!-- Database connection mode indicator -->
+            <div id="dbModeBanner" class="db-banner local">
+                <i class="fas fa-database"></i> <span id="dbModeText">Loading data source...</span>
+            </div>
+
+            <!-- Aggregated KPIs -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Views</h3>
+                        <div class="stat-value" id="kpiViews">0</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Total Likes</h3>
+                        <div class="stat-value" id="kpiLikes">0</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>Comments</h3>
+                        <div class="stat-value" id="kpiComments">0</div>
+                    </div>
+                    <div class="stat-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2><i class="fas fa-chart-bar"></i> Most Viewed Articles</h2>
+                    <div class="chart-container">
+                        <canvas id="viewsChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card">
+                    <h2><i class="fas fa-chart-pie"></i> Engagement balance</h2>
+                    <div class="chart-container">
+                        <canvas id="engagementChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments Moderation Feed -->
+            <div class="feed-card">
+                <h2><i class="fas fa-comment-slash"></i> Live Comment Moderation Feed</h2>
+                <div class="comments-table-wrapper">
+                    <table class="comments-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Target Article</th>
+                                <th style="width: 20%;">Commenter</th>
+                                <th style="width: 43%;">Comment Content</th>
+                                <th style="width: 12%; text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commentsTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                    Loading comments feed...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="cyberToast">
+        <i class="fas fa-circle-info"></i>
+        <span id="toastMsg">Action complete</span>
+    </div>
+
+    <!-- App Script -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyAM6IO689VRqYn7FS_gYTjpFTwMvB4um5Y",
+            authDomain: "personalblog-e8d0d.firebaseapp.com",
+            databaseURL: "https://personalblog-e8d0d-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "personalblog-e8d0d",
+            storageBucket: "personalblog-e8d0d.appspot.com",
+            messagingSenderId: "746191305731",
+            appId: "1:746191305731:web:b2802db970e04979fe2236"
+        };
+
+        // SHA-256 Hash of admin123
+        const ADMIN_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
+
+        // Application State
+        let postsIndex = [];
+        let dashboardData = null;
+        let viewsChartInstance = null;
+        let engagementChartInstance = null;
+
+        // --- PURE JS SHA-256 FALLBACK (for insecure contexts like file://) ---
+        function sha256Fallback(ascii) {
+            function rightRotate(value, amount) {
+                return (value>>>amount) | (value<<(32 - amount));
+            }
+
+            var mathPow = Math.pow;
+            var maxWord = mathPow(2, 32);
+            var lengthProperty = 'length';
+            var i, j; // Used as a counter across the whole file
+            var result = '';
+
+            var words = [];
+            var asciiBitLength = ascii[lengthProperty]*8;
+
+            var hash = sha256Fallback.h = sha256Fallback.h || [];
+            var k = sha256Fallback.k = sha256Fallback.k || [];
+            var primeCounter = k[lengthProperty];
+
+            var isComposite = {};
+            for (var candidate = 2; primeCounter < 64; candidate++) {
+                if (!isComposite[candidate]) {
+                    for (i = 0; i < 313; i += candidate) {
+                        isComposite[i] = candidate;
+                    }
+                    hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+                    k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
+                }
+            }
+
+            ascii += '\x80'; // Append '1' bit (plus zero padding)
+            while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
+            for (i = 0; i < ascii[lengthProperty]; i++) {
+                j = ascii.charCodeAt(i);
+                if (j>>8) return; // ASCII check: only accept characters in range 0-255
+                words[i>>2] |= j << ((3 - i)%4)*8;
+            }
+            words[words[lengthProperty]] = ((asciiBitLength/maxWord)|0);
+            words[words[lengthProperty]] = (asciiBitLength);
+
+            // process each chunk
+            for (j = 0; j < words[lengthProperty];) {
+                var w = words.slice(j, j += 16); // The message is expanded into 64 words
+                var oldHash = hash;
+                hash = hash.slice(0, 8);
+
+                for (i = 0; i < 64; i++) {
+                    var i2 = i + j;
+                    var w15 = w[i - 15], w2 = w[i - 2];
+
+                    // Iterate
+                    var a = hash[0], e = hash[4];
+                    var temp1 = hash[7]
+                        + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) // S1
+                        + ((e&hash[5])^((~e)&hash[6])) // ch
+                        + k[i]
+                        // Expand the message schedule if needed
+                        + (w[i] = (i < 16) ? w[i] : (
+                                        w[i - 16]
+                                        + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3)) // s0
+                                        + w[i - 7]
+                                        + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10)) // s1
+                                )|0
+                        );
+                    var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) // S0
+                        + ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2])); // maj
+
+                    hash = [(temp1 + temp2)|0].concat(hash);
+                    hash[4] = (hash[4] + temp1)|0;
+                }
+
+                for (i = 0; i < 8; i++) {
+                    hash[i] = (hash[i] + oldHash[i])|0;
+                }
+            }
+
+            for (i = 0; i < 8; i++) {
+                for (j = 3; j + 1; j--) {
+                    var b = (hash[i]>>(j*8))&255;
+                    result += ((b < 16) ? 0 : '') + b.toString(16);
+                }
+            }
+            return result;
+        }
+
+        // --- PASSWORD HASH ENGINE ---
+        async function sha256(message) {
+            // Check if Web Crypto API is available (HTTPS or localhost secure contexts)
+            if (window.crypto && window.crypto.subtle) {
+                try {
+                    const msgBuffer = new TextEncoder().encode(message);
+                    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+                    const hashArray = Array.from(new Uint8Array(hashBuffer));
+                    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    return hashHex;
+                } catch (e) {
+                    console.warn("SubtleCrypto digest failed, falling back to pure JS implementation:", e);
+                }
+            }
+            // Fallback for insecure contexts (e.g. file:// protocol)
+            return sha256Fallback(message);
+        }
+
+        // --- PASSWORD VISIBILITY TOGGLE ---
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('togglePasswordIcon');
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                pwdInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        // --- AUTHENTICATION ---
+        async function handleLogin(e) {
+            e.preventDefault();
+            const password = document.getElementById('password').value;
+            const hash = await sha256(password);
+            
+            if (hash === ADMIN_HASH) {
+                sessionStorage.setItem('dashboard-authorized', 'true');
+                showToast("Authorized successfully");
+                document.getElementById('password').value = '';
+                checkAuth();
+            } else {
+                showToast("Access Denied: Invalid Password");
+                document.getElementById('password').value = '';
+            }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('dashboard-authorized');
+            checkAuth();
+            showToast("Logged out successfully");
+        }
+
+        function checkAuth() {
+            const isAuth = sessionStorage.getItem('dashboard-authorized') === 'true';
+            const loginContainer = document.getElementById('login-container');
+            const dashboardContainer = document.getElementById('dashboard-container');
+            
+            if (isAuth) {
+                loginContainer.style.display = 'none';
+                dashboardContainer.style.display = 'block';
+                initDashboard();
+            } else {
+                loginContainer.style.display = 'flex';
+                dashboardContainer.style.display = 'none';
+            }
+        }
+
+        // --- TOAST NOTIFIER ---
+        const toastEl = document.getElementById('cyberToast');
+        const toastMsgEl = document.getElementById('toastMsg');
+        let toastTimer;
+
+        function showToast(msg) {
+            clearTimeout(toastTimer);
+            toastMsgEl.textContent = msg;
+            toastEl.classList.add('show');
+            toastTimer = setTimeout(() => {
+                toastEl.classList.remove('show');
+            }, 3000);
+        }
+
+        // --- DETERMINISTIC BASE STATS FOR FALLBACK ---
+        function getDeterministicBaseLikes(slug) {
+            return 0;
+        }
+
+        function getDeterministicBaseViews(slug) {
+            return 0;
+        }
+
+        function loadFallbackData(posts) {
+            const likes = {};
+            const views = {};
+            const comments = {};
+            posts.forEach(post => {
+                const slug = post.slug;
+                
+                // Likes
+                const baseLikes = getDeterministicBaseLikes(slug);
+                const localLikesExtra = parseInt(localStorage.getItem(`blog-likes-offset-${slug}`) || '0');
+                likes[slug] = baseLikes + localLikesExtra;
+                
+                // Views
+                const baseViews = getDeterministicBaseViews(slug);
+                const localViewsExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                views[slug] = baseViews + localViewsExtra;
+                
+                // Comments
+                comments[slug] = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
+            });
+            return { likes, views, comments };
+        }
+
+        // --- DATA FETCHING ---
+        function loadAllStats(posts, callback) {
+            if (typeof firebase !== 'undefined') {
+                try {
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig);
+                    }
+                    const db = firebase.database();
+                    
+                    Promise.all([
+                        db.ref('likes').once('value'),
+                        db.ref('views').once('value'),
+                        db.ref('comments').once('value')
+                    ]).then(([likesSnap, viewsSnap, commentsSnap]) => {
+                        const fbLikes = likesSnap.val() || {};
+                        const fbViews = viewsSnap.val() || {};
+                        const fbComments = commentsSnap.val() || {};
+                        
+                        const likes = {};
+                        const views = {};
+                        const comments = {};
+                        
+                        posts.forEach(post => {
+                            const slug = post.slug;
+                            likes[slug] = fbLikes[slug] !== undefined ? fbLikes[slug] : getDeterministicBaseLikes(slug);
+                            views[slug] = fbViews[slug] !== undefined ? fbViews[slug] : getDeterministicBaseViews(slug);
+                            comments[slug] = fbComments[slug] || {};
+                        });
+                        
+                        callback({ likes, views, comments, isFirebase: true });
+                    }).catch(err => {
+                        console.warn("Firebase read failed, switching to localStorage fallback:", err);
+                        callback({ ...loadFallbackData(posts), isFirebase: false });
+                    });
+                } catch (e) {
+                    console.error("Firebase init failed, switching to local fallback:", e);
+                    callback({ ...loadFallbackData(posts), isFirebase: false });
+                }
+            } else {
+                callback({ ...loadFallbackData(posts), isFirebase: false });
+            }
+        }
+
+        // --- CHART STYLING HELPER ---
+        function getChartColors() {
+            const styles = getComputedStyle(document.documentElement);
+            return {
+                text: styles.getPropertyValue('--text-primary').trim() || '#f4f4f5',
+                muted: styles.getPropertyValue('--text-muted').trim() || '#71717a',
+                border: styles.getPropertyValue('--border').trim() || '#27272a',
+                accent: styles.getPropertyValue('--accent').trim() || '#3b82f6',
+                accentHover: styles.getPropertyValue('--accent-hover').trim() || '#60a5fa',
+                accentGlow: styles.getPropertyValue('--accent-glow').trim() || 'rgba(59, 130, 246, 0.15)',
+                bgSecondary: styles.getPropertyValue('--bg-secondary').trim() || '#18181b',
+                bgPrimary: styles.getPropertyValue('--bg-primary').trim() || '#09090b'
+            };
+        }
+
+        // --- DASHBOARD INITIALIZATION ---
+        async function initDashboard() {
+            if (postsIndex.length === 0) {
+                try {
+                    const response = await fetch('posts-index.json');
+                    postsIndex = await response.json();
+                } catch (e) {
+                    console.error("Failed to load posts index. Generating local fallback list.", e);
+                    // Fallback to static listing if index is not loaded
+                    postsIndex = [
+                        { "slug": "created-on-purpose-living-with-intention", "title": "Created on Purpose: Living with Intention", "folder": "posts" },
+                        { "slug": "active-directory-attack-techniques", "title": "Active Directory Attack Techniques", "folder": "posts" },
+                        { "slug": "understanding-prompt-engineering-the-art-of-understanding-ai", "title": "Understanding Prompt Engineering", "folder": "posts" }
+                    ];
+                }
+            }
+
+            refreshDashboard();
+        }
+
+        function refreshDashboard() {
+            loadAllStats(postsIndex, (data) => {
+                dashboardData = data;
+                
+                // Update Banner
+                const modeBanner = document.getElementById('dbModeBanner');
+                const modeText = document.getElementById('dbModeText');
+                if (data.isFirebase) {
+                    modeBanner.className = "db-banner firebase";
+                    modeText.textContent = "Connected to Firebase Realtime Database (Live mode)";
+                } else {
+                    modeBanner.className = "db-banner local";
+                    modeText.textContent = "Firebase disconnected. Displaying Local Storage fallback metrics & deterministic base counts.";
+                }
+
+                // Compute KPI aggregates
+                let totalViews = 0;
+                let totalLikes = 0;
+                let totalComments = 0;
+                
+                postsIndex.forEach(post => {
+                    totalViews += data.views[post.slug] || 0;
+                    totalLikes += data.likes[post.slug] || 0;
+                    totalComments += Object.keys(data.comments[post.slug] || {}).length;
+                });
+
+                document.getElementById('kpiViews').textContent = totalViews.toLocaleString();
+                document.getElementById('kpiLikes').textContent = totalLikes.toLocaleString();
+                document.getElementById('kpiComments').textContent = totalComments.toLocaleString();
+
+                // Render Visualizations
+                renderCharts(data);
+
+                // Render Comment Moderation Table
+                renderComments(data);
+            });
+        }
+
+        // --- CHARTS RENDERING ---
+        function renderCharts(data) {
+            const colors = getChartColors();
+            
+            // 1. Bar Chart: Views per Article (Sorted descending)
+            const viewsChartData = postsIndex.map(post => ({
+                title: post.title.length > 25 ? post.title.slice(0, 25) + '...' : post.title,
+                views: data.views[post.slug] || 0
+            })).sort((a, b) => b.views - a.views).slice(0, 10); // Display Top 10
+
+            const viewsCtx = document.getElementById('viewsChart').getContext('2d');
+            
+            if (viewsChartInstance) {
+                viewsChartInstance.destroy();
+            }
+
+            viewsChartInstance = new Chart(viewsCtx, {
+                type: 'bar',
+                data: {
+                    labels: viewsChartData.map(d => d.title),
+                    datasets: [{
+                        label: 'Views',
+                        data: viewsChartData.map(d => d.views),
+                        backgroundColor: colors.accent,
+                        borderColor: colors.accentHover,
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y', // Horizontal bars are much cleaner for long titles!
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: colors.bgSecondary,
+                            titleColor: colors.text,
+                            bodyColor: colors.text,
+                            borderColor: colors.border,
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: colors.border },
+                            ticks: { color: colors.text }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: colors.text }
+                        }
+                    }
+                }
+            });
+
+            // 2. Doughnut Chart: Engagement metrics (Total Likes vs Total Comments)
+            let totalLikes = 0;
+            let totalComments = 0;
+            postsIndex.forEach(post => {
+                totalLikes += data.likes[post.slug] || 0;
+                totalComments += Object.keys(data.comments[post.slug] || {}).length;
+            });
+
+            const engagementCtx = document.getElementById('engagementChart').getContext('2d');
+            
+            if (engagementChartInstance) {
+                engagementChartInstance.destroy();
+            }
+
+            // Fallback empty values rendering
+            const engagementValues = [totalLikes, totalComments];
+            const engagementLabels = ['Likes', 'Comments'];
+            
+            engagementChartInstance = new Chart(engagementCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: engagementLabels,
+                    datasets: [{
+                        data: engagementValues,
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.7)', // Red/Coral for likes
+                            'rgba(59, 130, 246, 0.7)'  // Blue for comments
+                        ],
+                        borderColor: [
+                            'rgba(239, 68, 68, 1)',
+                            'rgba(59, 130, 246, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: colors.text }
+                        },
+                        tooltip: {
+                            backgroundColor: colors.bgSecondary,
+                            titleColor: colors.text,
+                            bodyColor: colors.text,
+                            borderColor: colors.border,
+                            borderWidth: 1
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // --- COMMENTS MODERATION FEED ---
+        function renderComments(data) {
+            const tableBody = document.getElementById('commentsTableBody');
+            tableBody.innerHTML = '';
+
+            const allComments = [];
+            postsIndex.forEach(post => {
+                const slug = post.slug;
+                const postComments = data.comments[slug] || {};
+                Object.keys(postComments).forEach(commentId => {
+                    const c = postComments[commentId];
+                    allComments.push({
+                        id: commentId,
+                        slug: slug,
+                        postTitle: post.title,
+                        postFolder: post.folder,
+                        name: c.name || 'Anonymous',
+                        text: c.text || '',
+                        timestamp: c.timestamp || Date.now()
+                    });
+                });
+            });
+
+            // Sort newest first
+            allComments.sort((a, b) => b.timestamp - a.timestamp);
+
+            if (allComments.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 3rem 1rem;">
+                            <i class="far fa-comments" style="font-size: 2rem; margin-bottom: 0.75rem; display: block; opacity: 0.5;"></i>
+                            No comments found on any article.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            allComments.forEach(c => {
+                const row = document.createElement('tr');
+                
+                const postUrl = `${c.postFolder}/${c.slug}.html`;
+                const dateStr = new Date(c.timestamp).toLocaleString();
+                
+                row.innerHTML = `
+                    <td>
+                        <a href="${postUrl}" class="comment-post-title" target="_blank">${c.postTitle}</a>
+                        <span class="comment-meta-info">${c.slug}</span>
+                    </td>
+                    <td>
+                        <div class="comment-author-badge"><i class="fas fa-user-shield"></i> ${c.name}</div>
+                        <div class="comment-meta-info"><i class="far fa-clock"></i> ${dateStr}</div>
+                    </td>
+                    <td>
+                        <div class="comment-text-content">${c.text}</div>
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;">
+                        <button class="btn-danger-sm" onclick="deleteComment('${c.slug}', '${c.id}', '${c.name.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-trash-can"></i> Delete
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // --- COMMENTS MODERATION DELETE ---
+        function deleteComment(slug, commentId, author) {
+            if (confirm(`Are you sure you want to delete the comment by "${author}"?`)) {
+                if (dashboardData && dashboardData.isFirebase) {
+                    try {
+                        const db = firebase.database();
+                        db.ref(`comments/${slug}/${commentId}`).remove().then(() => {
+                            showToast("Comment successfully deleted from Firebase");
+                            refreshDashboard();
+                        }).catch(err => {
+                            console.error("Firebase deletion failed, attempting local fallback:", err);
+                            fallbackDelete(slug, commentId);
+                        });
+                    } catch (e) {
+                        console.error("Firebase connection error during deletion:", e);
+                        fallbackDelete(slug, commentId);
+                    }
+                } else {
+                    fallbackDelete(slug, commentId);
+                }
+            }
+        }
+
+        function fallbackDelete(slug, commentId) {
+            try {
+                const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
+                delete localComments[commentId];
+                localStorage.setItem(`blog-comments-${slug}`, JSON.stringify(localComments));
+                showToast("Comment successfully deleted from Local Storage");
+                refreshDashboard();
+            } catch (e) {
+                console.error("Local storage deletion failed:", e);
+                showToast("Error: Deletion failed");
+            }
+        }
+
+        // --- SYSTEM EVENT LISTENERS ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Apply saved theme
+            const savedTheme = localStorage.getItem('blog-theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeIcon').className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+
+            // Theme toggle listener
+            document.getElementById('themeToggle').addEventListener('click', () => {
+                const current = document.documentElement.getAttribute('data-theme');
+                const next = current === 'dark' ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', next);
+                localStorage.setItem('blog-theme', next);
+                document.getElementById('themeIcon').className = next === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+                
+                showToast(`Theme changed to ${next}`);
+                
+                // Reactive chart redrawing to match the colors of the new theme
+                if (dashboardData) {
+                    renderCharts(dashboardData);
+                }
+            });
+
+            // Authentication verification
+            checkAuth();
+        });
+    </script>
+</body>
+</html>

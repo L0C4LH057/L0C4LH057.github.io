@@ -1,0 +1,22 @@
+# Virtual Environment
+venv/
+
+# IDE / Editor config and cache
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# CLI / Extension cache
+.qodo/
+.antigravitycli/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Generated data files
+posts-index.json

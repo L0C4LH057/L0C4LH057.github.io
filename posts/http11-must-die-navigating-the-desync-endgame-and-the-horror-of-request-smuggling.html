@@ -1113,7 +1113,7 @@
 <h2>The Core Vulnerability: Conflicting Message Lengths</h2>
 <p>The root of <code>HTTP/1.1</code>'s vulnerability lies in a fundamental parsing ambiguity, inherent in its design as a <strong>lenient, text-based protocol</strong>. Unlike modern protocols like <code>HTTP/2</code> and <code>HTTP/3</code>, which use explicit binary framing to clearly define message boundaries, <code>HTTP/1.1</code> relies on inspecting specific headers (such as <code>Content-Length</code> and <code>Transfer-Encoding</code>) to determine where one request ends and the next begins. This text-based interpretation makes it inherently susceptible to misinterpretation by different network components.</p>
 <p>In <code>HTTP/1.1</code>, multiple requests are often multiplexed (concatenated back-to-back) over a single, shared TCP connection. The risk emerges because the protocol offers multiple, sometimes conflicting, ways to define message boundaries. When an HTTP request traverses various intermediaries—such as load balancers, reverse proxies, or Web Application Firewalls (WAFs)—before reaching the origin server, each component independently attempts to interpret the request's length. A desynchronization (desync) of the request stream occurs when these components disagree on where one request truly ends and the next begins.</p>
-<img alt="Requests from multiple different users routed over a single TCP/TLS connection." class="inline-image" src="../images/revproxy_server.svg">
+<img alt="Requests from multiple different users routed over a single TCP/TLS connection." class="inline-image" src="../images/revproxy_server.svg"/>
 <p>This ambiguity typically stems from inconsistencies in how servers interpret two primary message length headers:</p>
 <ul>
 <li><code>Content-Length</code> (<code>CL</code>): Specifies the exact size of the request body in bytes.</li>
@@ -1370,7 +1370,7 @@ Content-Length: 10
 <h2>Conclusion: HTTP/1.1 Must Be Retired</h2>
 <p>The warnings have been unequivocal for years: <code>HTTP/1.1</code>, despite its historical importance, is no longer fit for the security demands of the modern web. Its fundamental design flaws create persistent avenues for sophisticated attacks that compromise data and erode user trust.</p>
 <p>It is imperative for the industry to accelerate the transition to <code>HTTP/2</code> and <code>HTTP/3</code>. This is about fortifying the very foundations of web security. The desync endgame is real, and the threat of request smuggling will continue until we decisively retire <code>HTTP/1.1</code> from its prominent role.</p>
-</img>
+
             </div>
 
             <!-- Comments Section -->
@@ -1706,6 +1706,23 @@ Content-Length: 10
                                 }
                             });
                         },
+                        getViews: (slug, callback) => {
+                            const ref = db.ref(`views/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase views read denied, using local storage fallback:", err);
+                                fallbackViews(slug, callback);
+                            });
+                        },
+                        trackView: (slug) => {
+                            db.ref(`views/${slug}`).transaction((current) => (current || 0) + 1, (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase trackView transaction failed, using local storage:", err);
+                                    fallbackTrackView(slug);
+                                }
+                            });
+                        },
                         getComments: (slug, callback) => {
                             const ref = db.ref(`comments/${slug}`);
                             ref.on('value', (snapshot) => {
@@ -1729,13 +1746,14 @@ Content-Length: 10
                 }
             }
 
-            // Deterministic base likes count based on the slug to make the blog look alive
+            // Deterministic base likes count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
             function getDeterministicBaseLikes(slug) {
-                let hash = 0;
-                for (let i = 0; i < slug.length; i++) {
-                    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
-                }
-                return Math.abs(hash % 24) + 18; // base count between 18 and 41 likes
+                return 0;
+            }
+
+            // Deterministic base views count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
+            function getDeterministicBaseViews(slug) {
+                return 0;
             }
 
             function fallbackLikes(slug, callback) {
@@ -1758,6 +1776,18 @@ Content-Length: 10
                 fallbackLikes(slug, callback);
             }
 
+            function fallbackViews(slug, callback) {
+                const base = getDeterministicBaseViews(slug);
+                const localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                callback(base + localExtra);
+            }
+
+            function fallbackTrackView(slug) {
+                let localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                localExtra += 1;
+                localStorage.setItem(`blog-views-offset-${slug}`, localExtra.toString());
+            }
+
             function fallbackComments(slug, callback) {
                 const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
                 callback(localComments);
@@ -1778,9 +1808,20 @@ Content-Length: 10
                     getLikes: fallbackLikes,
                     like: fallbackLike,
                     unlike: fallbackUnlike,
+                    getViews: fallbackViews,
+                    trackView: fallbackTrackView,
                     getComments: fallbackComments,
                     addComment: fallbackAddComment
                 };
+            }
+
+            // Page view tracking (throttled by 15 minutes in localStorage)
+            const viewedKey = `blog-viewed-time-${postSlug}`;
+            const lastViewed = localStorage.getItem(viewedKey);
+            const now = Date.now();
+            if (!lastViewed || (now - parseInt(lastViewed) > 900000)) {
+                dbBridge.trackView(postSlug);
+                localStorage.setItem(viewedKey, now.toString());
             }
 
             // --- LIKES ENGINE ---

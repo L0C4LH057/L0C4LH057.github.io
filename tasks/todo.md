@@ -1,24 +1,33 @@
-# TODO List - Blog UI/UX Refactoring
+# TODO List - Admin & Analytics Dashboard
 
-Track progress of refactoring the cybersecurity and AI blog into a premium, futuristic cyberpunk theme.
+Track progress of implementing the secure self-hosted Admin & Analytics Dashboard for the blog.
 
-## Step 1: Design Master Layout & Components [/]
-- [/] Update `template.html` with futuristic dark mesh theme, cyberpunk styling, responsive typography, and glassmorphism.
-- [ ] Create glowing animated background (Canvas-based particles or keyframe mesh gradients).
-- [ ] Refactor the Upvote Button component with micro-animations & particle feedback.
-- [ ] Refactor the Share Widget with copy-link animations and native sharing.
-- [ ] Refactor the Comments Section to look like a terminal command output / high-tech feed.
+## Step 1: Implement Page View Tracking in template.html [x]
+- [x] Implement `getViews`, `trackView`, and fallback methods in `template.html`'s `dbBridge`.
+- [x] Add throttled view tracking invocation on page load (15-minute throttle via localStorage).
 
-## Step 2: Refactor Main Index & Subpages [ ]
-- [ ] Update `index.html` to align with the futuristic style, adding a terminal title typing effect and glassmorphic cards.
-- [ ] Update `whoami.html` to style the profile page as a developer HUD / security dossier dossier.
-- [ ] Update `write-ups.html` to style the writeup list as a cyber-deck CTF log.
-- [ ] Update `tools.html` to style the tool cards as glowing system interfaces.
+## Step 2: Create dashboard.html [x]
+- [x] Establish secure login screen (SHA-256 for `admin123`).
+- [x] Design responsive glassmorphic dashboard UI using existing themes.
+- [x] Integrate Chart.js CDN and fetch view/like/comment stats dynamically from Firebase/localStorage.
+- [x] Build live comment moderation list with delete actions.
 
-## Step 3: Automate Post Updates [ ]
-- [ ] Write `update_posts.py` to parse existing post files, extract content/metadata, and inject them into the new `template.html`.
-- [ ] Run the Python script and verify that all posts are updated successfully.
+## Step 3: Automate Post Updates [x]
+- [x] Run `python3 update_posts.py` to compile the new template into all 26 articles.
 
-## Step 4: Verification and Quality Control [ ]
-- [ ] Run a local web server to check layout, typography, accessibility, and responsiveness.
-- [ ] Verify functionality of Firebase upvotes, comments, and sharing.
+## Step 4: Verification and Quality Control [x]
+- [x] Verify page view counts increment when visiting articles.
+- [x] Verify security of dashboard.html password prompt.
+- [x] Verify visual correctness of charts.
+- [x] Verify comment moderation delete action.
+
+## Step 5: Fix Admin Password Issue [x]
+- [x] Correct the SHA-256 hash constant in `dashboard.html` for `admin123`
+- [x] Add the pure JS SHA-256 fallback function for non-secure contexts (`file://`)
+- [x] Verify that password authentication works in both secure contexts and `file://`
+
+## Step 6: Transition to 100% Real Analytics [x]
+- [x] Modify `getDeterministicBaseLikes` and `getDeterministicBaseViews` to return `0` in `template.html`
+- [x] Modify `getDeterministicBaseLikes` and `getDeterministicBaseViews` to return `0` in `dashboard.html`
+- [x] Compile all blog post/writeup pages using `update_posts.py`
+- [x] Run automated verification script to confirm base counts are 0 across templates, dashboard, and generated files

@@ -1116,7 +1116,7 @@
 <p>Child psychologists like Jean Piaget and Lev Vygotsky showed us how children think differently at different stages. Piaget explained that young kids learn through senses and actions, and only later can they think abstractly. Vygotsky taught us that children learn best with the help of others—parents, teachers, or even peers—who guide them step by step.</p>
 <p>Interestingly, children’s limits can also be strengths. Their small memory capacity forces them to focus on little chunks, which makes them surprisingly good at learning languages and spotting new patterns.</p>
 <h2>The AI Dilemma: Helper or Shortcut?</h2>
-<img alt="" class="post-cover" src="../images/helper-or-shortcut.png">
+<img alt="" class="post-cover" src="../images/helper-or-shortcut.png"/>
 <p>AI is like a double-edged sword. On one side, it can be a wonderful teacher, giving personalized lessons, explanations, and quizzes. On the other side, it may cause <strong>cognitive offloading</strong>—when we let machines do the thinking for us.</p>
 <p>This is not new. We already use calculators for math and Google for facts. But AI goes deeper—it can write essays, solve problems, and even create art. If children always depend on AI, they may lose the habit of thinking for themselves.</p>
 <p>Think of an airline pilot. Autopilot makes flying safer and easier, but if the pilot relies too much on it, they may forget how to fly manually. In an emergency, this becomes dangerous. The same can happen with kids: if they always let AI think, their own problem-solving skills may weaken.</p>
@@ -1129,7 +1129,7 @@
 <li><strong>Lower Social Skills:</strong> If kids spend more time with AI than with teachers or classmates, they may lose practice in teamwork, empathy, and real communication.</li>
 </ul>
 <h2>A Balanced Way Forward: AI and Human Together</h2>
-<img alt="" class="post-cover" src="../images/balanced_way.png">
+<img alt="" class="post-cover" src="../images/balanced_way.png"/>
 <p>The solution is not to ban AI, but to use it wisely. AI should be a copilot, not the pilot. Children must stay in control. Here are some strategies for parents and teachers:</p>
 <ul>
 <li>Teach AI Literacy – Kids should know that AI can be wrong, biased, or even make up facts. They must learn to use it carefully.</li>
@@ -1148,7 +1148,7 @@
 <p style="text-align: center; margin-top: 2rem;">
 <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
 </p>
-</img></img>
+
             </div>
 
             <!-- Comments Section -->
@@ -1484,6 +1484,23 @@
                                 }
                             });
                         },
+                        getViews: (slug, callback) => {
+                            const ref = db.ref(`views/${slug}`);
+                            ref.on('value', (snapshot) => {
+                                callback(snapshot.val());
+                            }, (err) => {
+                                console.warn("Firebase views read denied, using local storage fallback:", err);
+                                fallbackViews(slug, callback);
+                            });
+                        },
+                        trackView: (slug) => {
+                            db.ref(`views/${slug}`).transaction((current) => (current || 0) + 1, (err, committed, snapshot) => {
+                                if (err || !committed) {
+                                    console.warn("Firebase trackView transaction failed, using local storage:", err);
+                                    fallbackTrackView(slug);
+                                }
+                            });
+                        },
                         getComments: (slug, callback) => {
                             const ref = db.ref(`comments/${slug}`);
                             ref.on('value', (snapshot) => {
@@ -1507,13 +1524,14 @@
                 }
             }
 
-            // Deterministic base likes count based on the slug to make the blog look alive
+            // Deterministic base likes count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
             function getDeterministicBaseLikes(slug) {
-                let hash = 0;
-                for (let i = 0; i < slug.length; i++) {
-                    hash = slug.charCodeAt(i) + ((hash << 5) - hash);
-                }
-                return Math.abs(hash % 24) + 18; // base count between 18 and 41 likes
+                return 0;
+            }
+
+            // Deterministic base views count based on the slug to make the blog look alive (changed to 0 for 100% real analytics)
+            function getDeterministicBaseViews(slug) {
+                return 0;
             }
 
             function fallbackLikes(slug, callback) {
@@ -1536,6 +1554,18 @@
                 fallbackLikes(slug, callback);
             }
 
+            function fallbackViews(slug, callback) {
+                const base = getDeterministicBaseViews(slug);
+                const localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                callback(base + localExtra);
+            }
+
+            function fallbackTrackView(slug) {
+                let localExtra = parseInt(localStorage.getItem(`blog-views-offset-${slug}`) || '0');
+                localExtra += 1;
+                localStorage.setItem(`blog-views-offset-${slug}`, localExtra.toString());
+            }
+
             function fallbackComments(slug, callback) {
                 const localComments = JSON.parse(localStorage.getItem(`blog-comments-${slug}`) || '{}');
                 callback(localComments);
@@ -1556,9 +1586,20 @@
                     getLikes: fallbackLikes,
                     like: fallbackLike,
                     unlike: fallbackUnlike,
+                    getViews: fallbackViews,
+                    trackView: fallbackTrackView,
                     getComments: fallbackComments,
                     addComment: fallbackAddComment
                 };
+            }
+
+            // Page view tracking (throttled by 15 minutes in localStorage)
+            const viewedKey = `blog-viewed-time-${postSlug}`;
+            const lastViewed = localStorage.getItem(viewedKey);
+            const now = Date.now();
+            if (!lastViewed || (now - parseInt(lastViewed) > 900000)) {
+                dbBridge.trackView(postSlug);
+                localStorage.setItem(viewedKey, now.toString());
             }
 
             // --- LIKES ENGINE ---
