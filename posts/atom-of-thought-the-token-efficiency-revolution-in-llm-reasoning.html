@@ -20,6 +20,20 @@
     <meta name="twitter:title" content="Atom of Thought: The Token Efficiency Revolution in LLM Reasoning">
     <meta name="twitter:description" content="How a new reasoning paradigm is reducing LLM costs by 70-90% while improving accuracy and performance">
 
+    <!-- PWA Support -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#09090b">
+    <link rel="apple-touch-icon" href="../images/icon-192.png">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../sw.js')
+                    .then(reg => console.log('Service Worker registered for post:', reg.scope))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">

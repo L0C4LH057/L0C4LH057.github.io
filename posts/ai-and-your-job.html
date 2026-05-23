@@ -20,6 +20,20 @@
     <meta name="twitter:title" content="AI & Your Job: The Real Story of Transformation, Not Just Loss">
     <meta name="twitter:description" content="Explore the true impact of AI on jobs, especially in tech. Learn how AI transforms rather than eliminates roles, the skills you need to thrive, and why collaboration is key to the future of work.">
 
+    <!-- PWA Support -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#09090b">
+    <link rel="apple-touch-icon" href="../images/icon-192.png">
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../sw.js')
+                    .then(reg => console.log('Service Worker registered for post:', reg.scope))
+                    .catch(err => console.error('Service Worker registration failed:', err));
+            });
+        }
+    </script>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;600&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1200,6 +1214,10 @@
 <ul>
 <h3>References</h3>
 <ul>
+<h3>References</h3>
+<ul>
+<h3>References</h3>
+<ul>
 <li><a href="https://www.weforum.org/publications/the-future-of-jobs-report-2023/" rel="noopener" target="_blank">World Economic Forum: Future of Jobs Report 2023</a></li>
 <li><a href="https://www.mckinsey.com/capabilities/mckinsey-digital/our-insights/the-economic-potential-of-generative-ai-the-next-productivity-frontier" rel="noopener" target="_blank">McKinsey: The Economic Potential of Generative AI</a></li>
 <li><a href="https://www.aisecuritynotes.com/" rel="noopener" target="_blank">Joshua Saxe: AI Security Notes</a></li>
@@ -1207,6 +1225,8 @@
 <p style="text-align: center; margin-top: 2rem;">
 <a href="../index.html" style="color: var(--accent); text-decoration: none; font-weight: 500;">← Back to Blog</a>
 </p>
+</ul>
+</ul>
 </ul>
 </ul>
 </ul>

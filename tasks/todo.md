@@ -48,5 +48,15 @@ Track progress of implementing the secure self-hosted Admin & Analytics Dashboar
 - [x] Verify pages render and play cloud audio correctly, and verify the dropdown is replaced by the static "Cloud Voice" badge
 - [x] Commit all changes to Git
 
+## Step 9: Turn Blog into a Progressive Web App (PWA) [/]
+- [ ] Generate high-resolution PWA icons and resize them using ImageMagick
+- [ ] Create `manifest.json` with PWA settings
+- [ ] Create service worker `sw.js` with offline caching logic
+- [ ] Add PWA headers & registration scripts to `template.html`
+- [ ] Add PWA headers & registration scripts to root files (`index.html`, `whoami.html`, `write-ups.html`, `tools.html`)
+- [ ] Recompile all 26 articles via `update_posts.py`
+- [ ] Verify PWA installability, service worker activation, and offline compatibility
+- [ ] Commit all PWA changes to Git
+
 
 
